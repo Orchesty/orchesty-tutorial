@@ -1,0 +1,66 @@
+parameters:
+    stdout_path: 'php://stdout'
+
+monolog:
+    use_microseconds: false
+    channels: [authorization, commons, connector, ftp, parser_table, rabbit_mq, stdout]
+    handlers:
+        main:
+            type: service
+            id: udp_handler
+            level: warning
+        authorization:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [authorization]
+        commons:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [commons]
+        connector:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [connector]
+        ftp:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [ftp]
+        parser_table:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [parser_table]
+        rabbit_mq:
+            type: service
+            id: udp_handler
+            level: info
+            channels: [rabbit_mq]
+
+        # Handler for docker container
+        stdout:
+            type:  stream
+            path:  "%stdout_path%"
+            level: info
+            formatter: logstash_formatter
+            max_files: 10
+            channels: '!php'
+
+services:
+    _defaults:
+        public: '%public.services%'
+
+    logstash_formatter:
+        class: Hanaboso\CommonsBundle\Monolog\LogstashFormatter
+
+    udp_handler:
+        class: Hanaboso\CommonsBundle\Monolog\UdpHandler
+        arguments:
+            - '@hbpf.transport.udp_sender'
+            - 'logstash:5120'
+            - 'info'
+        calls:
+            - ['setFormatter', ['@logstash_formatter']]

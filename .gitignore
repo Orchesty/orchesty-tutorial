@@ -1,0 +1,12 @@
+# IDEs
+.idea
+*.DS_Store
+
+# PHP
+php-sdk/vendor
+php-sdk/var
+
+# PIPES
+.env
+topology/*
+!topology/.gitkeep

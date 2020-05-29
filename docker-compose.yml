@@ -1,0 +1,214 @@
+version: '3.5'
+
+services:
+    php-sdk:
+        image: hanabosocom/php-dev:php-7.4-alpine
+        user: ${DEV_UID}:${DEV_GID}
+        working_dir: /var/www
+        volumes:
+            - ./php-sdk:/var/www:cached
+            - ${SSH_AUTH}:/tmp/.ssh-auth-sock
+            - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
+        environment:
+            DEV_UID: ${DEV_UID}
+            DEV_GID: ${DEV_GID}
+            APP_DEBUG: 1
+            PHP_IDE_CONFIG: ${PHP_IDE}
+            PHP_WEBROOT: /var/www/public
+            COMPOSER_HOME: ${HOME}/dev/.composer
+            KERNEL_CLASS: Pipes\PhpSdk\Kernel
+            BACKEND_HOST: 127.0.0.10:8080
+            MONGODB_DSN: mongodb://mongo/skeleton
+            MONGODB_DB: skeleton
+            RABBITMQ_DSN: amqp://rabbitmq:5672
+            METRICS_SERVICE: mongo
+
+    batch-connector:
+        image: hanabosocom/php-dev:php-7.4-alpine
+        user: ${DEV_UID}:${DEV_GID}
+        working_dir: /var/www
+        volumes:
+            - ./php-sdk:/var/www:cached
+            - ${SSH_AUTH}:/tmp/.ssh-auth-sock
+            - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
+        environment:
+            RABBITMQ_DSN: amqp://rabbitmq:5672
+            METRICS_SERVICE: mongo
+        command: bin/console rabbit_mq:consumer:batch-connector
+
+    status-service:
+        image: dkr.hanaboso.net/pipes/pipes/pf-bundle:master
+        working_dir: /var/www
+        environment:
+            BACKEND_HOST: ${BACKEND_URL}/
+            FRONTEND_HOST: ${FRONTEND_URL}/
+            RABBIT_DSN: amqp://rabbitmq:5672/
+            REDIS_DSN: redis://redis
+            MONGODB_DSN: mongodb://mongo:27017
+            METRICS_SERVICE: mongo
+            METRICS_HOST: mongo
+            METRICS_PORT: 27017
+            CRON_DSN: cron-api:8080
+            FTP_API_DSN: ftp-api
+            MAILER_API_DSN: mailer-api
+            MAPPER_API_DSN: mapper-api
+            MONOLITH_API_DSN: php-sdk
+            MULTI_PROBE_DSN: multi-probe:8007
+            STARTING_POINT_DSN: starting-point:8080
+            TOPOLOGY_API_DSN: topology-api:8080
+            XML_PARSER_API_DSN: xml-parser-api
+            WORKER_DEFAULT_PORT: 8008
+        command: bin/console rabbit_mq:consumer:status-service
+
+    notification-sender-api:
+        image: dkr.hanaboso.net/pipes/notification-sender:master
+        environment:
+            MONGO_HOST: mongo
+
+    multi-probe:
+        image: dkr.hanaboso.net/pipes/pipes/multi-probe:master
+        environment:
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            REDIS_PASS: ''
+            REDIS_DB:  0
+
+    multi-counter:
+        image: dkr.hanaboso.net/pipes/pipes/pf-bridge:master
+        environment:
+            RABBITMQ_HOST: rabbitmq
+            RABBITMQ_PORT: 5672
+            RABBITMQ_USER: guest
+            RABBITMQ_PASS: guest
+            RABBITMQ_VHOST: /
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            REDIS_PASS: ''
+            REDIS_DB: 0
+            COUNTER_PREFETCH: 100
+            METRICS_SERVICE: mongo
+            METRICS_HOST: mongo
+            METRICS_PORT: 27017
+        command: ./dist/src/bin/pipes.js start multi_counter
+        networks:
+            default:
+                aliases:
+                    - multi-counter-api
+
+    starting-point:
+        image: dkr.hanaboso.net/pipes/pipes/starting-point:master
+        environment:
+            MONGO_DSN: mongodb://mongo/skeleton?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            RABBIT_COUNTER_QUEUE_DURABLE: 'true'
+            RABBIT_QUEUE_DURABLE: 'true'
+            RABBIT_DELIVERY_MODE: 2
+        ports:
+            - ${DEV_IP}:82:8080
+
+    repeater:
+        image: dkr.hanaboso.net/pipes/pipes/pf-bridge:dev
+        environment:
+            RABBITMQ_HOST: rabbitmq
+            RABBITMQ_PORT: 5672
+            RABBITMQ_USER: guest
+            RABBITMQ_PASS: guest
+            RABBITMQ_VHOST: /
+            MONGO_HOST: mongo
+            REPEATER_CHECK_TIMEOUT: 5000
+        command: ./dist/src/bin/pipes.js start repeater
+
+    topology-api:
+        image: dkr.hanaboso.net/pipes/pipes/topology-api-v2:master
+        environment:
+            DEPLOYMENT_PREFIX: skeleton
+            GENERATOR_NETWORK: skeleton_default
+            GENERATOR_MODE: compose
+            GENERATOR_PATH: /srv/topology
+            MONGO_DSN: mongodb://mongo/skeleton?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            RABBITMQ_HOST: rabbitmq
+            PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
+        volumes:
+            - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
+            - ./topology:/srv/topology
+
+    telegraf:
+        image: dkr.hanaboso.net/pipes/pipes/rabbitmq-telegraf:master
+        environment:
+            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+
+    cron-api:
+        image: dkr.hanaboso.net/pipes/pipes/cron:master
+        environment:
+            MONGO_DSN: mongodb://mongo/cron?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            MONGO_COLLECTION: cron
+
+    frontend:
+        image: dkr.hanaboso.net/pipes/pipes/frontend:master
+        environment:
+            BACKEND_URL: ${BACKEND_URL}
+            FRONTEND_URL: ${FRONTEND_URL}
+        ports:
+            - ${DEV_IP}:80:80
+
+    backend:
+        image: dkr.hanaboso.net/pipes/pipes/pf-bundle:master
+        ports:
+            - ${DEV_IP}:8080:80
+        environment:
+            BACKEND_DSN: ${BACKEND_URL}/
+            FRONTEND_DSN: ${FRONTEND_URL}/
+            NOTIFICATION_DSN: notification-sender-api
+            RABBIT_DSN: amqp://rabbitmq:5672/
+            REDIS_DSN: redis://redis
+            MONGODB_DSN: mongodb://mongo/skeleton
+            MONGODB_DB: skeleton
+            METRICS_SERVICE: mongo
+            METRICS_HOST: mongo
+            METRICS_PORT: 27017
+            CRON_DSN: cron-api:8080
+            FTP_API_DSN: ftp-api
+            MAILER_API_DSN: mailer-api
+            MAPPER_API_DSN: mapper-api
+            MONOLITH_API_DSN: php-sdk
+            MULTI_PROBE_DSN: multi-probe:8007
+            STARTING_POINT_DSN: starting-point:8080
+            TOPOLOGY_API_DSN: topology-api:8080
+            XML_PARSER_API_DSN: xml-parser-api
+            WORKER_DEFAULT_PORT: 8008
+
+    redis:
+        image: redis:alpine
+        volumes:
+            - redis:/data
+
+    logstash:
+        image: dkr.hanaboso.net/pipes/pipes/logstash-mongo:master
+        environment:
+            - MONGO_DSN=mongodb://mongo:27017
+            - MONGO_DB=skeleton
+            - MONGO_COLLECTION=Logs
+            - LS_JAVA_OPTS=-Xms512m -Xmx512m
+
+    mongo:
+        image: mongo
+        ports:
+            - ${DEV_IP}:27017:27017
+        volumes:
+            - mongodb:/data/db
+
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+            - ${DEV_IP}:15672:15672
+        volumes:
+            - rabbitmq:/var/lib/rabbitmq
+
+volumes:
+    redis:
+    mongodb:
+    rabbitmq:
+
+networks:
+    default:
+        name: skeleton_default

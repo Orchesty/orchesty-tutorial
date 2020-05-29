@@ -1,0 +1,19 @@
+hb_pf_applications:
+    resource: "@HbPFApplicationBundle/Controller"
+    type: annotation
+
+hb_pf_appstore:
+    resource: "@HbPFAppStoreBundle"
+    type: annotation
+
+hb_pf_connector:
+    resource: "@HbPFConnectorBundle/Controller"
+    type: annotation
+
+hb_pf_cutom_node:
+    resource: "@HbPFCustomNodeBundle/Controller"
+    type: annotation
+
+hb_pf_long_running:
+    resource: '@HbPFLongRunningNodeBundle'
+    type: annotation

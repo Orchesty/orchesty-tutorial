@@ -1,0 +1,19 @@
+parameters:
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    public.services: false
+
+    backend_host: '%env(BACKEND_HOST)%'
+
+    node_services_dirs:
+        - '%kernel.project_dir%/config'
+
+    applications:
+        - '%kernel.project_dir%/config'
+
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: '%public.services%'

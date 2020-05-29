@@ -1,0 +1,49 @@
+parameters:
+    env(MONGODB_NOTIFICATION_DATABASE): notification-sender
+    mongodb_notification_database: '%env(MONGODB_NOTIFICATION_DATABASE)%'
+
+doctrine_mongodb:
+    default_document_manager: default
+    default_connection: default
+    auto_generate_proxy_classes: true
+    auto_generate_hydrator_classes: true
+    auto_generate_persistent_collection_classes: 3
+    proxy_namespace: Proxies
+    proxy_dir: '%kernel.cache_dir%/doctrine/odm/mongodb/Proxies'
+    hydrator_namespace: Hydrators
+    hydrator_dir: '%kernel.cache_dir%/doctrine/odm/mongodb/Hydrators'
+    connections:
+        default:
+            server: '%env(MONGODB_DSN)%'
+            options:
+                connectTimeoutMS: 60000
+                socketTimeoutMS: 60000
+    default_database: '%env(MONGODB_DB)%'
+    document_managers:
+        default:
+            mappings:
+                AppStoreDocument:
+                    type: annotation
+                    is_bundle: false
+                    dir: "%kernel.project_dir%/vendor/hanaboso/app-store/src/Document"
+                    prefix: Hanaboso\HbPFAppStore\Document
+                ApplicationDocument:
+                    type: annotation
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/Application/Document'
+                    prefix: Hanaboso\PipesPhpSdk\Application\Document
+                CommonsDocument:
+                    type: annotation
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/Database/Document'
+                    prefix: Hanaboso\PipesPhpSdk\Database\Document
+                LongRunningNodeDocument:
+                    type: annotation
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/LongRunningNode/Document'
+                    prefix: Hanaboso\PipesPhpSdk\LongRunningNode\Document
+            filters:
+                deleted:
+                    class: Hanaboso\CommonsBundle\Database\Filters\ODM\DeletedFilter
+                    enabled: TRUE
+

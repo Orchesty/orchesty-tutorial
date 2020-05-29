@@ -1,0 +1,12 @@
+rest:
+    routes:
+        '^/': ['json']
+    decoders:
+        json: rest.decoder.json
+        xml: rest.decoder.xml
+    cors:
+        '^/api':
+            origin: ['*']
+            methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS']
+            headers: ['Content-Type', 'OrderBy', 'Filter', 'Page', 'Limit']
+            credentials: TRUE

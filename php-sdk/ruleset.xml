@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="PIPES">
+    <rule ref="./vendor/hanaboso/php-check-utils/ruleset.xml"/>
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="src" value="Pipes\PhpSdk"/>
+                <element key="tests" value="Pipes\PhpSdk\Tests"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

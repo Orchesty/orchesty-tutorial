@@ -1,0 +1,13 @@
+framework:
+    secret: '%secret%'
+    router:
+        strict_requirements: ~
+    csrf_protection:
+        enabled: false
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    fragments: ~
+    http_method_override: true
+    test: false
+    php_errors:
+        log: true

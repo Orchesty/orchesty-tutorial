@@ -1,0 +1,13 @@
+# ./config/connector/connector.yaml
+service:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: '%public.services%'
+
+
+    hbpf.connector.send-grid.send-email:
+        class: Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector
+        arguments:
+            - '@doctrine_mongodb.odm.default_document_manager'
+            - '@hbpf.transport.curl_manager'

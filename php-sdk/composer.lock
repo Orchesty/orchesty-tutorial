@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.138.9",
+            "version": "3.138.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "aaee8d1639e0f92a9617c4842c4fb8e527281d2a"
+                "reference": "cf197a033ad75cd9e3a90a207cf5ec8935aafa48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/aaee8d1639e0f92a9617c4842c4fb8e527281d2a",
-                "reference": "aaee8d1639e0f92a9617c4842c4fb8e527281d2a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cf197a033ad75cd9e3a90a207cf5ec8935aafa48",
+                "reference": "cf197a033ad75cd9e3a90a207cf5ec8935aafa48",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-05-27T18:13:35+00:00"
+            "time": "2020-05-28T18:12:07+00:00"
         },
         {
             "name": "aws/aws-sdk-php-symfony",
@@ -142,6 +142,61 @@
                 "symfony3"
             ],
             "time": "2020-04-08T21:42:18+00:00"
+        },
+        {
+            "name": "composer/package-versions-deprecated",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/package-versions-deprecated.git",
+                "reference": "98df7f1b293c0550bd5b1ce6b60b59bdda23aa47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/98df7f1b293c0550bd5b1ce6b60b59bdda23aa47",
+                "reference": "98df7f1b293c0550bd5b1ce6b60b59bdda23aa47",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0 || ^2.0",
+                "php": "^7"
+            },
+            "replace": {
+                "ocramius/package-versions": "1.2 - 1.8.99"
+            },
+            "require-dev": {
+                "composer/composer": "^1.9.3 || ^2.0@dev",
+                "ext-zip": "^1.13",
+                "phpunit/phpunit": "^6.5 || ^7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "time": "2020-04-23T11:49:37+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -741,16 +796,16 @@
         },
         {
             "name": "doctrine/mongodb-odm",
-            "version": "2.0.5",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "638c4ec715941e9cfcaeff0dc3cd33576735548e"
+                "reference": "91e90a46dd63fa02b8acdfa89ae20b802ce70cca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/638c4ec715941e9cfcaeff0dc3cd33576735548e",
-                "reference": "638c4ec715941e9cfcaeff0dc3cd33576735548e",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/91e90a46dd63fa02b8acdfa89ae20b802ce70cca",
+                "reference": "91e90a46dd63fa02b8acdfa89ae20b802ce70cca",
                 "shasum": ""
             },
             "require": {
@@ -760,7 +815,9 @@
                 "doctrine/event-manager": "^1.0",
                 "doctrine/instantiator": "^1.1",
                 "doctrine/persistence": "^1.3.5",
+                "doctrine/reflection": "1.2.1",
                 "ext-mongodb": "^1.5",
+                "jean85/pretty-package-versions": "^1.3.0",
                 "mongodb/mongodb": "^1.2.0",
                 "ocramius/proxy-manager": "^2.2",
                 "php": "^7.2",
@@ -769,16 +826,20 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^6.0",
+                "ext-bcmath": "*",
                 "jmikola/geojson": "^1.0",
                 "phpbench/phpbench": "^0.13.0",
                 "phpstan/phpstan": "^0.10.3",
                 "phpunit/phpunit": "^8.2",
-                "squizlabs/php_codesniffer": "^3.5"
+                "squizlabs/php_codesniffer": "^3.5, <3.5.5"
+            },
+            "suggest": {
+                "ext-bcmath": "Decimal128 type support"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -827,7 +888,7 @@
                 "odm",
                 "php"
             ],
-            "time": "2020-01-14T20:52:40+00:00"
+            "time": "2020-05-29T09:36:27+00:00"
         },
         {
             "name": "doctrine/mongodb-odm-bundle",
@@ -1377,7 +1438,7 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.hanaboso.net:pipes/app-store.git",
-                "reference": "73c32c25f24ef06da398e1c740561f2b04aa1e60"
+                "reference": "876c9dcd6fefef5b0990fd3cde71cf128f5d8480"
             },
             "require": {
                 "hanaboso/pipes-php-sdk": "^1.3",
@@ -1402,7 +1463,7 @@
                 "proprietary"
             ],
             "description": "App store for PipesFramework",
-            "time": "2020-05-27T15:34:01+00:00"
+            "time": "2020-05-29T14:36:50+00:00"
         },
         {
             "name": "hanaboso/commons-bundle",
@@ -1496,11 +1557,11 @@
         },
         {
             "name": "hanaboso/pipes-php-sdk",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.hanaboso.net:pipes/pipes-php-sdk.git",
-                "reference": "28e8da5eb26cbb94704fbf743cb57c9d3ba19111"
+                "reference": "44ebcdb0e579e21fa95ff25516e4eca345ed9666"
             },
             "require": {
                 "ext-json": "*",
@@ -1538,7 +1599,7 @@
                 "proprietary"
             ],
             "description": "PHP sdk for PipesFramework",
-            "time": "2020-05-27T15:34:01+00:00"
+            "time": "2020-05-29T14:36:50+00:00"
         },
         {
             "name": "hanaboso/rabbit-mq-bundle",
@@ -1676,6 +1737,57 @@
                 }
             ],
             "time": "2020-05-22T08:39:20+00:00"
+        },
+        {
+            "name": "jean85/pretty-package-versions",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Jean85/pretty-package-versions.git",
+                "reference": "e3517fb11b67e798239354fe8213927d012ad8f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/e3517fb11b67e798239354fe8213927d012ad8f9",
+                "reference": "e3517fb11b67e798239354fe8213927d012ad8f9",
+                "shasum": ""
+            },
+            "require": {
+                "composer/package-versions-deprecated": "^1.8.0",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jean85\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alessandro Lai",
+                    "email": "alessandro.lai85@gmail.com"
+                }
+            ],
+            "description": "A wrapper for ocramius/package-versions to get pretty versions strings",
+            "keywords": [
+                "composer",
+                "package",
+                "release",
+                "versions"
+            ],
+            "time": "2020-04-24T14:19:45+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -2284,57 +2396,6 @@
                 "jsonpath"
             ],
             "time": "2019-12-30T18:03:34+00:00"
-        },
-        {
-            "name": "ocramius/package-versions",
-            "version": "1.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "421679846270a5772534828013a93be709fb13df"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/421679846270a5772534828013a93be709fb13df",
-                "reference": "421679846270a5772534828013a93be709fb13df",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1.0 || ^2.0",
-                "php": "^7.4.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.9.3 || ^2.0@dev",
-                "doctrine/coding-standard": "^7.0.2",
-                "ext-zip": "^1.15.0",
-                "infection/infection": "^0.15.3",
-                "phpunit/phpunit": "^9.0.1",
-                "vimeo/psalm": "^3.9.3"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "PackageVersions\\Installer",
-                "branch-alias": {
-                    "dev-master": "1.99.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PackageVersions\\": "src/PackageVersions"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "time": "2020-04-06T17:43:35+00:00"
         },
         {
             "name": "ocramius/proxy-manager",

@@ -18,8 +18,8 @@ services:
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             BACKEND_HOST: 127.0.0.10:8080
-            MONGODB_DSN: mongodb://mongo/skeleton
-            MONGODB_DB: skeleton
+            MONGODB_DSN: mongodb://mongo/tutorial
+            MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672
             METRICS_SERVICE: mongo
 
@@ -98,7 +98,7 @@ services:
     starting-point:
         image: dkr.hanaboso.net/pipes/pipes/starting-point:master
         environment:
-            MONGO_DSN: mongodb://mongo/skeleton?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             RABBIT_COUNTER_QUEUE_DURABLE: 'true'
             RABBIT_QUEUE_DURABLE: 'true'
@@ -121,11 +121,11 @@ services:
     topology-api:
         image: dkr.hanaboso.net/pipes/pipes/topology-api-v2:master
         environment:
-            DEPLOYMENT_PREFIX: skeleton
-            GENERATOR_NETWORK: skeleton_default
+            DEPLOYMENT_PREFIX: tutorial
+            GENERATOR_NETWORK: tutorial_default
             GENERATOR_MODE: compose
             GENERATOR_PATH: /srv/topology
-            MONGO_DSN: mongodb://mongo/skeleton?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             RABBITMQ_HOST: rabbitmq
             PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
         volumes:
@@ -161,8 +161,8 @@ services:
             NOTIFICATION_DSN: notification-sender-api
             RABBIT_DSN: amqp://rabbitmq:5672/
             REDIS_DSN: redis://redis
-            MONGODB_DSN: mongodb://mongo/skeleton
-            MONGODB_DB: skeleton
+            MONGODB_DSN: mongodb://mongo/tutorial
+            MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
             METRICS_PORT: 27017
@@ -186,7 +186,7 @@ services:
         image: dkr.hanaboso.net/pipes/pipes/logstash-mongo:master
         environment:
             - MONGO_DSN=mongodb://mongo:27017
-            - MONGO_DB=skeleton
+            - MONGO_DB=tutorial
             - MONGO_COLLECTION=Logs
             - LS_JAVA_OPTS=-Xms512m -Xmx512m
 
@@ -211,4 +211,4 @@ volumes:
 
 networks:
     default:
-        name: skeleton_default
+        name: tutorial_default

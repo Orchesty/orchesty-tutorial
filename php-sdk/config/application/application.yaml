@@ -1,0 +1,9 @@
+# ./config/application/application.yaml
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: '%public.services%'
+
+    hbpf.application.send-grid:
+        class: Pipes\PhpSdk\Application\SendGridApplication

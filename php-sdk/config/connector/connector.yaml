@@ -1,10 +1,15 @@
 # ./config/connector/connector.yaml
-service:
+services:
     _defaults:
         autowire: false
         autoconfigure: false
         public: '%public.services%'
 
+
+    hbpf.connector.get-users:
+        class: Pipes\PhpSdk\Connector\Users\GetUsersConnector
+        arguments:
+            - '@hbpf.transport.curl_manager'
 
     hbpf.connector.send-grid.send-email:
         class: Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector

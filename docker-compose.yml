@@ -33,6 +33,8 @@ services:
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
             RABBITMQ_DSN: amqp://rabbitmq:5672
+            MONGODB_DSN: mongodb://mongo/tutorial
+            MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
         command: bin/console rabbit_mq:consumer:batch-connector
 
@@ -45,6 +47,7 @@ services:
             RABBIT_DSN: amqp://rabbitmq:5672/
             REDIS_DSN: redis://redis
             MONGODB_DSN: mongodb://mongo:27017
+            MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
             METRICS_PORT: 27017
@@ -148,6 +151,7 @@ services:
         environment:
             BACKEND_URL: ${BACKEND_URL}
             FRONTEND_URL: ${FRONTEND_URL}
+            STARTING_POINT_URL: http://starting-point:8080
         ports:
             - ${DEV_IP}:80:80
 

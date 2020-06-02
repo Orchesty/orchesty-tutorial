@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Pipes\PhpSdk\Tests\Integration\Connector;
+namespace Pipes\PhpSdk\Tests\Integration\Connector\SendGrid;
 
 use Exception;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
@@ -18,7 +18,7 @@ use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 /**
  * Class SendGridSendEmailConnectorTest
  *
- * @package Pipes\PhpSdk\Tests\Integration\Connector
+ * @package Pipes\PhpSdk\Tests\Integration\Connector\SendGrid
  */
 final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
 {

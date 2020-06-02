@@ -4,13 +4,12 @@ namespace Pipes\PhpSdk;
 
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 /**
  * Class Kernel
@@ -23,7 +22,7 @@ final class Kernel extends BaseKernel
 
     use MicroKernelTrait;
 
-    public const CONFIG_EXTS = '.{yaml}';
+    public const CONFIG_EXT = '.{yaml}';
 
     /**
      * @return BundleInterface[]
@@ -49,22 +48,21 @@ final class Kernel extends BaseKernel
         $container->addResource(new FileResource(sprintf('%s/config/Bundles.php', $this->getProjectDir())));
         $container->setParameter('container.dumper.inline_class_loader', TRUE);
         $confDir = $this->getConfigDir();
-        $loader->load(sprintf('%s/*%s', $confDir, self::CONFIG_EXTS), 'glob');
-        $loader->load(sprintf('%s/{packages}/*%s', $confDir, self::CONFIG_EXTS), 'glob');
-        $loader->load(sprintf('%s/{packages}/%s/**/*%s', $confDir, $this->environment, self::CONFIG_EXTS), 'glob');
+        $loader->load(sprintf('%s/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $loader->load(sprintf('%s/{application}/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $loader->load(sprintf('%s/{connector}/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $loader->load(sprintf('%s/{packages}/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $loader->load(sprintf('%s/{packages}/%s/*%s', $confDir, $this->environment, self::CONFIG_EXT), 'glob');
     }
 
     /**
-     * @param RouteCollectionBuilder $routes
-     *
-     * @throws LoaderLoadException
+     * @param RoutingConfigurator $routes
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $confDir = $this->getConfigDir();
-        $routes->import(sprintf('%s/{routes}/*%s', $confDir, self::CONFIG_EXTS), '/', 'glob');
-        $routes->import(sprintf('%s/{routes}/%s/**/*%s', $confDir, $this->environment, self::CONFIG_EXTS), '/', 'glob');
-        $routes->import(sprintf('%s/{routes}%s', $confDir, self::CONFIG_EXTS), '/', 'glob');
+        $routes->import(sprintf('%s/{routes}/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $routes->import(sprintf('%s/{routes}/%s/*%s', $confDir, $this->environment, self::CONFIG_EXT), 'glob');
     }
 
     /**

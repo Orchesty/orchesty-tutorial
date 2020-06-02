@@ -52,11 +52,14 @@ phpintegration:
 phpcontroller:
 	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Controller
 
+phplive:
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Live
+
 phpcoverage:
 	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --coverage-html var/coverage --whitelist /var/www/src tests
 
 phpcoverage-ci:
-	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 90
+	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh
 
 fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcoverage-ci
 

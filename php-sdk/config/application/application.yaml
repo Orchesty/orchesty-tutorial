@@ -7,3 +7,8 @@ services:
 
     hbpf.application.send-grid:
         class: Pipes\PhpSdk\Application\SendGridApplication
+
+    hbpf.application.hub-spot:
+        class: Pipes\PhpSdk\Application\HubSpotApplication
+        arguments:
+            - '@hbpf.providers.oauth2_provider'

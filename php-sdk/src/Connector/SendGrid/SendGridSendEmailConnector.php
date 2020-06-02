@@ -73,17 +73,21 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
             );
         }
 
+        $data = Json::decode($dto->getData());
+        if (!isset($data['email'], $data['name'], $data['subject'])) {
+            throw new ConnectorException('Some data is missing. Keys [email, name, subject] is required.');
+        }
+
         $body = [
             'personalizations' => [
                 [
-                    'to'                    => [
+                    'to'      => [
                         [
-                            'email' => 'john.doe@example.com',
-                            'name'  => 'John Doe',
+                            'email' => $data['email'],
+                            'name'  => $data['name'],
                         ],
                     ],
-                    'dynamic_template_data' => [],
-                    'subject'               => 'Hello, World!',
+                    'subject' => $data['subject'],
                 ],
             ],
             'from'             => [

@@ -10,6 +10,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
 use Pipes\PhpSdk\Application\SendGridApplication;
 use Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector;
@@ -69,6 +70,39 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $dto = new ProcessDto();
+        $dto
+            ->setData(
+                Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            )
+            ->setHeaders(
+                [
+                    PipesHeaders::createKey(PipesHeaders::USER)        => 'user',
+                    PipesHeaders::createKey(PipesHeaders::APPLICATION) => $this->app->getKey(),
+                ]
+            );
+
+        $res = $this->createConnector($this->createResponseDto())->setApplication($this->app)->processAction($dto);
+        self::assertEquals('', $res->getData());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
+     *
+     * @throws Exception
+     */
+    public function testProcessActionDataException(): void
+    {
+        $appInstall = new ApplicationInstall();
+        $appInstall
+            ->setSettings([ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']])
+            ->setKey($this->app->getKey())
+            ->setUser('user');
+
+        $this->dm->persist($appInstall);
+        $this->dm->flush();
+        $this->dm->clear();
+
+        $dto = new ProcessDto();
         $dto->setHeaders(
             [
                 PipesHeaders::createKey(PipesHeaders::USER)        => 'user',
@@ -76,8 +110,11 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
             ]
         );
 
-        $res = $this->createConnector($this->createResponseDto())->setApplication($this->app)->processAction($dto);
-        self::assertEquals('', $res->getData());
+        self::expectException(ConnectorException::class);
+        $this
+            ->createConnector($this->createResponseDto(), new CurlException())
+            ->setApplication($this->app)
+            ->processAction($dto);
     }
 
     /**
@@ -98,12 +135,16 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $dto = new ProcessDto();
-        $dto->setHeaders(
-            [
-                PipesHeaders::createKey(PipesHeaders::USER)        => 'user',
-                PipesHeaders::createKey(PipesHeaders::APPLICATION) => $this->app->getKey(),
-            ]
-        );
+        $dto
+            ->setData(
+                Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            )
+            ->setHeaders(
+                [
+                    PipesHeaders::createKey(PipesHeaders::USER)        => 'user',
+                    PipesHeaders::createKey(PipesHeaders::APPLICATION) => $this->app->getKey(),
+                ]
+            );
 
         self::expectException(ConnectorException::class);
         $this

@@ -1,47 +1,50 @@
 <?php declare(strict_types=1);
 
-namespace Pipes\PhpSdk\Tests\Integration\Connector\SendGrid;
+namespace Pipes\PhpSdk\Tests\Integration\Connector\HubSpot;
 
 use Exception;
+use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
-use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\String\Json;
-use Pipes\PhpSdk\Application\SendGridApplication;
-use Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector;
+use Pipes\PhpSdk\Application\HubSpotApplication;
+use Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
 
 /**
- * Class SendGridSendEmailConnectorTest
+ * Class HubSpotCreateContactConnectorTest
  *
- * @package Pipes\PhpSdk\Tests\Integration\Connector\SendGrid
+ * @package Pipes\PhpSdk\Tests\Integration\Connector\HubSpot
  */
-final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
+final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @var SendGridApplication
+     * @var HubSpotApplication
      */
-    private SendGridApplication $app;
+    private HubSpotApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::getId
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::__construct
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::getId
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::__construct
      *
      * @throws Exception
      */
     public function testGetId(): void
     {
-        self::assertEquals('send-grid.send-email', $this->createConnector(DataProvider::createResponseDto())->getId());
+        self::assertEquals(
+            'hub-spot.create-contact',
+            $this->createConnector(DataProvider::createResponseDto())->getId()
+        );
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processEvent
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::processEvent
      *
      * @throws Exception
      */
@@ -53,7 +56,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::processAction
      *
      * @throws Exception
      */
@@ -65,7 +68,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
         );
 
         $res = $this->createConnector(DataProvider::createResponseDto())
@@ -75,29 +78,24 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::processAction
      *
      * @throws Exception
      */
-    public function testProcessActionDataException(): void
+    public function testProcessActionDataError(): void
     {
         $this->pfd($this->createApplicationInstall());
         $this->dm->clear();
 
-        $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
-            'user'
-        );
-
+        $dto = DataProvider::getProcessDto($this->app->getKey());
         self::expectException(ConnectorException::class);
-        $this
-            ->createConnector(DataProvider::createResponseDto(), new CurlException())
+        $this->createConnector(DataProvider::createResponseDto())
             ->setApplication($this->app)
             ->processAction($dto);
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::processAction
      *
      * @throws Exception
      */
@@ -109,29 +107,14 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
         );
 
-        self::expectException(ConnectorException::class);
+        self::expectException(OnRepeatException::class);
         $this
             ->createConnector(DataProvider::createResponseDto(), new CurlException())
             ->setApplication($this->app)
             ->processAction($dto);
-    }
-
-    /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
-     *
-     * @throws Exception
-     */
-    public function testProcessActionException(): void
-    {
-        self::expectException(ApplicationInstallException::class);
-        self::expectExceptionCode(ApplicationInstallException::APP_WAS_NOT_FOUND);
-        $this
-            ->createConnector(DataProvider::createResponseDto())
-            ->setApplication($this->app)
-            ->processAction(DataProvider::getProcessDto());
     }
 
     /**
@@ -145,16 +128,16 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->app = new SendGridApplication();
+        $this->app = new HubSpotApplication(self::$container->get('hbpf.providers.oauth2_provider'));
     }
 
     /**
      * @param ResponseDto    $dto
      * @param Exception|null $exception
      *
-     * @return SendGridSendEmailConnector
+     * @return HubSpotCreateContactConnector
      */
-    private function createConnector(ResponseDto $dto, ?Exception $exception = NULL): SendGridSendEmailConnector
+    private function createConnector(ResponseDto $dto, ?Exception $exception = NULL): HubSpotCreateContactConnector
     {
         $sender = self::createMock(CurlManager::class);
 
@@ -164,7 +147,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
             $sender->method('send')->willReturn($dto);
         }
 
-        return new SendGridSendEmailConnector($this->dm, $sender);
+        return new HubSpotCreateContactConnector($this->dm, $sender);
     }
 
     /**
@@ -173,9 +156,13 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
      */
     private function createApplicationInstall(): ApplicationInstall
     {
-        $appInstall = DataProvider::getBasicAppInstall($this->app->getKey());
-        $appInstall
-            ->setSettings([ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]);
+        $appInstall = DataProvider::getOauth2AppInstall($this->app->getKey());
+        $appInstall->setSettings(
+            array_merge(
+                $appInstall->getSettings(),
+                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],]
+            )
+        );
 
         return $appInstall;
     }

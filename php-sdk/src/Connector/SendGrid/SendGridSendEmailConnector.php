@@ -61,19 +61,12 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
      *
      * @return ProcessDto
      * @throws ConnectorException
+     * @throws ApplicationInstallException
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        try {
-            $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
-        } catch (ApplicationInstallException $e) {
-            throw new ConnectorException(
-                'ApplicationInstall is not set.',
-                ConnectorException::CONNECTOR_FAILED_TO_PROCESS
-            );
-        }
-
-        $data = Json::decode($dto->getData());
+        $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
+        $data               = $this->getJsonContent($dto);
         if (!isset($data['email'], $data['name'], $data['subject'])) {
             throw new ConnectorException('Some data is missing. Keys [email, name, subject] is required.');
         }

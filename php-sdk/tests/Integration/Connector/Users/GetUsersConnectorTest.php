@@ -4,12 +4,12 @@ namespace Pipes\PhpSdk\Tests\Integration\Connector\Users;
 
 use Exception;
 use Hanaboso\CommonsBundle\Exception\OnRepeatException;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Pipes\PhpSdk\Connector\Users\GetUsersConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
+use Pipes\PhpSdk\Tests\DataProvider;
 
 /**
  * Class GetUsersConnectorTest
@@ -27,7 +27,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testGetId(): void
     {
-        self::assertEquals('get-users', $this->createConnector($this->createResponseDto())->getId());
+        self::assertEquals('get-users', $this->createConnector(DataProvider::createResponseDto())->getId());
     }
 
     /**
@@ -39,7 +39,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
     {
         self::expectException(ConnectorException::class);
         self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->createConnector($this->createResponseDto())->processEvent(new ProcessDto());
+        $this->createConnector(DataProvider::createResponseDto())->processEvent(DataProvider::getProcessDto());
     }
 
     /**
@@ -50,8 +50,8 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
     public function testProcessAction(): void
     {
         $content  = (string) file_get_contents(__DIR__ . '/data/users.json');
-        $response = $this->createResponseDto($content);
-        $res      = $this->createConnector($response)->processAction(new ProcessDto());
+        $response = DataProvider::createResponseDto($content);
+        $res      = $this->createConnector($response)->processAction(DataProvider::getProcessDto());
 
         self::assertEquals($content, $res->getData());
     }
@@ -63,10 +63,10 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessActionRepeater(): void
     {
-        $response = $this->createResponseDto('', 500);
+        $response = DataProvider::createResponseDto('', 500);
 
         self::expectException(OnRepeatException::class);
-        $this->createConnector($response)->processAction(new ProcessDto());
+        $this->createConnector($response)->processAction(DataProvider::getProcessDto());
     }
 
 
@@ -91,17 +91,6 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
         }
 
         return new GetUsersConnector($sender);
-    }
-
-    /**
-     * @param string $body
-     * @param int    $code
-     *
-     * @return ResponseDto
-     */
-    private function createResponseDto(string $body = '', int $code = 200): ResponseDto
-    {
-        return new ResponseDto($code, '', $body, []);
     }
 
 }

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.139.0",
+            "version": "3.139.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0d8ccd70c76e22f04ec16bff07b7e002dd594c82"
+                "reference": "31fc7fc73d550e237b34f7c6802250fd4ade9a01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0d8ccd70c76e22f04ec16bff07b7e002dd594c82",
-                "reference": "0d8ccd70c76e22f04ec16bff07b7e002dd594c82",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/31fc7fc73d550e237b34f7c6802250fd4ade9a01",
+                "reference": "31fc7fc73d550e237b34f7c6802250fd4ade9a01",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-06-01T18:11:54+00:00"
+            "time": "2020-06-02T18:12:38+00:00"
         },
         {
             "name": "aws/aws-sdk-php-symfony",
@@ -1434,11 +1434,11 @@
         },
         {
             "name": "hanaboso/app-store",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.hanaboso.net:pipes/app-store.git",
-                "reference": "876c9dcd6fefef5b0990fd3cde71cf128f5d8480"
+                "reference": "3bb9deeef063dc3df2bfec074cffe06ceab1d908"
             },
             "require": {
                 "hanaboso/pipes-php-sdk": "^1.3",
@@ -1463,7 +1463,7 @@
                 "proprietary"
             ],
             "description": "App store for PipesFramework",
-            "time": "2020-05-29T14:36:50+00:00"
+            "time": "2020-06-01T12:37:46+00:00"
         },
         {
             "name": "hanaboso/commons-bundle",
@@ -1557,11 +1557,11 @@
         },
         {
             "name": "hanaboso/pipes-php-sdk",
-            "version": "1.3.1",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.hanaboso.net:pipes/pipes-php-sdk.git",
-                "reference": "44ebcdb0e579e21fa95ff25516e4eca345ed9666"
+                "reference": "a19e97d89c9d240bd2152526b3a96219da4fb98e"
             },
             "require": {
                 "ext-json": "*",
@@ -1572,13 +1572,13 @@
                 "hanaboso/rabbit-mq-bundle": "^1.3",
                 "league/oauth2-client": "^2.4",
                 "php": "^7.4",
-                "phpoffice/phpspreadsheet": "^1.12",
-                "symfony/debug-bundle": "^5.0",
-                "symfony/mailer": "^5.0",
+                "phpoffice/phpspreadsheet": "^1.13",
+                "symfony/debug-bundle": "^5.1",
+                "symfony/mailer": "^5.1",
                 "symfony/monolog-bundle": "^3.5",
-                "symfony/security-bundle": "^5.0",
-                "symfony/serializer": "^5.0",
-                "symfony/yaml": "^5.0"
+                "symfony/security-bundle": "^5.1",
+                "symfony/serializer": "^5.1",
+                "symfony/yaml": "^5.1"
             },
             "require-dev": {
                 "hanaboso/php-check-utils": "^1.1",
@@ -1599,7 +1599,7 @@
                 "proprietary"
             ],
             "description": "PHP sdk for PipesFramework",
-            "time": "2020-05-29T14:36:50+00:00"
+            "time": "2020-06-03T14:37:17+00:00"
         },
         {
             "name": "hanaboso/rabbit-mq-bundle",
@@ -7456,16 +7456,16 @@
         },
         {
             "name": "hanaboso/php-check-utils",
-            "version": "1.1.26",
+            "version": "1.1.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hanaboso/php-check-utils.git",
-                "reference": "6a457658004ce506078377c9683197df2aa0820a"
+                "reference": "77e86d3a0a0a697eed9977cb0ce4bea80112b1fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/php-check-utils/zipball/6a457658004ce506078377c9683197df2aa0820a",
-                "reference": "6a457658004ce506078377c9683197df2aa0820a",
+                "url": "https://api.github.com/repos/hanaboso/php-check-utils/zipball/77e86d3a0a0a697eed9977cb0ce4bea80112b1fb",
+                "reference": "77e86d3a0a0a697eed9977cb0ce4bea80112b1fb",
                 "shasum": ""
             },
             "require": {
@@ -7522,7 +7522,7 @@
                 }
             ],
             "description": "Utils for php development - CodeSniffer, PhpStan, PhpStorm",
-            "time": "2020-06-02T07:54:42+00:00"
+            "time": "2020-06-03T17:00:04+00:00"
         },
         {
             "name": "myclabs/deep-copy",

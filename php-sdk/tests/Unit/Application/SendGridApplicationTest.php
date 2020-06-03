@@ -6,10 +6,10 @@ use Exception;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
-use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\SendGridApplication;
+use Pipes\PhpSdk\Tests\DataProvider;
 use Pipes\PhpSdk\Tests\KernelTestCaseAbstract;
 
 /**
@@ -72,7 +72,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
      */
     public function testIsAuthorized(): void
     {
-        $appInstall = new ApplicationInstall();
+        $appInstall = DataProvider::createApplicationInstall($this->app->getKey());
         self::assertFalse($this->app->isAuthorized($appInstall));
 
         $appInstall->setSettings(
@@ -89,8 +89,9 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
      */
     public function testGetRequestDto(): void
     {
-        $appInstall = new ApplicationInstall();
-        $appInstall->setSettings(
+        $appInstall = DataProvider::createApplicationInstall(
+            $this->app->getKey(),
+            'user',
             [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]
         );
 
@@ -99,7 +100,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         self::assertEquals(SendGridApplication::BASE_URL, $dto->getUri(TRUE));
         self::assertEquals(Json::encode(['foo' => 'bar']), $dto->getBody());
 
-        $appInstall = new ApplicationInstall();
+        $appInstall = DataProvider::createApplicationInstall($this->app->getKey());
         self::expectException(ApplicationInstallException::class);
         $this->app->getRequestDto($appInstall, CurlManager::METHOD_GET);
     }

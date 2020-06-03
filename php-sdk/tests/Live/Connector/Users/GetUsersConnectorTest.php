@@ -3,10 +3,10 @@
 namespace Pipes\PhpSdk\Tests\Live\Connector\Users;
 
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Connector\Users\GetUsersConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
+use Pipes\PhpSdk\Tests\DataProvider;
 
 /**
  * Class GetUsersConnectorTest
@@ -19,6 +19,8 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
     /**
      * @covers \Pipes\PhpSdk\Connector\Users\GetUsersConnector::processAction
      *
+     * @group  live
+     *
      * @throws Exception
      */
     public function testProcessAction(): void
@@ -26,7 +28,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
         $curl      = self::$container->get('hbpf.transport.curl_manager');
         $connector = new GetUsersConnector($curl);
 
-        $resp = $connector->processAction(new ProcessDto());
+        $resp = $connector->processAction(DataProvider::getProcessDto());
         self::assertNotEmpty($resp->getData());
         $data = Json::decode($resp->getData());
         self::assertCount(10, $data);

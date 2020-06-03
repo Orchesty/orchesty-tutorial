@@ -56,10 +56,10 @@ phplive:
 	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Live
 
 phpcoverage:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --coverage-html var/coverage --whitelist /var/www/src tests
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --coverage-html var/coverage --whitelist /var/www/src --exclude-group live tests
 
 phpcoverage-ci:
-	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh
+	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -e live
 
 fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcoverage-ci
 

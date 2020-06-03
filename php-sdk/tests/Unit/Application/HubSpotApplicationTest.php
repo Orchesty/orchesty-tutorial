@@ -5,14 +5,12 @@ namespace Pipes\PhpSdk\Tests\Unit\Application;
 use Exception;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
-use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
-use Hanaboso\HbPFAppStore\Model\Webhook\WebhookSubscription;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\HubSpotApplication;
+use Pipes\PhpSdk\Tests\DataProvider;
 use Pipes\PhpSdk\Tests\KernelTestCaseAbstract;
 
 /**
@@ -117,7 +115,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     public function testGetSettingsForm(): void
     {
         $form = $this->app->getSettingsForm();
-        self::assertCount(5, $form->getFields());
+        self::assertCount(3, $form->getFields());
     }
 
     /**
@@ -137,7 +135,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
      */
     public function testGetWebhookSubscribeRequestDto(): void
     {
-        $subs = new WebhookSubscription('wh', 'sp', '', ['name' => 'contact.creation']);
+        $subs = DataProvider::createWebhookSubscription('wh', ['name' => 'contact.creation']);
         $dto  = $this->app->getWebhookSubscribeRequestDto($this->createApplicationInstall(), $subs, '');
         self::assertEquals('https://api.hubapi.com/webhooks/v1/app_id/subscriptions', $dto->getUriString());
         self::assertEquals(CurlManager::METHOD_POST, $dto->getMethod());
@@ -162,8 +160,10 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
      */
     public function testProcessWebhookSubscribeResponse(): void
     {
-        $dto = new ResponseDto(200, '', Json::encode(['id' => 'wh_id']), []);
-        $res = $this->app->processWebhookSubscribeResponse($dto, new ApplicationInstall());
+        $res = $this->app->processWebhookSubscribeResponse(
+            DataProvider::createResponseDto(Json::encode(['id' => 'wh_id']), 200),
+            $this->createApplicationInstall()
+        );
 
         self::assertEquals('wh_id', $res);
     }
@@ -175,11 +175,8 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
      */
     public function testProcessWebhookUnsubscribeResponse(): void
     {
-        $dto = new ResponseDto(204, '', '', []);
-        self::assertTrue($this->app->processWebhookUnsubscribeResponse($dto));
-
-        $dto = new ResponseDto(400, '', '', []);
-        self::assertFalse($this->app->processWebhookUnsubscribeResponse($dto));
+        self::assertTrue($this->app->processWebhookUnsubscribeResponse(DataProvider::createResponseDto('', 204)));
+        self::assertFalse($this->app->processWebhookUnsubscribeResponse(DataProvider::createResponseDto('', 400)));
     }
 
     /**
@@ -208,28 +205,23 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
         parent::setUp();
 
         $provider = self::createMock(OAuth2Provider::class);
-        $provider->method('authorize')->willReturnCallback(
-            static function (): void {
-            }
-        );
+        $provider->method('authorize')->willReturnCallback(static fn(): string => 'redirect/url');
         $this->app = new HubSpotApplication($provider);
     }
 
     /**
      * @return ApplicationInstall
+     * @throws Exception
      */
     private function createApplicationInstall(): ApplicationInstall
     {
-        $appInstall = new ApplicationInstall();
-        $appInstall
-            ->setUser('usr')
-            ->setKey($this->app->getKey())
-            ->setSettings(
-                [
-                    ApplicationInterface::AUTHORIZATION_SETTINGS => [ApplicationInterface::TOKEN => [OAuth2Provider::ACCESS_TOKEN => 'tkn']],
-                    ApplicationAbstract::FORM                    => [HubSpotApplication::APP_ID => 'app_id'],
-                ]
-            );
+        $appInstall = DataProvider::getOauth2AppInstall($this->app->getKey());
+        $appInstall->setSettings(
+            array_merge(
+                $appInstall->getSettings(),
+                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],]
+            )
+        );
 
         return $appInstall;
     }

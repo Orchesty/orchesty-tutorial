@@ -141,15 +141,4 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
         };
     }
 
-    /**
-     * @param mixed[]|string $data
-     * @param mixed[]        $headers
-     *
-     * @return ProcessDto
-     */
-    protected function prepareProcessDto($data = [], $headers = []): ProcessDto
-    {
-        return (new ProcessDto())->setData(is_array($data) ? Json::encode($data) : $data)->setHeaders($headers);
-    }
-
 }

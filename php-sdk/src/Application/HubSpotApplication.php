@@ -32,8 +32,6 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     public const    HUBSPOT_URL = 'https://app.hubspot.com/oauth/authorize';
     public const    TOKEN_URL   = 'https://api.hubapi.com/oauth/v1/token';
     public const    APP_ID      = 'app_id';
-    public const    HAPI_KEY    = 'hapi_key';
-    public const    USER_ID     = 'user_id';
 
     protected const SCOPE_SEPARATOR = ScopeFormatter::SPACE;
 
@@ -129,9 +127,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         $form
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_ID, 'Client Id', NULL, TRUE))
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', TRUE))
-            ->addField(new Field(Field::TEXT, self::APP_ID, 'Application Id', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::HAPI_KEY, 'Hapi Key', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::USER_ID, 'User Id', NULL, TRUE));
+            ->addField(new Field(Field::TEXT, self::APP_ID, 'Application Id', NULL, TRUE));
 
         return $form;
     }

@@ -151,7 +151,7 @@ services:
         environment:
             BACKEND_URL: ${BACKEND_URL}
             FRONTEND_URL: ${FRONTEND_URL}
-            STARTING_POINT_URL: http://starting-point:8080
+            STARTING_POINT_URL: http://${DEV_IP}:82
         ports:
             - ${DEV_IP}:80:80
 

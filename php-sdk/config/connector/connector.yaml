@@ -16,3 +16,9 @@ services:
         arguments:
             - '@doctrine_mongodb.odm.default_document_manager'
             - '@hbpf.transport.curl_manager'
+
+    hbpf.connector.hub-spot.create-contact:
+        class: Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector
+        arguments:
+            - '@doctrine_mongodb.odm.default_document_manager'
+            - '@hbpf.transport.curl_manager'

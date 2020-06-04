@@ -82,23 +82,6 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
      *
      * @throws Exception
      */
-    public function testProcessActionDataError(): void
-    {
-        $this->pfd($this->createApplicationInstall());
-        $this->dm->clear();
-
-        $dto = DataProvider::getProcessDto($this->app->getKey());
-        self::expectException(ConnectorException::class);
-        $this->createConnector(DataProvider::createResponseDto())
-            ->setApplication($this->app)
-            ->processAction($dto);
-    }
-
-    /**
-     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::processAction
-     *
-     * @throws Exception
-     */
     public function testProcessActionRequestException(): void
     {
         $this->pfd($this->createApplicationInstall());

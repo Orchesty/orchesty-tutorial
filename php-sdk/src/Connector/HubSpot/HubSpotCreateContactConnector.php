@@ -64,37 +64,11 @@ final class HubSpotCreateContactConnector extends ConnectorAbstract
      * @throws ApplicationInstallException
      * @throws PipesFrameworkException
      * @throws OnRepeatException
-     * @throws ConnectorException
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
         $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
-        $data               = $this->getJsonContent($dto);
-        if (!isset($data['name'], $data['email'], $data['phone'])) {
-            throw new ConnectorException('Some data is missing. Keys [name, email, phone] is required.');
-        }
-
-        $name = explode(' ', $data['name']);
-        $body = [
-            'properties' => [
-                [
-                    'property' => 'email',
-                    'value'    => $data['email'],
-                ],
-                [
-                    'property' => 'firstname',
-                    'value'    => $name[0],
-                ],
-                [
-                    'property' => 'lastname',
-                    'value'    => $name[1] ?? '',
-                ],
-                [
-                    'property' => 'phone',
-                    'value'    => $data['phone'],
-                ],
-            ],
-        ];
+        $body               = $this->getJsonContent($dto);
 
         try {
             $response = $this->sender->send(

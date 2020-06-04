@@ -3,7 +3,6 @@
 namespace Pipes\PhpSdk\Application;
 
 use GuzzleHttp\Psr7\Uri;
-use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
@@ -23,14 +22,6 @@ final class SendGridApplication extends BasicApplicationAbstract
 
     public const BASE_URL = 'https://api.sendgrid.com/v3';
     public const API_KEY  = 'api_key';
-
-    /**
-     * @return string
-     */
-    public function getApplicationType(): string
-    {
-        return ApplicationTypeEnum::CRON;
-    }
 
     /**
      * @return string

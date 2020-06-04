@@ -1,0 +1,9 @@
+# ./config/custom_node/custom_node.yaml
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: '%public.services%'
+
+    hbpf.custom_node.hub-spot.create-contact-mapper:
+        class: Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper

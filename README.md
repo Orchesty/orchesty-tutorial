@@ -10,6 +10,12 @@
 ## How to create user
 - Run `docker-compose exec backend bin/pipes u:c`
 
+## How to enable your PHP services
+1. Go to [UI SDK Implementation](http://127.0.0.10/ui/sdk_implementations)
+1. Add `php-sdk` as new SDK 
+
 ## MAC developers
-1. Before `init-dev` is need to add  alis on lo interface `sudo ifconfig lo0 alias 127.0.0.10 up`.
-2. For remove run `sudo ifconfig lo0 127.0.0.10 delete`.
+1. Before `init-dev` is need to run `make .env`.
+1. After that is need to edit .env file. Change `DEV_UID` and `DEV_GID` to `1001`.
+1. Add alis on lo interface `sudo ifconfig lo0 alias 127.0.0.10 up`.
+1. For remove run `sudo ifconfig lo0 127.0.0.10 delete`.

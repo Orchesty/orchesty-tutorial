@@ -3,7 +3,6 @@
 namespace Pipes\PhpSdk\Tests\Unit\Application;
 
 use Exception;
-use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
@@ -24,16 +23,6 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
      * @var SendGridApplication
      */
     private SendGridApplication $app;
-
-    /**
-     * @covers \Pipes\PhpSdk\Application\SendGridApplication::getApplicationType
-     *
-     * @throws Exception
-     */
-    public function testGetApplicationType(): void
-    {
-        self::assertEquals(ApplicationTypeEnum::CRON, $this->app->getApplicationType());
-    }
 
     /**
      * @covers \Pipes\PhpSdk\Application\SendGridApplication::getKey

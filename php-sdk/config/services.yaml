@@ -8,6 +8,7 @@ parameters:
 
     node_services_dirs:
         - '%kernel.project_dir%/config'
+        - '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/HbPFLongRunningNodeBundle/Resources'
 
     applications:
         - '%kernel.project_dir%/config'

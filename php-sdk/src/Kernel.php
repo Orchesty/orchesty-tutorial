@@ -50,6 +50,7 @@ final class Kernel extends BaseKernel
         $confDir = $this->getConfigDir();
         $loader->load(sprintf('%s/*%s', $confDir, self::CONFIG_EXT), 'glob');
         $loader->load(sprintf('%s/{application}/*%s', $confDir, self::CONFIG_EXT), 'glob');
+        $loader->load(sprintf('%s/{batch}/*%s', $confDir, self::CONFIG_EXT), 'glob');
         $loader->load(sprintf('%s/{connector}/*%s', $confDir, self::CONFIG_EXT), 'glob');
         $loader->load(sprintf('%s/{custom_node}/*%s', $confDir, self::CONFIG_EXT), 'glob');
         $loader->load(sprintf('%s/{packages}/*%s', $confDir, self::CONFIG_EXT), 'glob');

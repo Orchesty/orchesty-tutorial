@@ -19,11 +19,12 @@
         "ext-mongodb": "*",
         "ext-mbstring": "*",
         "ext-simplexml": "*",
-        "mongodb/mongodb": "~1.5.2",
         "hanaboso/app-store": "^1.4",
+        "hanaboso/pipes-connectors": "^1.4",
         "hanaboso/pipes-php-sdk": "^1.3",
         "hanaboso/rabbit-mq-bundle": "^1.3",
-        "hanaboso/rest-bundle": "^1.0"
+        "hanaboso/rest-bundle": "^1.0",
+        "mongodb/mongodb": "~1.5.2"
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.1"

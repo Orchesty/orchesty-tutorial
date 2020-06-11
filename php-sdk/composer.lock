@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b546ec5d5b33588d5907f4f803f29bd3",
+    "content-hash": "6fd9e12867fdab4afd27a15e61c9a507",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.140.3",
+            "version": "3.141.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "aebd17510b6220b6e5b239730b02eaf7b9b2b816"
+                "reference": "d57dbde176a7db7a6131bb5d325aff63515eabc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/aebd17510b6220b6e5b239730b02eaf7b9b2b816",
-                "reference": "aebd17510b6220b6e5b239730b02eaf7b9b2b816",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d57dbde176a7db7a6131bb5d325aff63515eabc3",
+                "reference": "d57dbde176a7db7a6131bb5d325aff63515eabc3",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-06-08T18:19:35+00:00"
+            "time": "2020-06-10T18:11:38+00:00"
         },
         {
             "name": "aws/aws-sdk-php-symfony",
@@ -1558,17 +1558,57 @@
             "time": "2019-12-06T12:19:16+00:00"
         },
         {
-            "name": "hanaboso/pipes-php-sdk",
-            "version": "1.3.6",
+            "name": "hanaboso/pipes-connectors",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/hanaboso/pipes-php-sdk.git",
-                "reference": "631fd0b2724cfab6fb1e86941e60ce4f7c019416"
+                "url": "https://github.com/hanaboso/pipes-php-connectors.git",
+                "reference": "0da8246f1f91e3cc6a999d64fd1e24186a63cb6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/pipes-php-sdk/zipball/631fd0b2724cfab6fb1e86941e60ce4f7c019416",
-                "reference": "631fd0b2724cfab6fb1e86941e60ce4f7c019416",
+                "url": "https://api.github.com/repos/hanaboso/pipes-php-connectors/zipball/0da8246f1f91e3cc6a999d64fd1e24186a63cb6c",
+                "reference": "0da8246f1f91e3cc6a999d64fd1e24186a63cb6c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-intl": "*",
+                "ext-mbstring": "*",
+                "ext-pgsql": "*",
+                "hanaboso/app-store": "^1.4",
+                "hanaboso/pipes-php-sdk": "^1.3",
+                "hanaboso/rabbit-mq-bundle": "^1.3",
+                "php": "^7.4"
+            },
+            "require-dev": {
+                "hanaboso/php-check-utils": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hanaboso\\HbPFConnectors\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "description": "Connectors for PipesFramework",
+            "time": "2020-06-09T15:21:16+00:00"
+        },
+        {
+            "name": "hanaboso/pipes-php-sdk",
+            "version": "1.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hanaboso/pipes-php-sdk.git",
+                "reference": "6673a7468c45784212585ba4c6019a8fad401d33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hanaboso/pipes-php-sdk/zipball/6673a7468c45784212585ba4c6019a8fad401d33",
+                "reference": "6673a7468c45784212585ba4c6019a8fad401d33",
                 "shasum": ""
             },
             "require": {
@@ -1603,7 +1643,7 @@
                 "proprietary"
             ],
             "description": "PHP sdk for PipesFramework",
-            "time": "2020-06-09T15:17:24+00:00"
+            "time": "2020-06-11T12:22:12+00:00"
         },
         {
             "name": "hanaboso/rabbit-mq-bundle",
@@ -8700,16 +8740,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.27",
+            "version": "0.12.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "2abbd3253e38a258137f647f4e5fdbcb13142c3e"
+                "reference": "76c0c4ec90b1eed66fa4855b8b4b53fa9054353f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2abbd3253e38a258137f647f4e5fdbcb13142c3e",
-                "reference": "2abbd3253e38a258137f647f4e5fdbcb13142c3e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/76c0c4ec90b1eed66fa4855b8b4b53fa9054353f",
+                "reference": "76c0c4ec90b1eed66fa4855b8b4b53fa9054353f",
                 "shasum": ""
             },
             "require": {
@@ -8738,20 +8778,20 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-06-08T21:28:12+00:00"
+            "time": "2020-06-10T06:20:14+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "0.12.14",
+            "version": "0.12.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "b43fe3e682022eb9436a914657cf0c7b58ddf768"
+                "reference": "7484f81e938a291052668eacc9ac46a1ae4e0763"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/b43fe3e682022eb9436a914657cf0c7b58ddf768",
-                "reference": "b43fe3e682022eb9436a914657cf0c7b58ddf768",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/7484f81e938a291052668eacc9ac46a1ae4e0763",
+                "reference": "7484f81e938a291052668eacc9ac46a1ae4e0763",
                 "shasum": ""
             },
             "require": {
@@ -8769,9 +8809,10 @@
                 "consistence/coding-standard": "^3.0.1",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
                 "doctrine/collections": "^1.0",
-                "doctrine/common": "^2.7",
-                "doctrine/mongodb-odm": "^1.2",
+                "doctrine/common": "^2.7 || ^3.0",
+                "doctrine/mongodb-odm": "^1.3 || ^2.1",
                 "doctrine/orm": "^2.5",
+                "doctrine/persistence": "^1.1 || ^2.0",
                 "ergebnis/composer-normalize": "^2.0.2",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "phing/phing": "^2.16.0",
@@ -8803,7 +8844,7 @@
                 "MIT"
             ],
             "description": "Doctrine extensions for PHPStan",
-            "time": "2020-06-01T13:11:40+00:00"
+            "time": "2020-06-11T14:46:08+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",

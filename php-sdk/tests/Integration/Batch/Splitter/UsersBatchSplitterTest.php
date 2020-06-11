@@ -1,0 +1,57 @@
+<?php declare(strict_types=1);
+
+namespace Pipes\PhpSdk\Tests\Integration\Batch\Splitter;
+
+use Exception;
+use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
+use Hanaboso\Utils\String\Json;
+use Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter;
+use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
+use Pipes\PhpSdk\Tests\DataProvider;
+use React\EventLoop\Factory;
+
+/**
+ * Class UsersBatchSplitterTest
+ *
+ * @package Pipes\PhpSdk\Tests\Integration\Batch\Splitter
+ */
+final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
+{
+
+    /**
+     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::getId
+     *
+     * @throws Exception
+     */
+    public function testGetId(): void
+    {
+        self::assertEquals('user-batch-splitter', (new UsersBatchSplitter())->getId());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::processBatch
+     *
+     * @throws Exception
+     */
+    public function testProcessBatch(): void
+    {
+        $batch = new UsersBatchSplitter();
+        $batch->processBatch(
+            DataProvider::getProcessDto('', '', (string) file_get_contents(__DIR__ . '/data/users.json')),
+            Factory::create(),
+            static function (SuccessMessage $message): void {
+                $data = Json::decode($message->getData());
+
+                self::assertArrayHasKey('id', $data);
+            }
+        )->then(
+            static function (): void {
+                self::assertTrue(TRUE);
+            },
+            static function (): void {
+                self::fail('Something gone wrong!');
+            }
+        );
+    }
+
+}

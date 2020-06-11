@@ -1,0 +1,9 @@
+# ./config/batch/batch.yaml
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: '%public.services%'
+
+    hbpf.connector.user-batch-splitter:
+        class: Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter

@@ -5,13 +5,16 @@ parameters:
     public.services: false
 
     backend_host: '%env(BACKEND_HOST)%'
+    starting_point_host: '%env(BACKEND_HOST)%'
 
     node_services_dirs:
         - '%kernel.project_dir%/config'
         - '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/HbPFLongRunningNodeBundle/Resources'
+        - '%kernel.project_dir%/vendor/hanaboso/pipes-connectors/src/Resources/config'
 
     applications:
         - '%kernel.project_dir%/config'
+        - '%kernel.project_dir%/vendor/hanaboso/pipes-connectors/src/Resources/config'
 
 services:
     _defaults:

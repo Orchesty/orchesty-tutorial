@@ -17,7 +17,7 @@ services:
             PHP_WEBROOT: /var/www/public
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
-            BACKEND_HOST: 127.0.0.10:8080
+            BACKEND_HOST: ${DEV_IP}:8080
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672
@@ -191,7 +191,7 @@ services:
             MAPPER_API_DSN: mapper-api
             MONOLITH_API_DSN: php-sdk
             MULTI_PROBE_DSN: multi-probe:8007
-            STARTING_POINT_DSN: starting-point:8080
+            STARTING_POINT_DSN: ${DEV_IP}:82
             TOPOLOGY_API_DSN: topology-api:8080
             XML_PARSER_API_DSN: xml-parser-api
             WORKER_DEFAULT_PORT: 8008

@@ -12,3 +12,8 @@ services:
         class: Pipes\PhpSdk\Application\HubSpotApplication
         arguments:
             - '@hbpf.providers.oauth2_provider'
+
+    hbpf.application.google-drive:
+        class: Pipes\PhpSdk\Application\GoogleDriveApplication
+        arguments:
+            - '@hbpf.providers.oauth2_provider'

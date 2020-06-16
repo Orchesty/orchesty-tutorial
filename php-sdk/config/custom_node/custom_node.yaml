@@ -5,5 +5,8 @@ services:
         autoconfigure: false
         public: '%public.services%'
 
+    hbpf.custom_node.hub-spot.create-multiple-contact-mapper:
+        class: Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateMultipleContactsMapper
+
     hbpf.custom_node.hub-spot.create-contact-mapper:
         class: Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper

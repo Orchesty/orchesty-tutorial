@@ -29,6 +29,16 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
     use ProcessEventNotSupportedTrait;
 
     /**
+     * @var string
+     */
+    protected string $fileName = 'my.txt';
+
+    /**
+     * @var string
+     */
+    protected string $folder = 'id';
+
+    /**
      * @var ApplicationInstallRepository
      */
     private ApplicationInstallRepository $repository;
@@ -69,15 +79,14 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
     public function processAction(ProcessDto $dto): ProcessDto
     {
         $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
-
-        $tmpFileName = sprintf('/tmp/%s', uniqid('file_', FALSE));
+        $tmpFileName        = sprintf('/tmp/%s', uniqid('file_', FALSE));
         file_put_contents($tmpFileName, $dto->getData());
 
         $multipart = [
             RequestOptions::MULTIPART => [
                 [
                     'name'     => 'metadata',
-                    'contents' => Json::encode(['name' => 'my.txt']),
+                    'contents' => Json::encode(['name' => $this->fileName, 'parents' => [$this->folder]]),
                     'headers'  => ['Content-Type' => 'application/json; charset=UTF-8'],
                 ],
                 [

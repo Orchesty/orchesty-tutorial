@@ -1,0 +1,32 @@
+{
+    "message": "Contact already exists",
+    "identityProfile": {
+        "vid": 1001,
+        "identity": [
+            {
+                "value": "sincere@april.biz",
+                "type": "EMAIL",
+                "timestamp": 1592489467113,
+                "isPrimary": true
+            },
+            {
+                "value": "de2534c0-0763-4646-8d56-ce05b09de582",
+                "type": "LEAD_GUID",
+                "timestamp": 1592489467156
+            }
+        ],
+        "linkedVid": [],
+        "isContact": true,
+        "savedAtTimestamp": 1592489467163
+    },
+    "errors": [
+        {
+            "message": "A contact with email sincere@april.biz already exists.",
+            "in": "email"
+        }
+    ],
+    "status": "error",
+    "correlationId": "8dfe3c5a-d55d-4a64-b3cd-bea6921d0595",
+    "category": "OBJECT_ALREADY_EXISTS",
+    "error": "CONTACT_EXISTS"
+}

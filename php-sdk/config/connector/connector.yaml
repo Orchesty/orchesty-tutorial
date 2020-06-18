@@ -29,6 +29,7 @@ services:
             - '@hbpf.transport.curl_manager'
         calls:
             - ['setApplication', ['@hbpf.application.hub-spot']]
+            - ['setLogger', ['@monolog.logger.commons']]
 
     hbpf.connector.hub-spot.create-contact:
         class: Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector
@@ -37,6 +38,7 @@ services:
             - '@hbpf.transport.curl_manager'
         calls:
             - ['setApplication', ['@hbpf.application.hub-spot']]
+            - ['setLogger', ['@monolog.logger.commons']]
 
     # Google Connectors
     hbpf.connector.google-drive.upload-file:

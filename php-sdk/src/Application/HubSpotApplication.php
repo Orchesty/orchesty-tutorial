@@ -126,7 +126,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         $form = new Form();
         $form
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_ID, 'Client Id', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', TRUE))
+            ->addField(new Field(Field::PASSWORD, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', TRUE))
             ->addField(new Field(Field::TEXT, self::APP_ID, 'Application Id', NULL, TRUE));
 
         return $form;

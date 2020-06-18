@@ -15,6 +15,7 @@ use Pipes\PhpSdk\Application\HubSpotApplication;
 use Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
+use Psr\Log\NullLogger;
 
 /**
  * Class HubSpotCreateMultipleContactsConnectorTest
@@ -41,6 +42,17 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
             'hub-spot.create-multiple-contacts',
             $this->createConnector(DataProvider::createResponseDto())->getId()
         );
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::setLogger
+     *
+     * @throws Exception
+     */
+    public function testSetLogger(): void
+    {
+        $this->createConnector(DataProvider::createResponseDto())->setLogger(new NullLogger());
+        self::assertFake();
     }
 
     /**
@@ -75,6 +87,31 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
             ->setApplication($this->app)
             ->processAction($dto);
         self::assertEquals('{}', $res->getData());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::processAction
+     *
+     * @throws Exception
+     */
+    public function testProcessActionDuplicitData(): void
+    {
+        $this->pfd($this->createApplicationInstall());
+        $this->dm->clear();
+
+        $dto = DataProvider::getProcessDto(
+            $this->app->getKey(),
+            'user',
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+        );
+
+        $ex  = (string) file_get_contents(__DIR__ . '/data/hubspot409Response.json');
+        $res = $this->createConnector(
+            DataProvider::createResponseDto($ex, 409)
+        )
+            ->setApplication($this->app)
+            ->processAction($dto);
+        self::assertEquals($ex, $res->getData());
     }
 
     /**

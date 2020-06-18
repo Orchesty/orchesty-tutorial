@@ -54,10 +54,11 @@ final class GetUsersConnector extends ConnectorAbstract
     public function processAction(ProcessDto $dto): ProcessDto
     {
         try {
-            $request  = new RequestDto(
+            $request = new RequestDto(
                 CurlManager::METHOD_GET,
                 new Uri('https://jsonplaceholder.typicode.com/users')
             );
+            $request->setDebugInfo($dto);
             $response = $this->sender->send($request);
 
             // If status code from response is 500 it will throw an exception to start the Repeater

@@ -98,11 +98,13 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
         ];
 
         try {
-            $request = $this->getApplication()->getRequestDto(
-                $applicationInstall,
-                CurlManager::METHOD_POST,
-                sprintf('%s/upload/drive/v3/files?uploadType=multipart', GoogleDriveApplication::BASE_URL)
-            );
+            $request = $this->getApplication()
+                ->getRequestDto(
+                    $applicationInstall,
+                    CurlManager::METHOD_POST,
+                    sprintf('%s/upload/drive/v3/files?uploadType=multipart', GoogleDriveApplication::BASE_URL)
+                )
+                ->setDebugInfo($dto);
 
             $response = $this->sender->send($request, $multipart);
 

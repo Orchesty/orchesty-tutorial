@@ -191,7 +191,7 @@ services:
             MAPPER_API_DSN: mapper-api
             MONOLITH_API_DSN: php-sdk
             MULTI_PROBE_DSN: multi-probe:8007
-            STARTING_POINT_DSN: ${DEV_IP}:82
+            STARTING_POINT_DSN: starting-point:8080
             TOPOLOGY_API_DSN: topology-api:8080
             XML_PARSER_API_DSN: xml-parser-api
             WORKER_DEFAULT_PORT: 8008

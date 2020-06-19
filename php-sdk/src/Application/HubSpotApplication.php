@@ -138,8 +138,8 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     public function getWebhookSubscriptions(): array
     {
         return [
-            new WebhookSubscription('Create Contact', 'starting-point', '', ['name' => 'contact.creation']),
-            new WebhookSubscription('Delete Contact', 'starting-point', '', ['name' => 'contact.deletion']),
+            new WebhookSubscription('Create Contact', 'Webhook', '', ['name' => 'contact.creation']),
+            new WebhookSubscription('Delete Contact', 'Webhook', '', ['name' => 'contact.deletion']),
         ];
     }
 
@@ -158,13 +158,14 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         string $url
     ): RequestDto
     {
-        $url  = sprintf(
+        $hubspotUrl = sprintf(
             '%s/webhooks/v1/%s/subscriptions',
             self::BASE_URL,
             $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID]
         );
-        $body = Json::encode(
+        $body       = Json::encode(
             [
+                'webhookUrl'          => $url,
                 'subscriptionDetails' => [
                     'subscriptionType' => $subscription->getParameters()['name'],
                     'propertyName'     => 'email',
@@ -173,7 +174,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             ]
         );
 
-        return $this->getRequestDto($applicationInstall, CurlManager::METHOD_POST, $url, $body);
+        return $this->getRequestDto($applicationInstall, CurlManager::METHOD_POST, $hubspotUrl, $body);
     }
 
     /**
@@ -207,7 +208,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     {
         $install;
 
-        return (string) Json::decode($dto->getBody())['id'];
+        return $dto->getJsonBody()['id'] ?? '';
     }
 
     /**
@@ -217,8 +218,6 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      */
     public function processWebhookUnsubscribeResponse(ResponseDto $dto): bool
     {
-        $dto;
-
         return $dto->getStatusCode() === 204;
     }
 

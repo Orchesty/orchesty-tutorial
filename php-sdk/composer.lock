@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fd9e12867fdab4afd27a15e61c9a507",
+    "content-hash": "236e1d0c017493d0f52dcf887df85fe0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.142.4",
+            "version": "3.142.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1d55df0b6490f6a9d6ebfd3a73d297d299ff8802"
+                "reference": "ba152ab9ff9e55b62ed2b47f776783242ad1480d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1d55df0b6490f6a9d6ebfd3a73d297d299ff8802",
-                "reference": "1d55df0b6490f6a9d6ebfd3a73d297d299ff8802",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ba152ab9ff9e55b62ed2b47f776783242ad1480d",
+                "reference": "ba152ab9ff9e55b62ed2b47f776783242ad1480d",
                 "shasum": ""
             },
             "require": {
@@ -89,7 +89,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-06-17T18:18:58+00:00"
+            "time": "2020-06-18T18:15:37+00:00"
         },
         {
             "name": "aws/aws-sdk-php-symfony",
@@ -146,16 +146,16 @@
         },
         {
             "name": "composer/package-versions-deprecated",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/package-versions-deprecated.git",
-                "reference": "98df7f1b293c0550bd5b1ce6b60b59bdda23aa47"
+                "reference": "b9805885293f3957ee0dd42616ac6915c4ac9a4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/98df7f1b293c0550bd5b1ce6b60b59bdda23aa47",
-                "reference": "98df7f1b293c0550bd5b1ce6b60b59bdda23aa47",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/b9805885293f3957ee0dd42616ac6915c4ac9a4b",
+                "reference": "b9805885293f3957ee0dd42616ac6915c4ac9a4b",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,7 @@
                 "php": "^7"
             },
             "replace": {
-                "ocramius/package-versions": "1.2 - 1.8.99"
+                "ocramius/package-versions": "1.8.99"
             },
             "require-dev": {
                 "composer/composer": "^1.9.3 || ^2.0@dev",
@@ -197,7 +197,7 @@
                 }
             ],
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "time": "2020-04-23T11:49:37+00:00"
+            "time": "2020-06-19T07:59:31+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -7500,17 +7500,197 @@
             "time": "2020-05-26T16:03:49+00:00"
         },
         {
-            "name": "hanaboso/php-check-utils",
-            "version": "1.1.27",
+            "name": "ergebnis/composer-normalize",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/hanaboso/php-check-utils.git",
-                "reference": "77e86d3a0a0a697eed9977cb0ce4bea80112b1fb"
+                "url": "https://github.com/ergebnis/composer-normalize.git",
+                "reference": "d0faf549e565757a7ffbf1f306a4293080e43bdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/php-check-utils/zipball/77e86d3a0a0a697eed9977cb0ce4bea80112b1fb",
-                "reference": "77e86d3a0a0a697eed9977cb0ce4bea80112b1fb",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/d0faf549e565757a7ffbf1f306a4293080e43bdd",
+                "reference": "d0faf549e565757a7ffbf1f306a4293080e43bdd",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0 || ^2.0.0",
+                "ergebnis/json-normalizer": "~0.12.0",
+                "ergebnis/json-printer": "^3.0.2",
+                "localheinz/diff": "^1.0.1",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "composer/composer": "^1.10.5 || ^2.0.0",
+                "composer/package-versions-deprecated": "^1.8.0",
+                "ergebnis/phpstan-rules": "~0.14.4",
+                "ergebnis/test-util": "~1.0.0",
+                "jangregor/phpstan-prophecy": "~0.6.2",
+                "phpstan/extension-installer": "^1.0.4",
+                "phpstan/phpstan": "~0.12.19",
+                "phpstan/phpstan-deprecation-rules": "~0.12.2",
+                "phpstan/phpstan-phpunit": "~0.12.8",
+                "phpstan/phpstan-strict-rules": "~0.12.2",
+                "phpunit/phpunit": "^7.5.20",
+                "symfony/filesystem": "^4.4.8"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Ergebnis\\Composer\\Normalize\\NormalizePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ergebnis\\Composer\\Normalize\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Möller",
+                    "email": "am@localheinz.com"
+                }
+            ],
+            "description": "Provides a composer plugin for normalizing composer.json.",
+            "homepage": "https://github.com/ergebnis/composer-normalize",
+            "keywords": [
+                "composer",
+                "normalize",
+                "normalizer",
+                "plugin"
+            ],
+            "time": "2020-05-01T12:02:09+00:00"
+        },
+        {
+            "name": "ergebnis/json-normalizer",
+            "version": "0.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ergebnis/json-normalizer.git",
+                "reference": "0197447cd5d8f7e82116e904196a3e9f470655db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/0197447cd5d8f7e82116e904196a3e9f470655db",
+                "reference": "0197447cd5d8f7e82116e904196a3e9f470655db",
+                "shasum": ""
+            },
+            "require": {
+                "ergebnis/json-printer": "^3.0.2",
+                "ext-json": "*",
+                "justinrainbow/json-schema": "^4.0.0 || ^5.0.0",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "ergebnis/license": "~0.1.0",
+                "ergebnis/php-cs-fixer-config": "^2.1.2",
+                "ergebnis/phpstan-rules": "~0.14.4",
+                "ergebnis/test-util": "~1.0.0",
+                "infection/infection": "~0.13.6",
+                "jangregor/phpstan-prophecy": "~0.6.2",
+                "phpstan/extension-installer": "^1.0.4",
+                "phpstan/phpstan": "~0.12.18",
+                "phpstan/phpstan-deprecation-rules": "~0.12.2",
+                "phpstan/phpstan-phpunit": "~0.12.8",
+                "phpstan/phpstan-strict-rules": "~0.12.2",
+                "phpunit/phpunit": "^7.5.20",
+                "psalm/plugin-phpunit": "~0.10.0",
+                "vimeo/psalm": "^3.11.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ergebnis\\Json\\Normalizer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Möller",
+                    "email": "am@localheinz.com"
+                }
+            ],
+            "description": "Provides generic and vendor-specific normalizers for normalizing JSON documents.",
+            "homepage": "https://github.com/ergebnis/json-normalizer",
+            "keywords": [
+                "json",
+                "normalizer"
+            ],
+            "time": "2020-04-19T12:30:41+00:00"
+        },
+        {
+            "name": "ergebnis/json-printer",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ergebnis/json-printer.git",
+                "reference": "c7985dc4879777f2e4ab689da25bdd49f59dd2cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ergebnis/json-printer/zipball/c7985dc4879777f2e4ab689da25bdd49f59dd2cb",
+                "reference": "c7985dc4879777f2e4ab689da25bdd49f59dd2cb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "ergebnis/php-cs-fixer-config": "~1.1.1",
+                "ergebnis/phpstan-rules": "~0.14.1",
+                "ergebnis/test-util": "~0.9.0",
+                "infection/infection": "~0.13.6",
+                "phpbench/phpbench": "~0.16.10",
+                "phpstan/extension-installer": "^1.0.3",
+                "phpstan/phpstan": "~0.11.19",
+                "phpstan/phpstan-deprecation-rules": "~0.11.2",
+                "phpstan/phpstan-strict-rules": "~0.11.1",
+                "phpunit/phpunit": "^7.5.18"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ergebnis\\Json\\Printer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Möller",
+                    "email": "am@localheinz.com"
+                }
+            ],
+            "description": "Provides a JSON printer, allowing for flexible indentation.",
+            "homepage": "https://github.com/ergebnis/json-printer",
+            "keywords": [
+                "formatter",
+                "json",
+                "printer"
+            ],
+            "time": "2019-12-19T14:42:54+00:00"
+        },
+        {
+            "name": "hanaboso/php-check-utils",
+            "version": "1.1.28",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hanaboso/php-check-utils.git",
+                "reference": "06050be508f0f021cadfe18512c49d520c1949e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hanaboso/php-check-utils/zipball/06050be508f0f021cadfe18512c49d520c1949e7",
+                "reference": "06050be508f0f021cadfe18512c49d520c1949e7",
                 "shasum": ""
             },
             "require": {
@@ -7519,6 +7699,7 @@
                 "dg/bypass-finals": "^1.2",
                 "doctrine/mongodb-odm": "^2.1",
                 "doctrine/orm": "^2.7",
+                "ergebnis/composer-normalize": "^2.5",
                 "ext-json": "*",
                 "ext-mongodb": "*",
                 "ext-pcov": "*",
@@ -7567,7 +7748,124 @@
                 }
             ],
             "description": "Utils for php development - CodeSniffer, PhpStan, PhpStorm",
-            "time": "2020-06-03T17:00:04+00:00"
+            "time": "2020-06-19T07:10:37+00:00"
+        },
+        {
+            "name": "justinrainbow/json-schema",
+            "version": "5.2.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/justinrainbow/json-schema.git",
+                "reference": "2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b",
+                "reference": "2ba9c8c862ecd5510ed16c6340aa9f6eadb4f31b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.2.20||~2.15.1",
+                "json-schema/json-schema-test-suite": "1.2.0",
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "bin": [
+                "bin/validate-json"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JsonSchema\\": "src/JsonSchema/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "time": "2020-05-27T16:41:55+00:00"
+        },
+        {
+            "name": "localheinz/diff",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/localheinz/diff.git",
+                "reference": "bd5661db4bbed26c6f25df8851fd9f4b424a356e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/localheinz/diff/zipball/bd5661db4bbed26c6f25df8851fd9f4b424a356e",
+                "reference": "bd5661db4bbed26c6f25df8851fd9f4b424a356e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8.0",
+                "symfony/process": "^2 || ^3.3 || ^4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de"
+                },
+                {
+                    "name": "Kore Nordmann",
+                    "email": "mail@kore-nordmann.de"
+                }
+            ],
+            "description": "Fork of sebastian/diff for use with ergebnis/composer-normalize",
+            "homepage": "https://github.com/sebastianbergmann/diff",
+            "keywords": [
+                "diff",
+                "udiff",
+                "unidiff",
+                "unified diff"
+            ],
+            "time": "2019-12-17T07:42:37+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -10564,8 +10862,8 @@
         "php": "^7.4",
         "ext-dom": "*",
         "ext-json": "*",
-        "ext-mongodb": "*",
         "ext-mbstring": "*",
+        "ext-mongodb": "*",
         "ext-simplexml": "*"
     },
     "platform-dev": []

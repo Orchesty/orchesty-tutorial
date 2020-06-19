@@ -1,23 +1,13 @@
 {
     "name": "pipes/php-sdk",
-    "license": "proprietary",
     "version": "1.0.0",
-    "autoload": {
-        "psr-4": {
-            "Pipes\\PhpSdk\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Pipes\\PhpSdk\\Tests\\": "tests/"
-        }
-    },
+    "license": "proprietary",
     "require": {
         "php": "^7.4",
         "ext-dom": "*",
         "ext-json": "*",
-        "ext-mongodb": "*",
         "ext-mbstring": "*",
+        "ext-mongodb": "*",
         "ext-simplexml": "*",
         "hanaboso/app-store": "^1.4",
         "hanaboso/pipes-connectors": "^1.4",
@@ -28,5 +18,15 @@
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pipes\\PhpSdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pipes\\PhpSdk\\Tests\\": "tests/"
+        }
     }
 }

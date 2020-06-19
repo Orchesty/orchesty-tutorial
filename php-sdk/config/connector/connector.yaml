@@ -40,6 +40,11 @@ services:
             - ['setApplication', ['@hbpf.application.hub-spot']]
             - ['setLogger', ['@monolog.logger.commons']]
 
+    hbpf.connector.hub-spot.contact-created:
+        class: Pipes\PhpSdk\Connector\HubSpot\HubSpotContactCreatedConnector
+        calls:
+            - ['setApplication', ['@hbpf.application.hub-spot']]
+
     # Google Connectors
     hbpf.connector.google-drive.upload-file:
         class: Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector

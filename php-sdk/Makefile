@@ -25,6 +25,7 @@ composer-install:
 
 composer-update:
 	$(DA) composer update --no-suggest
+	$(DA) composer normalize
 
 composer-outdated:
 	$(DA) composer outdated

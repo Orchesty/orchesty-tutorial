@@ -3,12 +3,12 @@
 namespace Pipes\PhpSdk\Tests\Integration\Batch\Splitter;
 
 use Exception;
+use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
-use React\EventLoop\Factory;
 
 /**
  * Class UsersBatchSplitterTest
@@ -29,6 +29,30 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::processAction
+     *
+     * @throws Exception
+     */
+    public function testProcessAction(): void
+    {
+        self::expectException(ConnectorException::class);
+        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_ACTION);
+        (new UsersBatchSplitter())->processAction(DataProvider::getProcessDto());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::processEvent
+     *
+     * @throws Exception
+     */
+    public function testProcessEvent(): void
+    {
+        self::expectException(ConnectorException::class);
+        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
+        (new UsersBatchSplitter())->processEvent(DataProvider::getProcessDto());
+    }
+
+    /**
      * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::processBatch
      *
      * @throws Exception
@@ -38,7 +62,6 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
         $batch = new UsersBatchSplitter();
         $batch->processBatch(
             DataProvider::getProcessDto('', '', (string) file_get_contents(__DIR__ . '/data/users.json')),
-            Factory::create(),
             static function (SuccessMessage $message): void {
                 $data = Json::decode($message->getData());
 

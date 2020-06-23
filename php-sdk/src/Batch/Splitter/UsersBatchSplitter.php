@@ -2,16 +2,15 @@
 
 namespace Pipes\PhpSdk\Batch\Splitter;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchInterface;
+use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchTrait;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
-use React\EventLoop\LoopInterface;
-use React\Promise\PromiseInterface;
-use function React\Promise\resolve;
 
 /**
  * Class UsersBatchSplitter
@@ -23,6 +22,7 @@ final class UsersBatchSplitter extends ConnectorAbstract implements BatchInterfa
 
     use ProcessActionNotSupportedTrait;
     use ProcessEventNotSupportedTrait;
+    use BatchTrait;
 
     /**
      * @return string
@@ -33,15 +33,13 @@ final class UsersBatchSplitter extends ConnectorAbstract implements BatchInterfa
     }
 
     /**
-     * @param ProcessDto    $dto
-     * @param LoopInterface $loop
-     * @param callable      $callbackItem
+     * @param ProcessDto $dto
+     * @param callable   $callbackItem
      *
      * @return PromiseInterface
      */
-    public function processBatch(ProcessDto $dto, LoopInterface $loop, callable $callbackItem): PromiseInterface
+    public function processBatch(ProcessDto $dto, callable $callbackItem): PromiseInterface
     {
-        $loop;
         $users = $this->getJsonContent($dto);
 
         for ($i = 0; $i < count($users); $i++) {
@@ -51,7 +49,7 @@ final class UsersBatchSplitter extends ConnectorAbstract implements BatchInterfa
             $callbackItem($message);
         }
 
-        return resolve();
+        return $this->createPromise();
     }
 
 }

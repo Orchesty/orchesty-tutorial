@@ -22,7 +22,9 @@ use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchInterface;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchTrait;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
+use Hanaboso\Utils\System\PipesHeaders;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -31,7 +33,7 @@ use Psr\Log\NullLogger;
  *
  * @package Pipes\PhpSdk\Batch\Connector\HubSpot
  */
-final class HubSpotListContactsConnector extends ConnectorAbstract implements BatchInterface
+final class HubSpotListContactsConnector extends ConnectorAbstract implements BatchInterface, LoggerAwareInterface
 {
 
     use ProcessActionNotSupportedTrait;
@@ -78,6 +80,18 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
     }
 
     /**
+     * @param LoggerInterface $logger
+     *
+     * @return HubSpotListContactsConnector
+     */
+    public function setLogger(LoggerInterface $logger): HubSpotListContactsConnector
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
      * @param ProcessDto $dto
      * @param callable   $callbackItem
      *
@@ -88,6 +102,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      */
     public function processBatch(ProcessDto $dto, callable $callbackItem): PromiseInterface
     {
+        $dto->addHeader(PipesHeaders::createKey(PipesHeaders::APPLICATION), $this->getApplicationKey() ?? '');
         $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
         $requestDto         = $this->getApplication()->getRequestDto(
             $applicationInstall,
@@ -108,34 +123,34 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param RequestDto         $dto
      * @param ApplicationInstall $install
      * @param int                $page
-     * @param int|null           $offset
+     * @param int                $offset
      *
      * @return PromiseInterface
      * @throws CurlException
      */
-    protected function doPageLoop(
+    private function doPageLoop(
         callable $callbackItem,
         RequestDto $dto,
         ApplicationInstall $install,
         int $page = 0,
-        ?int $offset = NULL
+        int $offset = 0
     ): PromiseInterface
     {
-        $uri = $this->getUri($dto, $page, $offset);
+        $uri = $this->getUri($dto, $offset);
 
-        return $this->fetchData(RequestDto::from($dto, $uri))
+        return $this->sender->sendAsync(RequestDto::from($dto, $uri))
             ->then(
                 function (ResponseInterface $response) use ($dto, $callbackItem, $page, $install): PromiseInterface {
-                    $body    = $response->getBody()->getContents();
-                    $data    = empty($body) ? [] : Json::decode($body);
-                    $promise = $callbackItem($this->createSuccessMessage($data, $page));
+                    $body = $response->getBody()->getContents();
+                    $data = empty($body) ? [] : Json::decode($body);
+                    $this->createSuccessMessage($install, $callbackItem, $data, ++$page);
 
                     if ($data['has-more'] ?? FALSE) {
-                        return $this->doPageLoop($callbackItem, $dto, $install, $page + 1, $data['vid-offset'] ?? NULL);
+                        return $this->doPageLoop($callbackItem, $dto, $install, ++$page, $data['vid-offset'] ?? 0);
                     } else {
                         unset($body, $data);
 
-                        return $promise;
+                        return $this->createPromise();
                     }
                 },
                 fn(Exception $e) => $callbackItem($this->batchConnectorError($e, $install))
@@ -143,49 +158,13 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
     }
 
     /**
-     * @param RequestDto $request
-     *
-     * @return PromiseInterface
-     */
-    protected function fetchData(RequestDto $request): PromiseInterface
-    {
-        return $this->sender->sendAsync($request);
-    }
-
-    /**
-     * @param Exception          $e
-     * @param ApplicationInstall $install
-     *
-     * @return SuccessMessage
-     * @throws Exception
-     */
-    protected function batchConnectorError(Exception $e, ApplicationInstall $install): SuccessMessage
-    {
-        $this->logger->error(
-            $e->getMessage(),
-            [
-                'AppInstall' => $install->getId(),
-                'User'       => $install->getUser(),
-                'Key'        => $install->getKey(),
-            ]
-        );
-
-        throw $e;
-    }
-
-    /**
      * @param RequestDto $dto
-     * @param int        $page
-     * @param int|null   $offset
+     * @param int        $offset
      *
      * @return Uri
      */
-    protected function getUri(RequestDto $dto, int $page, ?int $offset = NULL): Uri
+    private function getUri(RequestDto $dto, int $offset): Uri
     {
-        if (!$offset) {
-            $offset = $page * self::ITEMS_PER_PAGE;
-        }
-
         return new Uri(
             sprintf(
                 '%s?count=%s&vidOffset=%s',
@@ -197,27 +176,63 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
     }
 
     /**
-     * @param mixed $data
-     * @param int   $i
+     * @param ApplicationInstall $install
+     * @param callable           $callbackItem
+     * @param mixed[]            $data
+     * @param int                $page
      *
-     * @return SuccessMessage
-     * @throws ConnectorException
+     * @throws Exception
      */
-    protected function createSuccessMessage($data, int $i): SuccessMessage
+    private function createSuccessMessage(
+        ApplicationInstall $install,
+        callable $callbackItem,
+        array $data,
+        int $page
+    ): void
     {
         if (array_key_exists('contacts', $data)) {
-            $successMessage = new SuccessMessage($i);
-            $data           = $data['contacts'];
+            $contacts = $data['contacts'];
+            $i        = $page * self::ITEMS_PER_PAGE;
+            foreach ($contacts as $contact) {
+                $successMessage = new SuccessMessage($i);
+                $successMessage->setData(Json::encode($contact));
+                $callbackItem($successMessage);
+                $i++;
+            }
 
-            $successMessage->setData(Json::encode($data));
-            unset($data);
-
-            return $successMessage;
+            unset($data, $contacts, $i, $successMessage);
         } else {
-            throw new ConnectorException(
-                'Bad response data from HubSpot response.',
+            $this->batchConnectorError(
+                new ConnectorException('Bad response data from HubSpot response. Missing "contacts".'),
+                $install,
+                ['Data' => $data]
             );
         }
+    }
+
+    /**
+     * @param Exception          $e
+     * @param ApplicationInstall $install
+     * @param mixed[]            $context
+     *
+     * @return SuccessMessage
+     * @throws Exception
+     */
+    private function batchConnectorError(Exception $e, ApplicationInstall $install, array $context = []): SuccessMessage
+    {
+        $context = array_merge(
+            [
+                'AppInstall' => $install->getId(),
+                'User'       => $install->getUser(),
+                'Key'        => $install->getKey(),
+            ],
+            $context
+        );
+
+        $this->logger->error($e->getMessage(), $context);
+        unset($context);
+
+        throw $e;
     }
 
 }

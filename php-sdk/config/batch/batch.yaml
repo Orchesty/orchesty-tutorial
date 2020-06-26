@@ -7,3 +7,12 @@ services:
 
     hbpf.connector.user-batch-splitter:
         class: Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter
+
+    hbpf.connector.hub-spot.list-contacts:
+        class: Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector
+        arguments:
+            - '@doctrine_mongodb.odm.default_document_manager'
+            - '@hbpf.transport.curl_manager'
+        calls:
+            - ['setApplication', ['@hbpf.application.hub-spot']]
+            - ['setLogger', ['@monolog.logger.commons']]

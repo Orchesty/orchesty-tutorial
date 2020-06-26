@@ -12,6 +12,7 @@ use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
+use Psr\Log\NullLogger;
 
 /**
  * Class HubSpotListContactsConnectorTest
@@ -30,6 +31,18 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
     public function testGetId(): void
     {
         self::assertEquals('hub-spot.list-contacts', $this->createConnector()->getId());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::setLogger
+     *
+     * @throws Exception
+     */
+    public function testSetLogger(): void
+    {
+        $this->createConnector()->setLogger(new NullLogger());
+
+        self::assertFake();
     }
 
     /**
@@ -59,7 +72,6 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
     /**
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::processBatch
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::doPageLoop
-     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::fetchData
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::getUri
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::createSuccessMessage
      *
@@ -81,7 +93,6 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
     /**
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::processBatch
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::doPageLoop
-     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::fetchData
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::getUri
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::createSuccessMessage
      *
@@ -109,7 +120,6 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
     /**
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::processBatch
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::doPageLoop
-     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::fetchData
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::getUri
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::batchConnectorError
      *

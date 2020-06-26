@@ -32,6 +32,7 @@ services:
             - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
+            BACKEND_HOST: ${DEV_IP}:8080
             RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial

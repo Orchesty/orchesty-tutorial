@@ -12,7 +12,6 @@
         "hanaboso/app-store": "^1.4",
         "hanaboso/pipes-connectors": "^1.4",
         "hanaboso/pipes-php-sdk": "^1.4",
-        "hanaboso/rabbit-mq-bundle": "^1.4",
         "hanaboso/rest-bundle": "^1.0",
         "mongodb/mongodb": "~1.5.2"
     },

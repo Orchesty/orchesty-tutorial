@@ -111,7 +111,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         );
         $requestDto->setDebugInfo($dto);
 
-        return $this->doPageLoop($callbackItem, $requestDto, $applicationInstall);
+        return $this->doPageLoop($callbackItem, $requestDto, $applicationInstall, $dto);
     }
 
     /**
@@ -122,6 +122,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param callable           $callbackItem
      * @param RequestDto         $dto
      * @param ApplicationInstall $install
+     * @param ProcessDto         $processDto
      * @param int                $page
      * @param int                $offset
      *
@@ -132,6 +133,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         callable $callbackItem,
         RequestDto $dto,
         ApplicationInstall $install,
+        ProcessDto $processDto,
         int $page = 0,
         int $offset = 0
     ): PromiseInterface
@@ -140,20 +142,35 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
 
         return $this->sender->sendAsync(RequestDto::from($dto, $uri))
             ->then(
-                function (ResponseInterface $response) use ($dto, $callbackItem, $page, $install): PromiseInterface {
+                function (ResponseInterface $response) use (
+                    $dto,
+                    $callbackItem,
+                    $page,
+                    $install,
+                    $processDto
+                ): PromiseInterface {
                     $body = $response->getBody()->getContents();
                     $data = empty($body) ? [] : Json::decode($body);
-                    $this->createSuccessMessage($install, $callbackItem, $data, ++$page);
+                    $this->createSuccessMessage($install, $callbackItem, $data, ++$page, $processDto->getHeaders());
 
                     if ($data['has-more'] ?? FALSE) {
-                        return $this->doPageLoop($callbackItem, $dto, $install, ++$page, $data['vid-offset'] ?? 0);
+                        return $this->doPageLoop(
+                            $callbackItem,
+                            $dto,
+                            $install,
+                            $processDto,
+                            ++$page,
+                            $data['vid-offset'] ?? 0
+                        );
                     } else {
                         unset($body, $data);
 
                         return $this->createPromise();
                     }
                 },
-                fn(Exception $e) => $callbackItem($this->batchConnectorError($e, $install))
+                fn(Exception $e) => $callbackItem(
+                    $this->batchConnectorError($e, $install, [], $processDto->getHeaders())
+                )
             );
     }
 
@@ -180,6 +197,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param callable           $callbackItem
      * @param mixed[]            $data
      * @param int                $page
+     * @param mixed[]            $headers
      *
      * @throws Exception
      */
@@ -187,7 +205,8 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         ApplicationInstall $install,
         callable $callbackItem,
         array $data,
-        int $page
+        int $page,
+        array $headers = []
     ): void
     {
         if (array_key_exists('contacts', $data)) {
@@ -205,7 +224,8 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
             $this->batchConnectorError(
                 new ConnectorException('Bad response data from HubSpot response. Missing "contacts".'),
                 $install,
-                ['Data' => $data]
+                ['data' => $data],
+                $headers
             );
         }
     }
@@ -214,22 +234,28 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param Exception          $e
      * @param ApplicationInstall $install
      * @param mixed[]            $context
+     * @param mixed[]            $headers
      *
      * @return SuccessMessage
      * @throws Exception
      */
-    private function batchConnectorError(Exception $e, ApplicationInstall $install, array $context = []): SuccessMessage
+    private function batchConnectorError(
+        Exception $e,
+        ApplicationInstall $install,
+        array $context = [],
+        array $headers = []
+    ): SuccessMessage
     {
         $context = array_merge(
             [
-                'AppInstall' => $install->getId(),
-                'User'       => $install->getUser(),
-                'Key'        => $install->getKey(),
+                'app_install' => $install->getId(),
+                'user'        => $install->getUser(),
+                'key'         => $install->getKey(),
             ],
             $context
         );
 
-        $this->logger->error($e->getMessage(), $context);
+        $this->logger->error($e->getMessage(), array_merge($context, PipesHeaders::debugInfo($headers)));
         unset($context);
 
         throw $e;

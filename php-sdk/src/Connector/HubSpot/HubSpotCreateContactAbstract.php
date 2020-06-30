@@ -15,6 +15,7 @@ use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
+use Hanaboso\Utils\System\PipesHeaders;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -104,7 +105,9 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
                 $parsed = $response->getJsonBody();
                 $this->logger->error(
                     sprintf('Contact "%s" already exist.', $parsed['identityProfile']['identity'][0]['value'] ?? ''),
-                    ['Response' => $response->getBody()]
+                    array_merge(
+                        ['response' => $response->getBody(), PipesHeaders::debugInfo($dto->getHeaders())]
+                    )
                 );
             }
 

@@ -86,7 +86,7 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
+        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
         $body               = $this->getJsonContent($dto);
 
         try {

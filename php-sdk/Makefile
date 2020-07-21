@@ -39,25 +39,25 @@ clear-cache:
 
 # Tests section
 phpcodesniffer:
-	$(DA) vendor/bin/phpcs --standard=ruleset.xml src tests
+	$(DA) vendor/bin/phpcs --parallel=$$(nproc) --standard=ruleset.xml src tests
 
 phpstan:
 	$(DA) vendor/bin/phpstan analyse -c phpstan.neon -l 8 src tests
 
 phpunit:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Unit
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) tests/Unit
 
 phpintegration:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Integration
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) tests/Integration
 
 phpcontroller:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Controller
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) tests/Controller
 
 phplive:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Live
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) tests/Live
 
 phpcoverage:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --coverage-html var/coverage --whitelist /var/www/src --exclude-group live tests
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --coverage-html var/coverage --whitelist /var/www/src --exclude-group live tests
 
 phpcoverage-ci:
 	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -e live

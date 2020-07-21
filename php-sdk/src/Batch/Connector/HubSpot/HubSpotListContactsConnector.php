@@ -103,7 +103,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
     public function processBatch(ProcessDto $dto, callable $callbackItem): PromiseInterface
     {
         $dto->addHeader(PipesHeaders::createKey(PipesHeaders::APPLICATION), $this->getApplicationKey() ?? '');
-        $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
+        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
         $requestDto         = $this->getApplication()->getRequestDto(
             $applicationInstall,
             CurlManager::METHOD_GET,

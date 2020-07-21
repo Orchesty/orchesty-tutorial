@@ -78,7 +78,7 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        $applicationInstall = $this->repository->findUsersAppDefaultHeaders($dto);
+        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
         $tmpFileName        = sprintf('/tmp/%s', uniqid('file_', FALSE));
         file_put_contents($tmpFileName, $dto->getData());
 

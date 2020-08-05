@@ -25,6 +25,7 @@ composer-install:
 
 composer-update:
 	$(DA) composer update --no-suggest
+	$(DA) composer update --dry-run roave/security-advisories
 	$(DA) composer normalize
 
 composer-outdated:

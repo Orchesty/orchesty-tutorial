@@ -12,8 +12,7 @@
         "hanaboso/app-store": "^1.4",
         "hanaboso/pipes-connectors": "^1.4",
         "hanaboso/pipes-php-sdk": "^1.4",
-        "hanaboso/rest-bundle": "^1.0",
-        "mongodb/mongodb": "~1.5.2"
+        "hanaboso/rest-bundle": "^1.0"
     },
     "replace": {
         "ralouphie/getallheaders": "*",

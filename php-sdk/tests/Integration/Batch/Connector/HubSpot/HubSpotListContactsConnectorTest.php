@@ -156,14 +156,12 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     private function createConnector(array $responses = []): HubSpotListContactsConnector
     {
-        $app = self::$container->get('hbpf.application.hub-spot');
-
+        $app  = self::$container->get('hbpf.application.hub-spot');
         $curl = $this->createMock(CurlManager::class);
-        $i    = 0;
-        foreach ($responses as $response) {
-            $curl->expects(self::at($i))->method('sendAsync')->willReturn($response);
-            $i++;
-        }
+        $curl
+            ->expects(self::exactly(count($responses)))
+            ->method('sendAsync')
+            ->willReturnOnConsecutiveCalls(...$responses);
 
         $c = new HubSpotListContactsConnector($this->dm, $curl);
         $c->setApplication($app);

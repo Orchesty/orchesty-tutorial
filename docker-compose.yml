@@ -55,14 +55,14 @@ services:
         command: bin/console rabbit_mq:consumer:long-running-node
 
     status-service:
-        image: dkr.hanaboso.net/pipes/pipes/pf-bundle:master
+        image: hanaboso/pipes-pf-bundle:master
         working_dir: /var/www
         environment:
-            BACKEND_HOST: ${BACKEND_URL}/
-            FRONTEND_HOST: ${FRONTEND_URL}/
+            BACKEND_DSN: ${BACKEND_URL}/
+            FRONTEND_DSN: ${FRONTEND_URL}/
             RABBIT_DSN: amqp://rabbitmq:5672/
             REDIS_DSN: redis://redis
-            MONGODB_DSN: mongodb://mongo:27017
+            MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
@@ -77,15 +77,17 @@ services:
             TOPOLOGY_API_DSN: topology-api:8080
             XML_PARSER_API_DSN: xml-parser-api
             WORKER_DEFAULT_PORT: 8008
+            DOCKER_REGISTRY: hanaboso
+            DOCKER_PF_BRIDGE_IMAGE: pipes-pf-bridge:master
         command: bin/console rabbit_mq:consumer:status-service
 
     notification-sender-api:
-        image: dkr.hanaboso.net/pipes/notification-sender:master
+        image: hanaboso/pipes-notification-sender:master
         environment:
             MONGO_HOST: mongo
 
     multi-probe:
-        image: dkr.hanaboso.net/pipes/pipes/multi-probe:master
+        image: hanaboso/pipes-multi-probe:master
         environment:
             REDIS_HOST: redis
             REDIS_PORT: 6379
@@ -93,7 +95,7 @@ services:
             REDIS_DB:  0
 
     multi-counter:
-        image: dkr.hanaboso.net/pipes/pipes/pf-bridge:master
+        image: hanaboso/pipes-pf-bridge:master
         environment:
             RABBITMQ_HOST: rabbitmq
             RABBITMQ_PORT: 5672
@@ -114,19 +116,8 @@ services:
                 aliases:
                     - multi-counter-api
 
-    starting-point:
-        image: dkr.hanaboso.net/pipes/pipes/starting-point:master
-        environment:
-            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
-            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
-            RABBIT_COUNTER_QUEUE_DURABLE: 'true'
-            RABBIT_QUEUE_DURABLE: 'true'
-            RABBIT_DELIVERY_MODE: 2
-        ports:
-            - ${DEV_IP}:82:8080
-
     repeater:
-        image: dkr.hanaboso.net/pipes/pipes/pf-bridge:dev
+        image: hanaboso/pipes-pf-bridge:master
         environment:
             RABBITMQ_HOST: rabbitmq
             RABBITMQ_PORT: 5672
@@ -137,8 +128,19 @@ services:
             REPEATER_CHECK_TIMEOUT: 5000
         command: ./dist/src/bin/pipes.js start repeater
 
+    starting-point:
+        image: hanaboso/pipes-starting-point:master
+        environment:
+            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            RABBIT_COUNTER_QUEUE_DURABLE: 'true'
+            RABBIT_QUEUE_DURABLE: 'true'
+            RABBIT_DELIVERY_MODE: 2
+        ports:
+            - ${DEV_IP}:82:8080
+
     topology-api:
-        image: dkr.hanaboso.net/pipes/pipes/topology-api-v2:master
+        image: hanaboso/pipes-topology-api-v2:master
         environment:
             DEPLOYMENT_PREFIX: tutorial
             GENERATOR_NETWORK: tutorial_default
@@ -152,18 +154,18 @@ services:
             - ./topology:/srv/topology
 
     telegraf:
-        image: dkr.hanaboso.net/pipes/pipes/rabbitmq-telegraf:master
+        image: hanaboso/pipes-telegraf:master
         environment:
             METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
 
     cron-api:
-        image: dkr.hanaboso.net/pipes/pipes/cron:master
+        image: hanaboso/pipes-cron:master
         environment:
             MONGO_DSN: mongodb://mongo/cron?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             MONGO_COLLECTION: cron
 
     frontend:
-        image: dkr.hanaboso.net/pipes/pipes/frontend:master
+        image: hanaboso/pipes-frontend:master
         environment:
             BACKEND_URL: ${BACKEND_URL}
             FRONTEND_URL: ${FRONTEND_URL}
@@ -172,7 +174,7 @@ services:
             - ${DEV_IP}:80:80
 
     backend:
-        image: dkr.hanaboso.net/pipes/pipes/pf-bundle:master
+        image: hanaboso/pipes-pf-bundle:master
         ports:
             - ${DEV_IP}:8080:80
         environment:
@@ -196,19 +198,21 @@ services:
             TOPOLOGY_API_DSN: topology-api:8080
             XML_PARSER_API_DSN: xml-parser-api
             WORKER_DEFAULT_PORT: 8008
-
-    redis:
-        image: redis:alpine
-        volumes:
-            - redis:/data
+            DOCKER_REGISTRY: hanaboso
+            DOCKER_PF_BRIDGE_IMAGE: pipes-pf-bridge:master
 
     logstash:
-        image: dkr.hanaboso.net/pipes/pipes/logstash-mongo:master
+        image: hanaboso/pipes-logstash-mongo:master
         environment:
             - MONGO_DSN=mongodb://mongo:27017
             - MONGO_DB=tutorial
             - MONGO_COLLECTION=Logs
             - LS_JAVA_OPTS=-Xms512m -Xmx512m
+
+    redis:
+        image: redis:alpine
+        volumes:
+            - redis:/data
 
     mongo:
         image: mongo

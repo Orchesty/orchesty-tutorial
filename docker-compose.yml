@@ -22,6 +22,7 @@ services:
             MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672
             METRICS_SERVICE: mongo
+            USER_TASK_LISTENER_ENABLE: 0
 
     batch-connector:
         image: hanabosocom/php-dev:php-7.4-alpine
@@ -37,6 +38,7 @@ services:
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
+            USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:batch-connector
 
     long-running-node:
@@ -52,39 +54,35 @@ services:
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
+            USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:long-running-node
 
     status-service:
-        image: hanaboso/pipes-pf-bundle:master
+        user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
+        volumes:
+            - ./php-sdk:/var/www:cached
+            - ${SSH_AUTH}:/tmp/.ssh-auth-sock
+            - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
-            BACKEND_DSN: ${BACKEND_URL}/
-            FRONTEND_DSN: ${FRONTEND_URL}/
-            RABBIT_DSN: amqp://rabbitmq:5672/
-            REDIS_DSN: redis://redis
+            RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
-            METRICS_HOST: mongo
-            METRICS_PORT: 27017
-            CRON_DSN: cron-api:8080
-            FTP_API_DSN: ftp-api
-            MAILER_API_DSN: mailer-api
-            MAPPER_API_DSN: mapper-api
-            MONOLITH_API_DSN: php-sdk
-            MULTI_PROBE_DSN: multi-probe:8007
-            STARTING_POINT_DSN: starting-point:8080
-            TOPOLOGY_API_DSN: topology-api:8080
-            XML_PARSER_API_DSN: xml-parser-api
-            WORKER_DEFAULT_PORT: 8008
-            DOCKER_REGISTRY: hanaboso
-            DOCKER_PF_BRIDGE_IMAGE: pipes-pf-bridge:master
+            USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:status-service
 
     notification-sender-api:
         image: hanaboso/pipes-notification-sender:master
         environment:
             MONGO_HOST: mongo
+
+    notification-sender-consumer:
+        image: hanaboso/pipes-notification-sender:master
+        environment:
+            RABBITMQ_DSN: amqp://rabbitmq:5672
+            MONGO_HOST: mongo
+        command: bin/console rabbit_mq:consumer:notification
 
     multi-probe:
         image: hanaboso/pipes-multi-probe:master

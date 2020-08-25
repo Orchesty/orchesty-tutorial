@@ -98,7 +98,12 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
                     Json::encode($body)
                 )->setDebugInfo($dto)
             );
-            $message  = $response->getJsonBody()['validationResults'][0]['message'] ?? NULL;
+
+            if ($response->getStatusCode() === 202) {
+                return $dto->setData($response->getBody());
+            }
+
+            $message = $response->getJsonBody()['validationResults'][0]['message'] ?? NULL;
             $this->evaluateStatusCode($response->getStatusCode(), $dto, $message);
 
             if ($response->getStatusCode() === 409) {

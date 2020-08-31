@@ -58,6 +58,7 @@ services:
         command: bin/console rabbit_mq:consumer:long-running-node
 
     status-service:
+        image: hanabosocom/php-dev:php-7.4-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:

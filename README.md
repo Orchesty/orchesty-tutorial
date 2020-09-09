@@ -8,11 +8,11 @@
 - Go to [http://127.0.0.10/ui](http://127.0.0.10/ui)
 
 ## How to create user
-- Run `docker-compose exec backend bin/pipes u:c`
+- Run `docker-compose exec backend bin/pipes user:create`
 
 ## How to enable your PHP services
-1. Go to [UI Implementation](http://127.0.0.10/ui/sdk_implementations)
-1. Add `php-sdk` as new Implementation
+1. Go to [UI Services](http://127.0.0.10/ui/sdk_implementations)
+1. Add `php-sdk` as new Services
 
 ## MAC developers
 

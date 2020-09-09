@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2.4'
 
 services:
     php-sdk:
@@ -13,6 +13,7 @@ services:
             DEV_UID: ${DEV_UID}
             DEV_GID: ${DEV_GID}
             APP_DEBUG: 1
+            APP_ENV: dev
             PHP_IDE_CONFIG: ${PHP_IDE}
             PHP_WEBROOT: /var/www/public
             COMPOSER_HOME: ${HOME}/dev/.composer
@@ -23,16 +24,22 @@ services:
             RABBITMQ_DSN: amqp://rabbitmq:5672
             METRICS_SERVICE: mongo
             USER_TASK_LISTENER_ENABLE: 0
+        mem_limit: 64MB
 
     batch-connector:
         image: hanabosocom/php-dev:php-7.4-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
+        restart: on-failure
         volumes:
             - ./php-sdk:/var/www:cached
             - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
+            DEV_UID: ${DEV_UID}
+            DEV_GID: ${DEV_GID}
+            APP_DEBUG: 1
+            APP_ENV: dev
             BACKEND_HOST: ${DEV_IP}:8080
             RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGODB_DSN: mongodb://mongo/tutorial
@@ -40,43 +47,57 @@ services:
             METRICS_SERVICE: mongo
             USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:batch-connector
+        mem_limit: 64MB
 
     long-running-node:
         image: hanabosocom/php-dev:php-7.4-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
+        restart: on-failure
         volumes:
             - ./php-sdk:/var/www:cached
             - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
+            DEV_UID: ${DEV_UID}
+            DEV_GID: ${DEV_GID}
+            APP_DEBUG: 1
+            APP_ENV: dev
             RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:long-running-node
+        mem_limit: 64MB
 
     status-service:
         image: hanabosocom/php-dev:php-7.4-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
+        restart: on-failure
         volumes:
             - ./php-sdk:/var/www:cached
             - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
+            DEV_UID: ${DEV_UID}
+            DEV_GID: ${DEV_GID}
+            APP_DEBUG: 1
+            APP_ENV: dev
             RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             USER_TASK_LISTENER_ENABLE: 0
         command: bin/console rabbit_mq:consumer:status-service
+        mem_limit: 64MB
 
     notification-sender-api:
         image: hanaboso/pipes-notification-sender:master
         environment:
             MONGO_HOST: mongo
+        mem_limit: 64MB
 
     notification-sender-consumer:
         image: hanaboso/pipes-notification-sender:master
@@ -84,14 +105,11 @@ services:
             RABBITMQ_DSN: amqp://rabbitmq:5672
             MONGO_HOST: mongo
         command: bin/console rabbit_mq:consumer:notification
+        mem_limit: 64MB
 
     multi-probe:
         image: hanaboso/pipes-multi-probe:master
-        environment:
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_PASS: ''
-            REDIS_DB:  0
+        mem_limit: 64MB
 
     multi-counter:
         image: hanaboso/pipes-pf-bridge:master
@@ -101,19 +119,12 @@ services:
             RABBITMQ_USER: guest
             RABBITMQ_PASS: guest
             RABBITMQ_VHOST: /
-            REDIS_HOST: redis
-            REDIS_PORT: 6379
-            REDIS_PASS: ''
-            REDIS_DB: 0
             COUNTER_PREFETCH: 100
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
             METRICS_PORT: 27017
         command: ./dist/src/bin/pipes.js start multi_counter
-        networks:
-            default:
-                aliases:
-                    - multi-counter-api
+        mem_limit: 128MB
 
     repeater:
         image: hanaboso/pipes-pf-bridge:master
@@ -126,6 +137,7 @@ services:
             MONGO_HOST: mongo
             REPEATER_CHECK_TIMEOUT: 5000
         command: ./dist/src/bin/pipes.js start repeater
+        mem_limit: 128MB
 
     starting-point:
         image: hanaboso/pipes-starting-point:master
@@ -137,6 +149,7 @@ services:
             RABBIT_DELIVERY_MODE: 2
         ports:
             - ${DEV_IP}:82:8080
+        mem_limit: 64MB
 
     topology-api:
         image: hanaboso/pipes-topology-api-v2:master
@@ -151,17 +164,20 @@ services:
         volumes:
             - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
             - ./topology:/srv/topology
+        mem_limit: 64MB
 
     telegraf:
         image: hanaboso/pipes-telegraf:master
         environment:
             METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+        mem_limit: 64MB
 
     cron-api:
         image: hanaboso/pipes-cron:master
         environment:
             MONGO_DSN: mongodb://mongo/cron?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             MONGO_COLLECTION: cron
+        mem_limit: 64MB
 
     frontend:
         image: hanaboso/pipes-frontend:master
@@ -171,6 +187,7 @@ services:
             STARTING_POINT_URL: http://${DEV_IP}:82
         ports:
             - ${DEV_IP}:80:80
+        mem_limit: 64MB
 
     backend:
         image: hanaboso/pipes-pf-bundle:master
@@ -181,24 +198,20 @@ services:
             FRONTEND_DSN: ${FRONTEND_URL}/
             NOTIFICATION_DSN: notification-sender-api
             RABBIT_DSN: amqp://rabbitmq:5672/
-            REDIS_DSN: redis://redis
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
             METRICS_PORT: 27017
             CRON_DSN: cron-api:8080
-            FTP_API_DSN: ftp-api
-            MAILER_API_DSN: mailer-api
-            MAPPER_API_DSN: mapper-api
             MONOLITH_API_DSN: php-sdk
             MULTI_PROBE_DSN: multi-probe:8007
             STARTING_POINT_DSN: starting-point:8080
             TOPOLOGY_API_DSN: topology-api:8080
-            XML_PARSER_API_DSN: xml-parser-api
             WORKER_DEFAULT_PORT: 8008
             DOCKER_REGISTRY: hanaboso
             DOCKER_PF_BRIDGE_IMAGE: pipes-pf-bridge:master
+        mem_limit: 64MB
 
     logstash:
         image: hanaboso/pipes-logstash-mongo:master
@@ -207,11 +220,7 @@ services:
             - MONGO_DB=tutorial
             - MONGO_COLLECTION=Logs
             - LS_JAVA_OPTS=-Xms512m -Xmx512m
-
-    redis:
-        image: redis:alpine
-        volumes:
-            - redis:/data
+        mem_limit: 768MB
 
     mongo:
         image: mongo
@@ -219,6 +228,7 @@ services:
             - ${DEV_IP}:27017:27017
         volumes:
             - mongodb:/data/db
+        mem_limit: 256MB
 
     rabbitmq:
         image: rabbitmq:3-management-alpine
@@ -226,9 +236,9 @@ services:
             - ${DEV_IP}:15672:15672
         volumes:
             - rabbitmq:/var/lib/rabbitmq
+        mem_limit: 256MB
 
 volumes:
-    redis:
     mongodb:
     rabbitmq:
 

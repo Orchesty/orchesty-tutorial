@@ -3,7 +3,6 @@
 namespace Pipes\PhpSdk\Tests\Live\Batch\Connector\HubSpot;
 
 use Exception;
-use Hanaboso\CommonsBundle\Crypt\CryptManager;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector;
@@ -27,7 +26,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessBatch(): void
     {
-        $settings     = CryptManager::decrypt('01_aaa');
+        $settings     = self::$container->get('hbpf.commons.crypt.crypt_manager')->decrypt('001_aaa');
         $token        = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::TOKEN][OAuth2Provider::ACCESS_TOKEN];
         $clientId     = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::CLIENT_ID];
         $clientSecret = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::CLIENT_SECRET];

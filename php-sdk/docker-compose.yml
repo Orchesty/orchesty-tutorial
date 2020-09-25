@@ -17,6 +17,8 @@ services:
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             BACKEND_HOST: 127.0.0.10:8080
+            METRICS_DSN: mongodb://mongo/metrics
+            METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672

@@ -9,9 +9,9 @@
         "ext-mbstring": "*",
         "ext-mongodb": "*",
         "ext-simplexml": "*",
-        "hanaboso/app-store": "^1.4",
-        "hanaboso/pipes-connectors": "^1.4",
-        "hanaboso/pipes-php-sdk": "^1.4",
+        "hanaboso/app-store": "^1.5",
+        "hanaboso/pipes-connectors": "^1.5",
+        "hanaboso/pipes-php-sdk": "^1.5",
         "hanaboso/rest-bundle": "^1.0"
     },
     "replace": {

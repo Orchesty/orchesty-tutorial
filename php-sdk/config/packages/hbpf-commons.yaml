@@ -3,6 +3,20 @@ services:
         public: '%public.services%'
 
     ##########################
+    #        Crypts          #
+    ##########################
+
+    hbpf.commons.crypt.crypt_manager:
+        class: Hanaboso\CommonsBundle\Crypt\CryptManager
+        arguments:
+            - ['@hbpf.commons.crypt.windwalker']
+
+    hbpf.commons.crypt.windwalker:
+        class: Hanaboso\CommonsBundle\Crypt\Impl\WindwalkerCrypt
+        arguments:
+            - '%kernel.secret%'
+
+    ##########################
     #        Metrics         #
     ##########################
 
@@ -19,13 +33,13 @@ services:
     hbpf.metrics.mongodb_connector:
         class: Hanaboso\CommonsBundle\Metrics\Impl\MongoDbSender
         arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
+            - '@doctrine_mongodb.odm.metrics_document_manager'
             - '%mongodb.connector_table%'
 
     hbpf.metrics.mongodb_monolith:
         class: Hanaboso\CommonsBundle\Metrics\Impl\MongoDbSender
         arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
+            - '@doctrine_mongodb.odm.metrics_document_manager'
             - '%mongodb.monolith_table%'
 
     hbpf.metrics_connector.loader:
@@ -46,29 +60,29 @@ services:
     #      File Storage      #
     ##########################
 
-    hbpf.file_storage.driver.mongo:
-        class: Hanaboso\CommonsBundle\FileStorage\Driver\Impl\Mongo\MongoFileDriver
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.path_generator.hash'
-
-    hbpf.path_generator.hash:
-        class: Hanaboso\CommonsBundle\FileStorage\PathGenerator\HashPathGenerator
-        arguments:
-
-    hbpf.file_storage.locator:
-        class: Hanaboso\CommonsBundle\FileStorage\Driver\FileStorageDriverLocator
-        arguments:
-            - '@hbpf.file_storage.driver.mongo'
-            - '@hbpf.file_storage.driver.mongo'
-            - '@hbpf.file_storage.driver.mongo'
-
-    hbpf.file_storage:
-        class: Hanaboso\CommonsBundle\FileStorage\FileStorage
-        arguments:
-            - '@hbpf.file_storage.locator'
-            - '@hbpf.database_manager_locator'
-            - 'Hanaboso\CommonsBundle\FileStorage\Document\File'
+#    hbpf.file_storage.driver.mongo:
+#        class: Hanaboso\CommonsBundle\FileStorage\Driver\Impl\Mongo\MongoFileDriver
+#        arguments:
+#            - '@doctrine_mongodb.odm.default_document_manager'
+#            - '@hbpf.path_generator.hash'
+#
+#    hbpf.path_generator.hash:
+#        class: Hanaboso\CommonsBundle\FileStorage\PathGenerator\HashPathGenerator
+#        arguments:
+#
+#    hbpf.file_storage.locator:
+#        class: Hanaboso\CommonsBundle\FileStorage\Driver\FileStorageDriverLocator
+#        arguments:
+#            - '@hbpf.file_storage.driver.mongo'
+#            - '@hbpf.file_storage.driver.mongo'
+#            - '@hbpf.file_storage.driver.mongo'
+#
+#    hbpf.file_storage:
+#        class: Hanaboso\CommonsBundle\FileStorage\FileStorage
+#        arguments:
+#            - '@hbpf.file_storage.locator'
+#            - '@hbpf.database_manager_locator'
+#            - 'Hanaboso\CommonsBundle\FileStorage\Document\File'
 
     ##########################
     #    Database Locator    #

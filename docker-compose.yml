@@ -19,6 +19,8 @@ services:
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             BACKEND_HOST: ${DEV_IP}:8080
+            METRICS_DSN: mongodb://mongo/metrics
+            METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672
@@ -42,6 +44,8 @@ services:
             APP_ENV: dev
             BACKEND_HOST: ${DEV_IP}:8080
             RABBITMQ_DSN: amqp://rabbitmq:5672
+            METRICS_DSN: mongodb://mongo/metrics
+            METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
@@ -64,6 +68,8 @@ services:
             APP_DEBUG: 1
             APP_ENV: dev
             RABBITMQ_DSN: amqp://rabbitmq:5672
+            METRICS_DSN: mongodb://mongo/metrics
+            METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
@@ -86,6 +92,8 @@ services:
             APP_DEBUG: 1
             APP_ENV: dev
             RABBITMQ_DSN: amqp://rabbitmq:5672
+            METRICS_DSN: mongodb://mongo/metrics
+            METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo/tutorial
             MONGODB_DB: tutorial
             METRICS_SERVICE: mongo
@@ -114,15 +122,11 @@ services:
     multi-counter:
         image: hanaboso/pipes-pf-bridge:master
         environment:
-            RABBITMQ_HOST: rabbitmq
-            RABBITMQ_PORT: 5672
-            RABBITMQ_USER: guest
-            RABBITMQ_PASS: guest
-            RABBITMQ_VHOST: /
-            COUNTER_PREFETCH: 100
             METRICS_SERVICE: mongo
             METRICS_HOST: mongo
             METRICS_PORT: 27017
+            PROGRESS_DSN: mongodb://mongo/tutorial
+            PROGRESS_SAVE: 'true'
         command: ./dist/src/bin/pipes.js start multi_counter
         mem_limit: 128MB
 
@@ -236,7 +240,7 @@ services:
             - ${DEV_IP}:15672:15672
         volumes:
             - rabbitmq:/var/lib/rabbitmq
-        mem_limit: 256MB
+        mem_limit: 512MB
 
 volumes:
     mongodb:

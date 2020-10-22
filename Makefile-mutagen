@@ -1,0 +1,22 @@
+MTGN_NAME?=pipes-tutorial-php-sdk
+MTGN_COMPOSE_FILE?=-f docker-compose.mutagen.yml
+MTGN_PATH?=$(shell pwd)
+
+.mutagen-compose:
+	sed -r 's/^(\s+-\s.*\:\/var\/www.*)/#\1/gm;' docker-compose.yml > docker-compose.mutagen.yml
+
+docker-up-force-m: .env .mutagen-compose
+ifeq ($(USE_LO),true)
+	-@make .lo0-up
+endif
+	$(DC) $(MTGN_COMPOSE_FILE) pull
+	$(DC) $(MTGN_COMPOSE_FILE) up -d --force-recreate --remove-orphans
+	mutagen sync terminate $(MTGN_NAME) || true
+	mutagen sync create --name=$(MTGN_NAME) $(MTGN_PATH) docker://root@$(MTGN_CONTAINER)/var/www
+
+docker-down-clean-m: .env .mutagen-compose
+ifeq ($(USE_LO),true)
+	-@make .lo0-down
+endif
+	$(DC) $(MTGN_COMPOSE_FILE) down -v
+	mutagen sync terminate $(MTGN_NAME)

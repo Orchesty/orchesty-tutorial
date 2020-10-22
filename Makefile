@@ -1,3 +1,10 @@
+##### MUTAGEN_SYNC #####
+USE_LO=true
+MTGN_CONTAINER=pipes-tutorial_php-sdk_1
+MTGN_PATH=$(shell pwd)/php-sdk
+include ./Makefile-mutagen
+##### ____________ #####
+
 DC=docker-compose
 PHP_SDK=docker-compose exec -T php-sdk
 

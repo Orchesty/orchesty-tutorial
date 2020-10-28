@@ -101,11 +101,10 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     protected function prepareSender(Closure ...$closures): CurlManager
     {
         $sender = self::createPartialMock(CurlManager::class, ['send']);
-        $i      = 0;
-
-        foreach ($closures as $closure) {
-            $sender->expects(self::at($i++))->method('send')->willReturnCallback($closure);
-        }
+        $sender
+            ->expects(self::exactly(count($closures)))
+            ->method('send')
+            ->willReturnOnConsecutiveCalls($closures);
 
         return $sender;
     }

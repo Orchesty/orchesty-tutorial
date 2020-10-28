@@ -26,10 +26,10 @@ docker-down-clean: .env
 
 # Composer section
 composer-install:
-	$(DA) composer install --no-suggest
+	$(DA) composer install
 
 composer-update:
-	$(DA) composer update --no-suggest
+	$(DA) composer update
 	$(DA) composer update --dry-run roave/security-advisories
 	$(DA) composer normalize
 

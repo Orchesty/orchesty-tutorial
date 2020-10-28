@@ -16,6 +16,7 @@ use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
+use JsonException;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -83,6 +84,7 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
      * @throws ApplicationInstallException
      * @throws PipesFrameworkException
      * @throws OnRepeatException
+     * @throws JsonException
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {

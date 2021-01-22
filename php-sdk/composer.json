@@ -13,7 +13,7 @@
         "hanaboso/pipes-connectors": "^1.5",
         "hanaboso/pipes-php-sdk": "^1.5",
         "hanaboso/rest-bundle": "^1.0",
-        "symfony/security-bundle": "^5.1"
+        "symfony/security-bundle": "^v5.2"
     },
     "replace": {
         "ralouphie/getallheaders": "*",
@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.1",
-        "symfony/debug-bundle": "^5.1"
+        "symfony/debug-bundle": "^v5.1"
     },
     "autoload": {
         "psr-4": {

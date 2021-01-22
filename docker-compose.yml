@@ -165,6 +165,8 @@ services:
             MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             RABBITMQ_HOST: rabbitmq
             PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
+            WORKER_DEFAULT_LIMIT_CPU: 1
+            WORKER_DEFAULT_LIMIT_MEMORY: 200m
         volumes:
             - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
             - ./topology:/srv/topology

@@ -33,8 +33,8 @@ final class HubSpotCreateMultipleContactsMapperTest extends KernelTestCaseAbstra
                     [
                         'name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555',
                     ],
-                ]
-            )
+                ],
+            ),
         );
 
         $res = Json::decode($mapper->process($dto)->getData());

@@ -40,7 +40,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'hub-spot.create-contact',
-            $this->createConnector(DataProvider::createResponseDto())->getId()
+            $this->createConnector(DataProvider::createResponseDto())->getId(),
         );
     }
 
@@ -80,7 +80,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         $res = $this->createConnector(DataProvider::createResponseDto())
@@ -102,12 +102,12 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         $ex  = (string) file_get_contents(__DIR__ . '/data/hubspot409Response.json');
         $res = $this->createConnector(
-            DataProvider::createResponseDto($ex, 409)
+            DataProvider::createResponseDto($ex, 409),
         )
             ->setApplication($this->app)
             ->processAction($dto);
@@ -127,7 +127,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         self::expectException(OnRepeatException::class);
@@ -180,8 +180,8 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
         $appInstall->setSettings(
             array_merge(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],]
-            )
+                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+            ),
         );
 
         return $appInstall;

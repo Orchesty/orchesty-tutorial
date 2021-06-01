@@ -34,7 +34,7 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'hub-spot.contact-created',
-            $this->createConnector()->getId()
+            $this->createConnector()->getId(),
         );
     }
 
@@ -63,7 +63,7 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         $res = $this->createConnector()
@@ -104,8 +104,8 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
         $appInstall->setSettings(
             array_merge(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],]
-            )
+                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+            ),
         );
 
         return $appInstall;

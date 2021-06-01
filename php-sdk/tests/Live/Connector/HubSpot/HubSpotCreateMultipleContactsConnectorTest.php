@@ -41,7 +41,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
             'user',
             $token,
             $clientId,
-            $clientSecret
+            $clientSecret,
         );
         $this->pfd($appInstall);
         $this->dm->clear();
@@ -54,8 +54,8 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
                     [
                         'name' => 'first last', 'email' => 'first@last.com', 'phone' => '555-555',
                     ],
-                ]
-            )
+                ],
+            ),
         );
 
         $resp = $connector->processAction($dto);

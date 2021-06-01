@@ -107,13 +107,13 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
         $this->createConnector([$promise])
             ->processBatch(
                 DataProvider::getProcessDto($app->getKey()),
-                fn() => $this->createPromise()
+                fn() => $this->createPromise(),
             )
             ->then(
                 NULL,
                 static function (Exception $e): void {
                     self::assertInstanceOf(ConnectorException::class, $e);
-                }
+                },
             )->wait();
     }
 
@@ -133,13 +133,13 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
         $this->createConnector([$promise])
             ->processBatch(
                 DataProvider::getProcessDto($app->getKey()),
-                fn() => $this->createPromise()
+                fn() => $this->createPromise(),
             )
             ->then(
                 NULL,
                 static function (Exception $e): void {
                     self::assertInstanceOf(CurlException::class, $e);
-                }
+                },
             )->wait();
     }
 

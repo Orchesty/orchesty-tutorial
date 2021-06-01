@@ -65,7 +65,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     {
         self::assertEquals(
             'HubSpot offers a full stack of software for marketing, sales, and customer service, with a completely free CRM at its core. They’re powerful alone — but even better when used together.',
-            $this->app->getDescription()
+            $this->app->getDescription(),
         );
     }
 
@@ -100,7 +100,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
             $this->createApplicationInstall(),
             CurlManager::METHOD_POST,
             NULL,
-            Json::encode(['foo' => 'bar'])
+            Json::encode(['foo' => 'bar']),
         );
         self::assertEquals(CurlManager::METHOD_POST, $dto->getMethod());
         self::assertEquals(HubSpotApplication::BASE_URL, $dto->getUri(TRUE));
@@ -162,7 +162,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     {
         $res = $this->app->processWebhookSubscribeResponse(
             DataProvider::createResponseDto(Json::encode(['id' => 'wh_id']), 200),
-            $this->createApplicationInstall()
+            $this->createApplicationInstall(),
         );
 
         self::assertEquals('wh_id', $res);
@@ -219,8 +219,8 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
         $appInstall->setSettings(
             array_merge(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],]
-            )
+                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+            ),
         );
 
         return $appInstall;

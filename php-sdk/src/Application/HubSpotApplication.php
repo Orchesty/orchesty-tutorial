@@ -99,7 +99,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
-        ?string $data = NULL
+        ?string $data = NULL,
     ): RequestDto
     {
         $request = new RequestDto($method, $this->getUri($url ?? self::BASE_URL));
@@ -108,7 +108,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
                 'Authorization' => sprintf('Bearer %s', $this->getAccessToken($applicationInstall)),
-            ]
+            ],
         );
 
         if (isset($data)) {
@@ -155,13 +155,13 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     public function getWebhookSubscribeRequestDto(
         ApplicationInstall $applicationInstall,
         WebhookSubscription $subscription,
-        string $url
+        string $url,
     ): RequestDto
     {
         $hubspotUrl = sprintf(
             '%s/webhooks/v1/%s/subscriptions',
             self::BASE_URL,
-            $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID]
+            $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID],
         );
         $body       = Json::encode(
             [
@@ -171,7 +171,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
                     'propertyName'     => 'email',
                 ],
                 'enabled'             => FALSE,
-            ]
+            ],
         );
 
         return $this->getRequestDto($applicationInstall, CurlManager::METHOD_POST, $hubspotUrl, $body);
@@ -191,7 +191,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             '%s/webhooks/v1/%s/subscriptions/%s',
             self::BASE_URL,
             $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID],
-            $id
+            $id,
         );
 
         return $this->getRequestDto($applicationInstall, CurlManager::METHOD_DELETE, $url);

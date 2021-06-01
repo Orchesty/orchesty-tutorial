@@ -84,7 +84,7 @@ final class GoogleDriveApplicationTest extends KernelTestCaseAbstract
             DataProvider::getOauth2AppInstall($this->app->getKey()),
             CurlManager::METHOD_POST,
             NULL,
-            Json::encode(['foo' => 'bar'])
+            Json::encode(['foo' => 'bar']),
         );
         self::assertEquals(CurlManager::METHOD_POST, $dto->getMethod());
         self::assertEquals(GoogleDriveApplication::BASE_URL, $dto->getUri(TRUE));

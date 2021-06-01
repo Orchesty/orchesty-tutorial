@@ -66,14 +66,14 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
                 $data = Json::decode($message->getData());
 
                 self::assertArrayHasKey('id', $data);
-            }
+            },
         )->then(
             static function (): void {
                 self::assertTrue(TRUE);
             },
             static function (): void {
                 self::fail('Something gone wrong!');
-            }
+            },
         );
     }
 

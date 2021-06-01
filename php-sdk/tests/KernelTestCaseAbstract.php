@@ -53,7 +53,7 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
         string $exception,
         ?int $exceptionCode = NULL,
         ?string $exceptionMessage = NULL,
-        bool $isExact = TRUE
+        bool $isExact = TRUE,
     ): void
     {
         self::expectException($exception);
@@ -82,14 +82,14 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
                 self::assertTrue(TRUE);
 
                 return $this->createPromise();
-            }
+            },
         )->then(
             static function (): void {
                 self::assertTrue(TRUE);
             },
             static function (): void {
                 self::fail('Something gone wrong!');
-            }
+            },
         )->wait();
     }
 

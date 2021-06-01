@@ -55,7 +55,7 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
-        ?string $data = NULL
+        ?string $data = NULL,
     ): RequestDto
     {
         $token = $applicationInstall->getSettings()
@@ -67,7 +67,7 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
                 'Authorization' => sprintf('Bearer %s', $token),
-            ]
+            ],
         );
 
         if (isset($data)) {

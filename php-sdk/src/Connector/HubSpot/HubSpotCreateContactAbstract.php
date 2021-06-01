@@ -38,11 +38,6 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
     protected string $contactUrl;
 
     /**
-     * @var CurlManager
-     */
-    protected CurlManager $sender;
-
-    /**
      * @var ApplicationInstallRepository
      */
     protected ApplicationInstallRepository $repository;
@@ -58,9 +53,8 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
      * @param DocumentManager $dm
      * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, CurlManager $sender)
+    public function __construct(DocumentManager $dm, protected CurlManager $sender)
     {
-        $this->sender     = $sender;
         $this->repository = $dm->getRepository(ApplicationInstall::class);
         $this->logger     = new NullLogger();
     }
@@ -97,8 +91,8 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
                     $applicationInstall,
                     CurlManager::METHOD_POST,
                     sprintf('%s/%s', HubspotApplication::BASE_URL, $this->contactUrl),
-                    Json::encode($body)
-                )->setDebugInfo($dto)
+                    Json::encode($body),
+                )->setDebugInfo($dto),
             );
 
             if ($response->getStatusCode() === 202) {
@@ -113,8 +107,8 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
                 $this->logger->error(
                     sprintf('Contact "%s" already exist.', $parsed['identityProfile']['identity'][0]['value'] ?? ''),
                     array_merge(
-                        ['response' => $response->getBody(), PipesHeaders::debugInfo($dto->getHeaders())]
-                    )
+                        ['response' => $response->getBody(), PipesHeaders::debugInfo($dto->getHeaders())],
+                    ),
                 );
             }
 

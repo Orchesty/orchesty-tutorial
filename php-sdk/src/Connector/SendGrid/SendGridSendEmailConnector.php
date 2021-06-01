@@ -28,11 +28,6 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
     use ProcessEventNotSupportedTrait;
 
     /**
-     * @var CurlManager
-     */
-    private CurlManager $sender;
-
-    /**
      * @var ApplicationInstallRepository
      */
     private ApplicationInstallRepository $repository;
@@ -43,9 +38,8 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
      * @param DocumentManager $dm
      * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, CurlManager $sender)
+    public function __construct(DocumentManager $dm, private CurlManager $sender)
     {
-        $this->sender     = $sender;
         $this->repository = $dm->getRepository(ApplicationInstall::class);
     }
 

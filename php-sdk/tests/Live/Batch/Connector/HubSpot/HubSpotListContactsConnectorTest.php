@@ -40,7 +40,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
             'user',
             $token,
             $clientId,
-            $clientSecret
+            $clientSecret,
         );
         $this->pfd($appInstall);
         $this->dm->clear();

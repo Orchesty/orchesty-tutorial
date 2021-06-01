@@ -64,7 +64,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
             DataProvider::createApplicationInstall($this->app->getKey()),
             CurlManager::METHOD_POST,
             'foo.bar',
-            Json::encode(['foo' => 'bar'])
+            Json::encode(['foo' => 'bar']),
         );
         self::assertEquals(CurlManager::METHOD_POST, $dto->getMethod());
         self::assertEquals('foo.bar', $dto->getUri(TRUE));
@@ -106,7 +106,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     {
         $this->app->setAuthorizationToken(
             DataProvider::createApplicationInstall($this->app->getKey()),
-            ['token' => 'abc']
+            ['token' => 'abc'],
         );
 
         self::assertFake();

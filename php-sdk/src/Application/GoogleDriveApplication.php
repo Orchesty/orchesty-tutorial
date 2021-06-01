@@ -77,7 +77,7 @@ final class GoogleDriveApplication extends OAuth2ApplicationAbstract
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
-        ?string $data = NULL
+        ?string $data = NULL,
     ): RequestDto
     {
         $request = new RequestDto($method, $this->getUri($url ?? self::BASE_URL));
@@ -85,7 +85,7 @@ final class GoogleDriveApplication extends OAuth2ApplicationAbstract
             [
                 'Accept'        => 'application/json',
                 'Authorization' => sprintf('Bearer %s', $this->getAccessToken($applicationInstall)),
-            ]
+            ],
         );
 
         if (isset($data)) {

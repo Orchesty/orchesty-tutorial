@@ -49,11 +49,6 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
     private ApplicationInstallRepository $repository;
 
     /**
-     * @var CurlManager
-     */
-    private CurlManager $sender;
-
-    /**
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
@@ -64,10 +59,9 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param DocumentManager $dm
      * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, CurlManager $sender)
+    public function __construct(DocumentManager $dm, private CurlManager $sender)
     {
         $this->repository = $dm->getRepository(ApplicationInstall::class);
-        $this->sender     = $sender;
         $this->logger     = new NullLogger();
     }
 
@@ -107,7 +101,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         $requestDto         = $this->getApplication()->getRequestDto(
             $applicationInstall,
             CurlManager::METHOD_GET,
-            sprintf(self::URL, HubspotApplication::BASE_URL)
+            sprintf(self::URL, HubspotApplication::BASE_URL),
         );
         $requestDto->setDebugInfo($dto);
 
@@ -135,7 +129,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         ApplicationInstall $install,
         ProcessDto $processDto,
         int $page = 0,
-        int $offset = 0
+        int $offset = 0,
     ): PromiseInterface
     {
         $uri = $this->getUri($dto, $offset);
@@ -160,7 +154,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
                             $install,
                             $processDto,
                             ++$page,
-                            $data['vid-offset'] ?? 0
+                            $data['vid-offset'] ?? 0,
                         );
                     } else {
                         unset($body, $data);
@@ -169,8 +163,8 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
                     }
                 },
                 fn(Exception $e) => $callbackItem(
-                    $this->batchConnectorError($e, $install, [], $processDto->getHeaders())
-                )
+                    $this->batchConnectorError($e, $install, [], $processDto->getHeaders()),
+                ),
             );
     }
 
@@ -188,7 +182,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
                 urldecode($dto->getUriString()),
                 self::ITEMS_PER_PAGE,
                 $offset,
-            )
+            ),
         );
     }
 
@@ -206,7 +200,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         callable $callbackItem,
         array $data,
         int $page,
-        array $headers = []
+        array $headers = [],
     ): void
     {
         if (array_key_exists('contacts', $data)) {
@@ -225,7 +219,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
                 new ConnectorException('Bad response data from HubSpot response. Missing "contacts".'),
                 $install,
                 ['data' => $data],
-                $headers
+                $headers,
             );
         }
     }
@@ -243,7 +237,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         Exception $e,
         ApplicationInstall $install,
         array $context = [],
-        array $headers = []
+        array $headers = [],
     ): SuccessMessage
     {
         $context = array_merge(
@@ -252,7 +246,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
                 'user'        => $install->getUser(),
                 'key'         => $install->getKey(),
             ],
-            $context
+            $context,
         );
 
         $this->logger->error($e->getMessage(), array_merge($context, PipesHeaders::debugInfo($headers)));

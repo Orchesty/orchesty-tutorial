@@ -37,7 +37,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'google-drive.upload-file',
-            $this->createConnector(DataProvider::createResponseDto())->getId()
+            $this->createConnector(DataProvider::createResponseDto())->getId(),
         );
     }
 
@@ -66,19 +66,19 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         $res = $this->createConnector(
             DataProvider::createResponseDto(
-                '{"kind": "drive#file","id": "169PQAadbK5TMmuCcZd5aFzZa1sblBymt","name": "my.txt","mimeType": "text/plain"}'
-            )
+                '{"kind": "drive#file","id": "169PQAadbK5TMmuCcZd5aFzZa1sblBymt","name": "my.txt","mimeType": "text/plain"}',
+            ),
         )
             ->setApplication($this->app)
             ->processAction($dto);
         self::assertEquals(
             '{"kind": "drive#file","id": "169PQAadbK5TMmuCcZd5aFzZa1sblBymt","name": "my.txt","mimeType": "text/plain"}',
-            $res->getData()
+            $res->getData(),
         );
     }
 
@@ -95,7 +95,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555'])
+            Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
         self::expectException(OnRepeatException::class);

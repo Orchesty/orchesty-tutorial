@@ -71,7 +71,7 @@ final class SendGridApplication extends BasicApplicationAbstract
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
-        ?string $data = NULL
+        ?string $data = NULL,
     ): RequestDto
     {
         if (!$this->isAuthorized($applicationInstall)) {
@@ -83,7 +83,7 @@ final class SendGridApplication extends BasicApplicationAbstract
         $dto      = new RequestDto(
             $method,
             new Uri($url ?? self::BASE_URL),
-            ['Content-Type' => 'application/json', 'Authorization' => sprintf('Bearer %s', $token)]
+            ['Content-Type' => 'application/json', 'Authorization' => sprintf('Bearer %s', $token)],
         );
 
         if ($data) {

@@ -34,7 +34,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
 
         $appInstall = DataProvider::getBasicAppInstall($app->getKey());
         $appInstall->setSettings(
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]
+            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
         );
         $this->pfd($appInstall);
         $this->dm->clear();

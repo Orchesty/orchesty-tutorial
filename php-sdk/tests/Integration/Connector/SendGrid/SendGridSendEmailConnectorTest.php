@@ -65,7 +65,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!']),
         );
 
         $res = $this->createConnector(DataProvider::createResponseDto())
@@ -86,7 +86,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
 
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
-            'user'
+            'user',
         );
 
         self::expectException(ConnectorException::class);
@@ -109,7 +109,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $dto = DataProvider::getProcessDto(
             $this->app->getKey(),
             'user',
-            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!'])
+            Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!']),
         );
 
         self::expectException(ConnectorException::class);

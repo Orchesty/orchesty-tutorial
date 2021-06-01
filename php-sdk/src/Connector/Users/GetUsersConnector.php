@@ -23,18 +23,12 @@ final class GetUsersConnector extends ConnectorAbstract
     use ProcessEventNotSupportedTrait;
 
     /**
-     * @var CurlManager
-     */
-    private CurlManager $sender;
-
-    /**
      * GetUsersConnector constructor.
      *
      * @param CurlManager $sender
      */
-    public function __construct(CurlManager $sender)
+    public function __construct(private CurlManager $sender)
     {
-        $this->sender = $sender;
     }
 
     /**
@@ -56,7 +50,7 @@ final class GetUsersConnector extends ConnectorAbstract
         try {
             $request = new RequestDto(
                 CurlManager::METHOD_GET,
-                new Uri('https://jsonplaceholder.typicode.com/users')
+                new Uri('https://jsonplaceholder.typicode.com/users'),
             );
             $request->setDebugInfo($dto);
             $response = $this->sender->send($request);
@@ -70,7 +64,7 @@ final class GetUsersConnector extends ConnectorAbstract
             $this->evaluateStatusCode(
                 $response->getStatusCode(),
                 $dto,
-                sprintf('Status code is not valid %s!', $response->getStatusCode())
+                sprintf('Status code is not valid %s!', $response->getStatusCode()),
             );
 
             $dto->setData($response->getBody());

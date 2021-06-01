@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
     php-sdk:
-        image: hanabosocom/php-dev:php-7.4-alpine
+        image: hanabosocom/php-dev:php-8.0-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:

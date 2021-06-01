@@ -37,7 +37,7 @@ final class DataProvider
         string $user = 'user',
         string $accessToken = 'token123',
         string $clientId = 'clientId',
-        string $clientSecret = 'clientSecret'
+        string $clientSecret = 'clientSecret',
     ): ApplicationInstall
     {
         $settings                                                                                                               = [];
@@ -64,7 +64,7 @@ final class DataProvider
     public static function getBasicAppInstall(
         string $key,
         string $user = 'user',
-        string $password = 'pass123'
+        string $password = 'pass123',
     ): ApplicationInstall
     {
         $settings                                                                                        = [];
@@ -95,7 +95,7 @@ final class DataProvider
                 [
                     PipesHeaders::createKey(PipesHeaders::USER)        => [$user],
                     PipesHeaders::createKey(PipesHeaders::APPLICATION) => [$key],
-                ]
+                ],
             );
 
         return $dto;
@@ -114,7 +114,7 @@ final class DataProvider
         string $key,
         string $user = 'user',
         array $settings = [],
-        array $nonEncryptedSettings = []
+        array $nonEncryptedSettings = [],
     ): ApplicationInstall
     {
         return (new ApplicationInstall())

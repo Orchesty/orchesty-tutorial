@@ -65,7 +65,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         self::assertFalse($this->app->isAuthorized($appInstall));
 
         $appInstall->setSettings(
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]
+            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
         );
         self::assertTrue($this->app->isAuthorized($appInstall));
     }
@@ -81,7 +81,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         $appInstall = DataProvider::createApplicationInstall(
             $this->app->getKey(),
             'user',
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]
+            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
         );
 
         $dto = $this->app->getRequestDto($appInstall, CurlManager::METHOD_POST, NULL, Json::encode(['foo' => 'bar']));

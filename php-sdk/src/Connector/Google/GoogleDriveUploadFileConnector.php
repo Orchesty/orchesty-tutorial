@@ -44,20 +44,14 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
     private ApplicationInstallRepository $repository;
 
     /**
-     * @var CurlManager
-     */
-    private CurlManager $sender;
-
-    /**
      * GoogleDriveUploadFileConnector constructor.
      *
      * @param DocumentManager $dm
      * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, CurlManager $sender)
+    public function __construct(DocumentManager $dm, private CurlManager $sender)
     {
         $this->repository = $dm->getRepository(ApplicationInstall::class);
-        $this->sender     = $sender;
     }
 
     /**
@@ -102,7 +96,7 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
                 ->getRequestDto(
                     $applicationInstall,
                     CurlManager::METHOD_POST,
-                    sprintf('%s/upload/drive/v3/files?uploadType=multipart', GoogleDriveApplication::BASE_URL)
+                    sprintf('%s/upload/drive/v3/files?uploadType=multipart', GoogleDriveApplication::BASE_URL),
                 )
                 ->setDebugInfo($dto);
 

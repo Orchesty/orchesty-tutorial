@@ -37,7 +37,7 @@ docker-down-clean: .env .lo0-down
 
 # Composer section
 composer-install:
-	$(PHP_SDK) composer install --no-suggest
+	$(PHP_SDK) composer install
 
 # App section
 clear-cache:

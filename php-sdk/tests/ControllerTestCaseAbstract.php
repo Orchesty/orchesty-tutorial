@@ -37,7 +37,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     protected function recreateClient(): void
     {
         $this->startClient();
-        $this->dm = self::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->dm = self::getContainer()->get('doctrine_mongodb.odm.default_document_manager');
     }
 
 }

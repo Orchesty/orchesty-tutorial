@@ -27,8 +27,8 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessAction(): void
     {
-        $app       = self::$container->get('hbpf.application.send-grid');
-        $curl      = self::$container->get('hbpf.transport.curl_manager');
+        $app       = self::getContainer()->get('hbpf.application.send-grid');
+        $curl      = self::getContainer()->get('hbpf.transport.curl_manager');
         $connector = new SendGridSendEmailConnector($this->dm, $curl);
         $connector->setApplication($app);
 

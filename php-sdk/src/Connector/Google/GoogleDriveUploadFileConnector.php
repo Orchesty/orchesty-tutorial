@@ -15,6 +15,7 @@ use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
+use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\GoogleDriveApplication;
 
@@ -74,7 +75,7 @@ final class GoogleDriveUploadFileConnector extends ConnectorAbstract
     {
         $applicationInstall = $this->repository->findUserAppByHeaders($dto);
         $tmpFileName        = sprintf('/tmp/%s', uniqid('file_', FALSE));
-        file_put_contents($tmpFileName, $dto->getData());
+        File::putContent($tmpFileName, $dto->getData());
 
         $multipart = [
             RequestOptions::MULTIPART => [

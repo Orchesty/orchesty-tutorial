@@ -111,7 +111,7 @@ final class GoogleDriveApplication extends OAuth2ApplicationAbstract
     /**
      * @param ApplicationInstall $applicationInstall
      *
-     * @return mixed[]|string[]
+     * @return string[]
      */
     protected function getScopes(ApplicationInstall $applicationInstall): array
     {

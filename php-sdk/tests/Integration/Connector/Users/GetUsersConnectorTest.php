@@ -7,6 +7,7 @@ use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\Utils\File\File;
 use Pipes\PhpSdk\Connector\Users\GetUsersConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
@@ -49,7 +50,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessAction(): void
     {
-        $content  = (string) file_get_contents(__DIR__ . '/data/users.json');
+        $content  = File::getContent(__DIR__ . '/data/users.json');
         $response = DataProvider::createResponseDto($content);
         $res      = $this->createConnector($response)->processAction(DataProvider::getProcessDto());
 
@@ -76,19 +77,13 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
 
     /**
      * @param ResponseDto    $dto
-     * @param Exception|null $exception
      *
      * @return GetUsersConnector
      */
-    private function createConnector(ResponseDto $dto, ?Exception $exception = NULL): GetUsersConnector
+    private function createConnector(ResponseDto $dto): GetUsersConnector
     {
         $sender = self::createMock(CurlManager::class);
-
-        if ($exception) {
-            $sender->method('send')->willThrowException($exception);
-        } else {
-            $sender->method('send')->willReturn($dto);
-        }
+        $sender->method('send')->willReturn($dto);
 
         return new GetUsersConnector($sender);
     }

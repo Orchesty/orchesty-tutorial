@@ -10,6 +10,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector;
@@ -127,7 +128,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
             Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
 
-        $ex  = (string) file_get_contents(__DIR__ . '/data/hubspot409Response.json');
+        $ex  = File::getContent(__DIR__ . '/data/hubspot409Response.json');
         $res = $this->createConnector(
             DataProvider::createResponseDto($ex, 409),
         )
@@ -170,7 +171,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
     {
         parent::setUp();
 
-        $this->app = new HubSpotApplication(self::$container->get('hbpf.providers.oauth2_provider'));
+        $this->app = new HubSpotApplication(self::getContainer()->get('hbpf.providers.oauth2_provider'));
     }
 
     /**

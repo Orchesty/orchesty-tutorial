@@ -18,7 +18,6 @@ use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Authorization\Utils\ScopeFormatter;
 use Hanaboso\Utils\String\Json;
-use JsonException;
 
 /**
  * Class HubSpotApplication
@@ -202,7 +201,6 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      * @param ApplicationInstall $install
      *
      * @return string
-     * @throws JsonException
      */
     public function processWebhookSubscribeResponse(ResponseDto $dto, ApplicationInstall $install): string
     {

@@ -9,6 +9,7 @@ use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
+use Hanaboso\Utils\File\File;
 use Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
@@ -79,12 +80,12 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessBatch(): void
     {
-        $app = self::$container->get('hbpf.application.hub-spot');
+        $app = self::getContainer()->get('hbpf.application.hub-spot');
 
-        $response = new Response(200, [], (string) file_get_contents(__DIR__ . '/data/listContacts.json'));
+        $response = new Response(200, [], File::getContent(__DIR__ . '/data/listContacts.json'));
         $promise  = $this->createPromise(static fn() => $response);
 
-        $response2 = new Response(200, [], (string) file_get_contents(__DIR__ . '/data/emptyListContacts.json'));
+        $response2 = new Response(200, [], File::getContent(__DIR__ . '/data/emptyListContacts.json'));
         $promise2  = $this->createPromise(static fn() => $response2);
 
         $this->assertBatch($this->createConnector([$promise, $promise2]), DataProvider::getProcessDto($app->getKey()));
@@ -100,7 +101,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessBatchBadData(): void
     {
-        $app      = self::$container->get('hbpf.application.hub-spot');
+        $app      = self::getContainer()->get('hbpf.application.hub-spot');
         $response = new Response(200, [], '{}');
         $promise  = $this->createPromise(static fn() => $response);
 
@@ -127,7 +128,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessBatchRejected(): void
     {
-        $app     = self::$container->get('hbpf.application.hub-spot');
+        $app     = self::getContainer()->get('hbpf.application.hub-spot');
         $promise = new RejectedPromise(new CurlException('some error'));
 
         $this->createConnector([$promise])
@@ -156,7 +157,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
      */
     private function createConnector(array $responses = []): HubSpotListContactsConnector
     {
-        $app  = self::$container->get('hbpf.application.hub-spot');
+        $app  = self::getContainer()->get('hbpf.application.hub-spot');
         $curl = $this->createMock(CurlManager::class);
         $curl
             ->expects(self::exactly(count($responses)))

@@ -5,6 +5,7 @@ namespace Pipes\PhpSdk\Tests\Integration\Batch\Splitter;
 use Exception;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
+use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
@@ -61,7 +62,7 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
     {
         $batch = new UsersBatchSplitter();
         $batch->processBatch(
-            DataProvider::getProcessDto('', '', (string) file_get_contents(__DIR__ . '/data/users.json')),
+            DataProvider::getProcessDto('', '', File::getContent(__DIR__ . '/data/users.json')),
             static function (SuccessMessage $message): void {
                 $data = Json::decode($message->getData());
 

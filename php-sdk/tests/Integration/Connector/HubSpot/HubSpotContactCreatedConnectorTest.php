@@ -83,7 +83,7 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->app = new HubSpotApplication(self::$container->get('hbpf.providers.oauth2_provider'));
+        $this->app = new HubSpotApplication(self::getContainer()->get('hbpf.providers.oauth2_provider'));
     }
 
     /**

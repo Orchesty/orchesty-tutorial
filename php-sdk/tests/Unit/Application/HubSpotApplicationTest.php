@@ -161,7 +161,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     public function testProcessWebhookSubscribeResponse(): void
     {
         $res = $this->app->processWebhookSubscribeResponse(
-            DataProvider::createResponseDto(Json::encode(['id' => 'wh_id']), 200),
+            DataProvider::createResponseDto(Json::encode(['id' => 'wh_id'])),
             $this->createApplicationInstall(),
         );
 

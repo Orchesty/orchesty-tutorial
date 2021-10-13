@@ -16,7 +16,6 @@ use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
-use JsonException;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -78,7 +77,6 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
      * @throws ApplicationInstallException
      * @throws PipesFrameworkException
      * @throws OnRepeatException
-     * @throws JsonException
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
@@ -97,6 +95,15 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
 
             if ($response->getStatusCode() === 202) {
                 return $dto->setData($response->getBody());
+            }
+
+            if ($response->getStatusCode() === 403){
+                $this->logger->error(
+                    'Token does not have proper permissions!',
+                    array_merge(
+                        ['response' => $response->getBody(), PipesHeaders::debugInfo($dto->getHeaders())],
+                    ),
+                );
             }
 
             $message = $response->getJsonBody()['validationResults'][0]['message'] ?? NULL;

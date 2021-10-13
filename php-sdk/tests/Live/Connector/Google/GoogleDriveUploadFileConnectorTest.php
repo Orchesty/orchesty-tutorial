@@ -3,7 +3,8 @@
 namespace Pipes\PhpSdk\Tests\Live\Connector\Google;
 
 use Exception;
-use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector;
@@ -27,12 +28,12 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessAction(): void
     {
-        $settings     = self::$container->get('hbpf.commons.crypt.crypt_manager')->decrypt('001_aaa');
-        $token        = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::TOKEN][OAuth2Provider::ACCESS_TOKEN];
-        $clientId     = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::CLIENT_ID];
-        $clientSecret = $settings[OAuth2ApplicationAbstract::AUTHORIZATION_SETTINGS][OAuth2ApplicationAbstract::CLIENT_SECRET];
-        $app          = self::$container->get('hbpf.application.google-drive');
-        $curl         = self::$container->get('hbpf.transport.curl_manager');
+        $settings     = self::getContainer()->get('hbpf.commons.crypt.crypt_manager')->decrypt('001_aaa');
+        $token        = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][ApplicationInterface::TOKEN][OAuth2Provider::ACCESS_TOKEN];
+        $clientId     = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_ID];
+        $clientSecret = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_SECRET];
+        $app          = self::getContainer()->get('hbpf.application.google-drive');
+        $curl         = self::getContainer()->get('hbpf.transport.curl_manager');
         $connector    = new GoogleDriveUploadFileConnector($this->dm, $curl);
         $connector->setApplication($app);
 

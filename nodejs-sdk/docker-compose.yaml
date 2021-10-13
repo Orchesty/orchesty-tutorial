@@ -1,0 +1,35 @@
+version: '3.5'
+services:
+
+    sdk:
+        image: node-sdk:tag
+        build: ./docker
+        user: ${DEV_UID}:${DEV_GID}
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        environment:
+            # Envs for tests are load from .jest/testEnvs.js
+            JEST_DOCKER: 1
+            APP_ENV: 'debug'
+            CRYPT_SECRET: 'ThisIsNotSoSecret'
+            BACKEND_URL: 'http://127.0.0.42:8080'
+            UDP_LOGGER_DSN: 'logstash:5005'
+            METRICS_DSN: 'mongodb://mongo:27017/metrics'
+            MONGO_DSN: 'mongodb://mongo:27017/node-sdk'
+        command: sleep infinity
+
+    mongo:
+        image: mongo:latest
+        ports:
+            - ${DEV_IP}:27017:27017
+        volumes:
+            - mongo:/data/db
+
+    logstash:
+        image: mendhak/udp-listener
+        ports:
+            - ${DEV_IP}:4444:5005
+
+volumes:
+    mongo: {}

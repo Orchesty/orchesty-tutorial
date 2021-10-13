@@ -11,7 +11,6 @@ use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchInterface;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchTrait;
 use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
-use JsonException;
 
 /**
  * Class UsersBatchSplitter
@@ -38,7 +37,6 @@ final class UsersBatchSplitter extends ConnectorAbstract implements BatchInterfa
      * @param callable   $callbackItem
      *
      * @return PromiseInterface
-     * @throws JsonException
      */
     public function processBatch(ProcessDto $dto, callable $callbackItem): PromiseInterface
     {

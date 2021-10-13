@@ -25,7 +25,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessAction(): void
     {
-        $curl      = self::$container->get('hbpf.transport.curl_manager');
+        $curl      = self::getContainer()->get('hbpf.transport.curl_manager');
         $connector = new GetUsersConnector($curl);
 
         $resp = $connector->processAction(DataProvider::getProcessDto());

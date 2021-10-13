@@ -2,6 +2,9 @@
 .idea
 *.DS_Store
 
+# Node.js
+nodejs-sdk/node_modules
+
 # PHP
 php-sdk/vendor
 php-sdk/var

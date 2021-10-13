@@ -84,10 +84,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->pfd($this->createApplicationInstall());
         $this->dm->clear();
 
-        $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
-            'user',
-        );
+        $dto = DataProvider::getProcessDto($this->app->getKey());
 
         self::expectException(ConnectorException::class);
         $this

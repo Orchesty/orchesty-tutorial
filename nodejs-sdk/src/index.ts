@@ -1,30 +1,37 @@
-import { initiateContainer, listen } from 'pipes-nodejs-sdk';
+import { container, initiateContainer, listen } from 'pipes-nodejs-sdk';
+import CoreServices from 'pipes-nodejs-sdk/dist/lib/DIContainer/CoreServices';
+import GetUsersConnector from './Tutorial/Connector/GetUsersConnector';
+import SendgridApplication from './Tutorial/SendgridApplication';
+import SengridSendEmailConnector from './Tutorial/Connector/SengridSendEmailConnector';
+import { CustomNode } from './Tutorial/CustomNode/CustomNode';
+import { SplitBatch } from './Tutorial/Batch/SplitBatch';
+import { CursorBatch } from './Tutorial/Batch/CursorBatch';
 
 const prepare = async (): Promise<void> => {
-// Load core services by:
-    await initiateContainer();
+  // Load core services by:
+  await initiateContainer();
 
-    // Express.js is available by import:
-    // import { expressApp } from 'pipes-nodejs-sdk/lib';
+  const curlSender = container.get(CoreServices.CURL);
+  const mongoDbClient = container.get(CoreServices.MONGO);
 
-    // DIContainer is available by import:
-    // import { container } from 'pipes-nodejs-sdk/lib';
+  // Tutorial services
+  const getUsers = new GetUsersConnector()
+    .setSender(curlSender);
+  container.setConnector(getUsers);
+  container.setCustomNode(new CustomNode());
 
-    // How to add Connector to the DIC
-    // const myConnector = new MyConnector()
-    // container.setConnector(myConnector);
+  const sendgridApp = new SendgridApplication();
+  container.setApplication(sendgridApp);
 
-    // How to add CustomNode to the DIC
-    // const myCustomNode = new MyCustomNode()
-    // container.setCustomNode(myCustomNode);
+  const sendgridConn = new SengridSendEmailConnector();
+  sendgridConn
+    .setSender(curlSender)
+    .setDb(mongoDbClient)
+    .setApplication(sendgridApp);
 
-    // How to add Batch to the DIC
-    // const myBatch = new MyBatch()
-    // container.setBatch(myBatch);
-
-// How to add Application to the DIC
-// const myApp = new MyApp()
-// container.setApplication(myApp);
+  container.setBatch(new SplitBatch());
+  container.setBatch(new CursorBatch());
+  // Tutorial services end
 };
 
 // Start App by:

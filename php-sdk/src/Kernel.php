@@ -30,6 +30,10 @@ final class Kernel extends BaseKernel
     public function registerBundles(): iterable
     {
         $contents = require sprintf('%s/config/Bundles.php', $this->getProjectDir());
+        /**
+         * @var BundleInterface $class
+         * @var mixed $envs
+         */
         foreach ($contents as $class => $envs) {
             if ($envs[$this->environment] ?? $envs['all'] ?? FALSE) {
                 yield new $class();

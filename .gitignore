@@ -3,6 +3,7 @@
 *.DS_Store
 
 # Node.js
+nodejs-sdk/coverage
 nodejs-sdk/node_modules
 
 # PHP

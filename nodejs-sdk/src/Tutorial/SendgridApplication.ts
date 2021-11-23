@@ -12,13 +12,23 @@ import {
 } from 'pipes-nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
 import { encode } from 'pipes-nodejs-sdk/dist/lib/Utils/Base64';
 import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
+import { JSON_TYPE } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
+import { CommonHeaders } from 'pipes-nodejs-sdk/lib/Utils/Headers';
 
 export default class SendgridApplication extends ABasicApplication {
   public getDescription = () => 'SendgridApplication';
+
   public getName = () => 'sendgrid';
+
   public getPublicName = () => 'Sendgrid';
 
-  public getRequestDto(dto: ProcessDto, applicationInstall: ApplicationInstall, method: string, url?: string, data?: string): RequestDto {
+  public getRequestDto(
+    dto: ProcessDto,
+    applicationInstall: ApplicationInstall,
+    method: string,
+    url?: string,
+    data?: string,
+  ): RequestDto {
     if (!this.isAuthorized(applicationInstall)) {
       throw new Error('Missing authorization settings');
     }
@@ -28,9 +38,9 @@ export default class SendgridApplication extends ABasicApplication {
       `${settings[AUTHORIZATION_SETTINGS][USER]}:${settings[AUTHORIZATION_SETTINGS][PASSWORD]}`,
     );
     const headers = {
-      Authorization: `Basic ${token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      [CommonHeaders.AUTHORIZATION]: `Basic ${token}`,
+      [CommonHeaders.ACCEPT]: JSON_TYPE,
+      [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
     };
 
     return new RequestDto(url || '', parseHttpMethod(method), data, headers, dto);
@@ -44,5 +54,4 @@ export default class SendgridApplication extends ABasicApplication {
 
     return form;
   }
-
 }

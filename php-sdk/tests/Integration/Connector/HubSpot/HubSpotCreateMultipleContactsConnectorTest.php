@@ -117,6 +117,28 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
      *
      * @throws Exception
      */
+    public function testProcessAction403(): void
+    {
+        $this->pfd($this->createApplicationInstall());
+        $this->dm->clear();
+
+        $dto = DataProvider::getProcessDto(
+            $this->app->getKey(),
+            'user',
+            Json::encode([['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']]),
+        );
+
+        $res = $this->createConnector(DataProvider::createResponseDto('{}', 403))
+            ->setApplication($this->app)
+            ->processAction($dto);
+        self::assertEquals('{}', $res->getData());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::processAction
+     *
+     * @throws Exception
+     */
     public function testProcessActionDuplicitData(): void
     {
         $this->pfd($this->createApplicationInstall());

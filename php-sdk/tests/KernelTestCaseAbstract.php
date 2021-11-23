@@ -110,13 +110,17 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     }
 
     /**
-     * @param mixed[]|string $data
+     * @param string|mixed[] $data
      * @param string|null    $url
      * @param int            $statusCode
      *
      * @return Closure
      */
-    protected function prepareSenderResponse($data = '{}', ?string $url = NULL, int $statusCode = 200): Closure
+    protected function prepareSenderResponse(
+        array|string $data = '{}',
+        ?string $url = NULL,
+        int $statusCode = 200,
+    ): Closure
     {
         return static function (RequestDto $dto) use ($data, $url, $statusCode): ResponseDto {
             if ($url) {

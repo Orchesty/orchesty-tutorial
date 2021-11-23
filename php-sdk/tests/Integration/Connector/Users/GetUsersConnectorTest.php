@@ -76,7 +76,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
 
     /**
-     * @param ResponseDto    $dto
+     * @param ResponseDto $dto
      *
      * @return GetUsersConnector
      */

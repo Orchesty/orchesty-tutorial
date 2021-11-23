@@ -9,13 +9,15 @@ import FieldType from 'pipes-nodejs-sdk/dist/lib/Application/Model/Form/FieldTyp
 import { CLIENT_ID, CLIENT_SECRET } from 'pipes-nodejs-sdk/dist/lib/Authorization/Type/OAuth2/IOAuth2Application';
 import ScopeSeparatorEnum from 'pipes-nodejs-sdk/dist/lib/Authorization/ScopeSeparatorEnum';
 import { ACCESS_TOKEN } from 'pipes-nodejs-sdk/lib/Authorization/Provider/OAuth2/OAuth2Provider';
+import { CommonHeaders } from 'pipes-nodejs-sdk/lib/Utils/Headers';
+import { JSON_TYPE } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
 
 export default class TestOAuth2Application extends AOAuth2Application {
-
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
 
   public getTokenUrl = (): string => 'https://identity.idoklad.cz/server/connect/token';
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getScopes = (applicationInstall: ApplicationInstall): string[] => ['idoklad_api', 'offline_access'];
 
   protected _getScopesSeparator = (): string => ScopeSeparatorEnum.SPACE;
@@ -33,9 +35,9 @@ export default class TestOAuth2Application extends AOAuth2Application {
     url?: string,
     data?: string,
   ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data, {
-    Accept: 'application/json',
-    Authorization: `Bearer ${this.getTokens(applicationInstall)[ACCESS_TOKEN]}`,
-    'Content-Type': 'application/json',
+    [CommonHeaders.AUTHORIZATION]: `Bearer ${this.getTokens(applicationInstall)[ACCESS_TOKEN]}`,
+    [CommonHeaders.ACCEPT]: JSON_TYPE,
+    [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
   });
 
   public getSettingsForm = (): Form => {
@@ -49,5 +51,4 @@ export default class TestOAuth2Application extends AOAuth2Application {
 
     return form;
   };
-
 }

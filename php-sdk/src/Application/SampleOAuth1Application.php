@@ -21,7 +21,7 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'sample-oauth1';
     }
@@ -29,7 +29,7 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'SampleOAuth1 Application';
     }

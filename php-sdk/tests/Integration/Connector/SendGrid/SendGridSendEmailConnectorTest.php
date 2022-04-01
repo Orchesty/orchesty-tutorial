@@ -41,18 +41,6 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processEvent
-     *
-     * @throws Exception
-     */
-    public function testProcessEvent(): void
-    {
-        self::expectException(ConnectorException::class);
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->createConnector(DataProvider::createResponseDto())->processEvent(DataProvider::getProcessDto());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::processAction
      *
      * @throws Exception
@@ -63,7 +51,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!']),
         );
@@ -84,7 +72,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->pfd($this->createApplicationInstall());
         $this->dm->clear();
 
-        $dto = DataProvider::getProcessDto($this->app->getKey());
+        $dto = DataProvider::getProcessDto($this->app->getName());
 
         self::expectException(ConnectorException::class);
         $this
@@ -104,7 +92,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!']),
         );
@@ -170,7 +158,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
      */
     private function createApplicationInstall(): ApplicationInstall
     {
-        $appInstall = DataProvider::getBasicAppInstall($this->app->getKey());
+        $appInstall = DataProvider::getBasicAppInstall($this->app->getName());
         $appInstall
             ->setSettings([ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]);
 

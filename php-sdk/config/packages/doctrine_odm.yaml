@@ -47,11 +47,6 @@ doctrine_mongodb:
                     is_bundle: false
                     dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/Database/Document'
                     prefix: Hanaboso\PipesPhpSdk\Database\Document
-                LongRunningNodeDocument:
-                    type: annotation
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/LongRunningNode/Document'
-                    prefix: Hanaboso\PipesPhpSdk\LongRunningNode\Document
             filters:
                 deleted:
                     class: Hanaboso\CommonsBundle\Database\Filters\ODM\DeletedFilter

@@ -12,7 +12,6 @@ use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
@@ -28,8 +27,6 @@ use Psr\Log\NullLogger;
  */
 abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements LoggerAwareInterface
 {
-
-    use ProcessEventNotSupportedTrait;
 
     /**
      * @var string
@@ -106,7 +103,7 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
                 );
             }
 
-            $message = $response->getJsonBody()['validationResults'][0]['message'] ?? NULL;
+            $message = $response->getJsonBody()['validationResults'][0]['message'] ?? '';
             $this->evaluateStatusCode($response->getStatusCode(), $dto, $message);
 
             if ($response->getStatusCode() === 409) {

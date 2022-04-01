@@ -4,10 +4,8 @@ namespace Pipes\PhpSdk\Batch\Connector\HubSpot;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Uri;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
-use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
@@ -15,15 +13,9 @@ use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
-use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchInterface;
-use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\BatchTrait;
-use Hanaboso\PipesPhpSdk\RabbitMq\Impl\Batch\SuccessMessage;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
 use Pipes\PhpSdk\Application\HubSpotApplication;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -33,12 +25,8 @@ use Psr\Log\NullLogger;
  *
  * @package Pipes\PhpSdk\Batch\Connector\HubSpot
  */
-final class HubSpotListContactsConnector extends ConnectorAbstract implements BatchInterface, LoggerAwareInterface
+final class HubSpotListContactsConnector extends ConnectorAbstract implements LoggerAwareInterface
 {
-
-    use ProcessActionNotSupportedTrait;
-    use ProcessEventNotSupportedTrait;
-    use BatchTrait;
 
     public const ITEMS_PER_PAGE = 90;
     public const URL            = '%s/contacts/v1/lists/all/contacts/all';
@@ -87,14 +75,13 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
 
     /**
      * @param ProcessDto $dto
-     * @param callable   $callbackItem
      *
-     * @return PromiseInterface
-     * @throws CurlException
+     * @return ProcessDto
      * @throws ApplicationInstallException
      * @throws ConnectorException
+     * @throws Exception
      */
-    public function processBatch(ProcessDto $dto, callable $callbackItem): PromiseInterface
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         $dto->addHeader(PipesHeaders::createKey(PipesHeaders::APPLICATION), $this->getApplicationKey() ?? '');
         $applicationInstall = $this->repository->findUserAppByHeaders($dto);
@@ -105,7 +92,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         );
         $requestDto->setDebugInfo($dto);
 
-        return $this->doPageLoop($callbackItem, $requestDto, $applicationInstall, $dto);
+        return $this->doPageLoop($requestDto, $applicationInstall, $dto);
     }
 
     /**
@@ -113,59 +100,29 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      */
 
     /**
-     * @param callable           $callbackItem
      * @param RequestDto         $dto
      * @param ApplicationInstall $install
      * @param ProcessDto         $processDto
-     * @param int                $page
-     * @param int                $offset
      *
-     * @return PromiseInterface
-     * @throws CurlException
+     * @return ProcessDto
+     * @throws Exception
      */
-    private function doPageLoop(
-        callable $callbackItem,
-        RequestDto $dto,
-        ApplicationInstall $install,
-        ProcessDto $processDto,
-        int $page = 0,
-        int $offset = 0,
-    ): PromiseInterface
+    private function doPageLoop(RequestDto $dto, ApplicationInstall $install, ProcessDto $processDto): ProcessDto
     {
-        $uri = $this->getUri($dto, $offset);
+        $offset = (int) $processDto->getBatchCursor('0');
+        $uri    = $this->getUri($dto, $offset);
 
-        return $this->sender->sendAsync(RequestDto::from($dto, $uri))
-            ->then(
-                function (ResponseInterface $response) use (
-                    $dto,
-                    $callbackItem,
-                    $page,
-                    $install,
-                    $processDto
-                ): PromiseInterface {
-                    $body = $response->getBody()->getContents();
-                    $data = empty($body) ? [] : Json::decode($body);
-                    $this->createSuccessMessage($install, $callbackItem, $data, ++$page, $processDto->getHeaders());
+        $response = $this->sender->send(RequestDto::from($dto, $uri));
 
-                    if ($data['has-more'] ?? FALSE) {
-                        return $this->doPageLoop(
-                            $callbackItem,
-                            $dto,
-                            $install,
-                            $processDto,
-                            ++$page,
-                            $data['vid-offset'] ?? 0,
-                        );
-                    } else {
-                        unset($body, $data);
+        $body    = $response->getBody();
+        $data    = empty($body) ? [] : Json::decode($body);
+        $respDto = $this->createSuccessMessage($install, $data, $processDto->getHeaders());
 
-                        return $this->createPromise();
-                    }
-                },
-                fn(Exception $e) => $callbackItem(
-                    $this->batchConnectorError($e, $install, [], $processDto->getHeaders()),
-                ),
-            );
+        if ($data['has-more'] ?? FALSE) {
+            $respDto->setBatchCursor((string) ++$offset);
+        }
+
+        return $respDto;
     }
 
     /**
@@ -188,34 +145,18 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
 
     /**
      * @param ApplicationInstall $install
-     * @param callable           $callbackItem
      * @param mixed[]            $data
-     * @param int                $page
      * @param mixed[]            $headers
      *
+     * @return ProcessDto
      * @throws Exception
      */
-    private function createSuccessMessage(
-        ApplicationInstall $install,
-        callable $callbackItem,
-        array $data,
-        int $page,
-        array $headers = [],
-    ): void
+    private function createSuccessMessage(ApplicationInstall $install, array $data, array $headers = []): ProcessDto
     {
         if (array_key_exists('contacts', $data)) {
-            $contacts = $data['contacts'];
-            $i        = $page * self::ITEMS_PER_PAGE;
-            foreach ($contacts as $contact) {
-                $successMessage = new SuccessMessage($i);
-                $successMessage->setData(Json::encode($contact));
-                $callbackItem($successMessage);
-                $i++;
-            }
-
-            unset($data, $contacts, $i, $successMessage);
+            return (new ProcessDto())->setData(Json::encode($data['contacts']));
         } else {
-            $this->batchConnectorError(
+            throw $this->batchConnectorError(
                 new ConnectorException('Bad response data from HubSpot response. Missing "contacts".'),
                 $install,
                 ['data' => $data],
@@ -230,7 +171,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
      * @param mixed[]            $context
      * @param mixed[]            $headers
      *
-     * @return SuccessMessage
+     * @return Exception
      * @throws Exception
      */
     private function batchConnectorError(
@@ -238,7 +179,7 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         ApplicationInstall $install,
         array $context = [],
         array $headers = [],
-    ): SuccessMessage
+    ): Exception
     {
         $context = array_merge(
             [
@@ -250,9 +191,8 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Ba
         );
 
         $this->logger->error($e->getMessage(), array_merge($context, PipesHeaders::debugInfo($headers)));
-        unset($context);
 
-        throw $e;
+        return $e;
     }
 
 }

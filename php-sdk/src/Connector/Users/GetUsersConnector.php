@@ -9,7 +9,6 @@ use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 
 /**
@@ -19,8 +18,6 @@ use Hanaboso\Utils\Exception\PipesFrameworkException;
  */
 final class GetUsersConnector extends ConnectorAbstract
 {
-
-    use ProcessEventNotSupportedTrait;
 
     /**
      * GetUsersConnector constructor.

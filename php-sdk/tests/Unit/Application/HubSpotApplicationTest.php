@@ -37,23 +37,23 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Application\HubSpotApplication::getKey
-     *
-     * @throws Exception
-     */
-    public function testGetKey(): void
-    {
-        self::assertEquals('hub-spot', $this->app->getKey());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Application\HubSpotApplication::getName
      *
      * @throws Exception
      */
     public function testGetName(): void
     {
-        self::assertEquals('HubSpot Application', $this->app->getName());
+        self::assertEquals('hub-spot', $this->app->getName());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Application\HubSpotApplication::getPublicName
+     *
+     * @throws Exception
+     */
+    public function testGetPublicName(): void
+    {
+        self::assertEquals('HubSpot Application', $this->app->getPublicName());
     }
 
     /**
@@ -215,7 +215,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
      */
     private function createApplicationInstall(): ApplicationInstall
     {
-        $appInstall = DataProvider::getOauth2AppInstall($this->app->getKey());
+        $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
             array_merge(
                 $appInstall->getSettings(),

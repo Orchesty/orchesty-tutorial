@@ -32,7 +32,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $connector = new SendGridSendEmailConnector($this->dm, $curl);
         $connector->setApplication($app);
 
-        $appInstall = DataProvider::getBasicAppInstall($app->getKey());
+        $appInstall = DataProvider::getBasicAppInstall($app->getName());
         $appInstall->setSettings(
             [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
         );
@@ -40,7 +40,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $data = Json::encode(['email' => 'noreply@johndoe.com', 'name' => 'John Doe', 'subject' => 'Hello, World!']);
-        $resp = $connector->processAction(DataProvider::getProcessDto($app->getKey(), 'user', $data));
+        $resp = $connector->processAction(DataProvider::getProcessDto($app->getName(), 'user', $data));
         self::assertNotEmpty($resp->getData());
     }
 

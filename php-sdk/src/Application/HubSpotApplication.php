@@ -47,7 +47,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'hub-spot';
     }
@@ -55,7 +55,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'HubSpot Application';
     }

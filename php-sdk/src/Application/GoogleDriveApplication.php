@@ -26,7 +26,7 @@ final class GoogleDriveApplication extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'google-drive';
     }
@@ -34,7 +34,7 @@ final class GoogleDriveApplication extends OAuth2ApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'GoogleDrive Application';
     }

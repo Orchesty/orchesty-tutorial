@@ -24,23 +24,23 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     private SampleOAuth1Application $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Application\SampleOAuth1Application::getKey
-     *
-     * @throws Exception
-     */
-    public function testGetKey(): void
-    {
-        self::assertEquals('sample-oauth1', $this->app->getKey());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Application\SampleOAuth1Application::getName
      *
      * @throws Exception
      */
     public function testGetName(): void
     {
-        self::assertEquals('SampleOAuth1 Application', $this->app->getName());
+        self::assertEquals('sample-oauth1', $this->app->getName());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Application\SampleOAuth1Application::getPublicName
+     *
+     * @throws Exception
+     */
+    public function testGetPublicName(): void
+    {
+        self::assertEquals('SampleOAuth1 Application', $this->app->getPublicName());
     }
 
     /**
@@ -61,7 +61,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     public function testGetRequestDto(): void
     {
         $dto = $this->app->getRequestDto(
-            DataProvider::createApplicationInstall($this->app->getKey()),
+            DataProvider::createApplicationInstall($this->app->getName()),
             CurlManager::METHOD_POST,
             'foo.bar',
             Json::encode(['foo' => 'bar']),
@@ -91,7 +91,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
      */
     public function testAuthorize(): void
     {
-        $this->app->authorize(DataProvider::createApplicationInstall($this->app->getKey()));
+        $this->app->authorize(DataProvider::createApplicationInstall($this->app->getName()));
 
         self::assertFake();
     }
@@ -105,7 +105,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     public function testSetAuthorizationToken(): void
     {
         $this->app->setAuthorizationToken(
-            DataProvider::createApplicationInstall($this->app->getKey()),
+            DataProvider::createApplicationInstall($this->app->getName()),
             ['token' => 'abc'],
         );
 

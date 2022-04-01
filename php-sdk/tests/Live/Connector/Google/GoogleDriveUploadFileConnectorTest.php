@@ -38,7 +38,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
         $connector->setApplication($app);
 
         $appInstall = DataProvider::getOauth2AppInstall(
-            $app->getKey(),
+            $app->getName(),
             'user',
             $token,
             $clientId,
@@ -48,7 +48,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $app->getKey(),
+            $app->getName(),
             'user',
             Json::encode(
                 [

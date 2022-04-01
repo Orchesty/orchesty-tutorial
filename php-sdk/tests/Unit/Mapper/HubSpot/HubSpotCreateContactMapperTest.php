@@ -35,7 +35,7 @@ final class HubSpotCreateContactMapperTest extends KernelTestCaseAbstract
             ),
         );
 
-        $res = Json::decode($mapper->process($dto)->getData())['properties'];
+        $res = Json::decode($mapper->processAction($dto)->getData())['properties'];
         self::assertCount(4, $res);
     }
 
@@ -50,7 +50,7 @@ final class HubSpotCreateContactMapperTest extends KernelTestCaseAbstract
         $dto    = DataProvider::getProcessDto();
 
         self::expectException(ConnectorException::class);
-        $mapper->process($dto);
+        $mapper->processAction($dto);
     }
 
 }

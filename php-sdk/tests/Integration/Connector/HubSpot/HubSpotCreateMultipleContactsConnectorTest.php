@@ -9,7 +9,6 @@ use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\File\File;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\HubSpotApplication;
@@ -57,18 +56,6 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::processEvent
-     *
-     * @throws Exception
-     */
-    public function testProcessEvent(): void
-    {
-        self::expectException(ConnectorException::class);
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->createConnector(DataProvider::createResponseDto())->processEvent(DataProvider::getProcessDto());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::processAction
      *
      * @throws Exception
@@ -79,7 +66,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode([['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']]),
         );
@@ -101,7 +88,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode([['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']]),
         );
@@ -123,7 +110,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode([['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']]),
         );
@@ -145,7 +132,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
@@ -170,7 +157,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
@@ -224,7 +211,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
      */
     private function createApplicationInstall(): ApplicationInstall
     {
-        $appInstall = DataProvider::getOauth2AppInstall($this->app->getKey());
+        $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
             array_merge(
                 $appInstall->getSettings(),

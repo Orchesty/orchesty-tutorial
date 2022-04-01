@@ -60,7 +60,7 @@ services:
         class: Hanaboso\CommonsBundle\Monolog\UdpHandler
         arguments:
             - '@hbpf.transport.udp_sender'
-            - 'logstash:5120'
+            - '%udp_logger_url%'
             - 'info'
         calls:
             - ['setFormatter', ['@logstash_formatter']]

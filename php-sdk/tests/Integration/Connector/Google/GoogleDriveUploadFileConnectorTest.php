@@ -7,7 +7,6 @@ use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\GoogleDriveApplication;
 use Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector;
@@ -42,29 +41,17 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector::processEvent
-     *
-     * @throws Exception
-     */
-    public function testProcessEvent(): void
-    {
-        self::expectException(ConnectorException::class);
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->createConnector(DataProvider::createResponseDto())->processEvent(DataProvider::getProcessDto());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector::processAction
      *
      * @throws Exception
      */
     public function testProcessAction(): void
     {
-        $this->pfd(DataProvider::getOauth2AppInstall($this->app->getKey()));
+        $this->pfd(DataProvider::getOauth2AppInstall($this->app->getName()));
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );
@@ -89,11 +76,11 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testProcessActionRequestException(): void
     {
-        $this->pfd(DataProvider::getOauth2AppInstall($this->app->getKey()));
+        $this->pfd(DataProvider::getOauth2AppInstall($this->app->getName()));
         $this->dm->clear();
 
         $dto = DataProvider::getProcessDto(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             Json::encode(['name' => 'John Doe', 'email' => 'noreply@johndoe.com', 'phone' => '555-555']),
         );

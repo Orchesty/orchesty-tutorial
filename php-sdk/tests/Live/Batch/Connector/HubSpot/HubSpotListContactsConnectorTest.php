@@ -37,7 +37,7 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
         $connector->setApplication($app);
 
         $appInstall = DataProvider::getOauth2AppInstall(
-            $app->getKey(),
+            $app->getName(),
             'user',
             $token,
             $clientId,
@@ -46,8 +46,8 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
         $this->pfd($appInstall);
         $this->dm->clear();
 
-        $dto = DataProvider::getProcessDto($app->getKey());
-        self::assertBatch($connector, $dto);
+        $dto = DataProvider::getProcessDto($app->getName());
+        self::assertBatch($connector, $dto, [DataProvider::getProcessDto()]);
     }
 
 }

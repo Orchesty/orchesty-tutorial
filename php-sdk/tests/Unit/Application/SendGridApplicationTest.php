@@ -25,23 +25,23 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
     private SendGridApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Application\SendGridApplication::getKey
-     *
-     * @throws Exception
-     */
-    public function testGetKey(): void
-    {
-        self::assertEquals('send-grid', $this->app->getKey());
-    }
-
-    /**
      * @covers \Pipes\PhpSdk\Application\SendGridApplication::getName
      *
      * @throws Exception
      */
     public function testGetName(): void
     {
-        self::assertEquals('SendGrid Application', $this->app->getName());
+        self::assertEquals('send-grid', $this->app->getName());
+    }
+
+    /**
+     * @covers \Pipes\PhpSdk\Application\SendGridApplication::getPublicName
+     *
+     * @throws Exception
+     */
+    public function testGetPublicName(): void
+    {
+        self::assertEquals('SendGrid Application', $this->app->getPublicName());
     }
 
     /**
@@ -61,7 +61,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
      */
     public function testIsAuthorized(): void
     {
-        $appInstall = DataProvider::createApplicationInstall($this->app->getKey());
+        $appInstall = DataProvider::createApplicationInstall($this->app->getName());
         self::assertFalse($this->app->isAuthorized($appInstall));
 
         $appInstall->setSettings(
@@ -79,7 +79,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
     public function testGetRequestDto(): void
     {
         $appInstall = DataProvider::createApplicationInstall(
-            $this->app->getKey(),
+            $this->app->getName(),
             'user',
             [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
         );
@@ -89,7 +89,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         self::assertEquals(SendGridApplication::BASE_URL, $dto->getUri(TRUE));
         self::assertEquals(Json::encode(['foo' => 'bar']), $dto->getBody());
 
-        $appInstall = DataProvider::createApplicationInstall($this->app->getKey());
+        $appInstall = DataProvider::createApplicationInstall($this->app->getName());
         self::expectException(ApplicationInstallException::class);
         $this->app->getRequestDto($appInstall, CurlManager::METHOD_GET);
     }

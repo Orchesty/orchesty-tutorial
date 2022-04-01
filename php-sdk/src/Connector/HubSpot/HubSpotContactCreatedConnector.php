@@ -4,7 +4,6 @@ namespace Pipes\PhpSdk\Connector\HubSpot;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait;
 
 /**
  * Class HubSpotContactCreatedConnector
@@ -13,8 +12,6 @@ use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessActionNotSupportedTrait;
  */
 final class HubSpotContactCreatedConnector extends ConnectorAbstract
 {
-
-    use ProcessActionNotSupportedTrait;
 
     /**
      * @return string
@@ -29,7 +26,7 @@ final class HubSpotContactCreatedConnector extends ConnectorAbstract
      *
      * @return ProcessDto
      */
-    public function processEvent(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         return $dto;
     }

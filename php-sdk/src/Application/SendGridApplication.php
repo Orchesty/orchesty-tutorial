@@ -26,7 +26,7 @@ final class SendGridApplication extends BasicApplicationAbstract
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getName(): string
     {
         return 'send-grid';
     }
@@ -34,7 +34,7 @@ final class SendGridApplication extends BasicApplicationAbstract
     /**
      * @return string
      */
-    public function getName(): string
+    public function getPublicName(): string
     {
         return 'SendGrid Application';
     }

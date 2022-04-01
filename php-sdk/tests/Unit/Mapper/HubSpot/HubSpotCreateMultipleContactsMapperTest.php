@@ -37,7 +37,7 @@ final class HubSpotCreateMultipleContactsMapperTest extends KernelTestCaseAbstra
             ),
         );
 
-        $res = Json::decode($mapper->process($dto)->getData());
+        $res = Json::decode($mapper->processAction($dto)->getData());
         self::assertCount(3, $res[0]['properties']);
         self::assertArrayHasKey('email', $res[0]);
     }
@@ -53,7 +53,7 @@ final class HubSpotCreateMultipleContactsMapperTest extends KernelTestCaseAbstra
         $dto    = DataProvider::getProcessDto('', '', Json::encode([[]]));
 
         self::expectException(ConnectorException::class);
-        $mapper->process($dto);
+        $mapper->processAction($dto);
     }
 
 }

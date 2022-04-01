@@ -1,8 +1,8 @@
-version: '3.5'
+version: '3.9'
 
 services:
     php-sdk:
-        image: hanabosocom/php-dev:php-8.0-alpine
+        image: hanabosocom/php-dev:php-8.1-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
@@ -10,21 +10,20 @@ services:
             - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
-            DEV_UID: ${DEV_UID}
-            DEV_GID: ${DEV_GID}
             APP_DEBUG: 1
+            APP_ENV: dev
             PHP_WEBROOT: /var/www/public
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
-            BACKEND_HOST: 127.0.0.10:8080
-            METRICS_DSN: mongodb://mongo/metrics
+            BACKEND_DSN: 127.0.0.10:8080
+            STARTING_POINT_DSN: 127.0.0.10:8080
+            METRICS_SERVICE: mongo
+            METRICS_DSN: mongodb://mongo
             METRICS_DB: metrics
-            MONGODB_DSN: mongodb://mongo/tutorial
+            MONGODB_DSN: mongodb://mongo
             MONGODB_DB: tutorial
             RABBITMQ_DSN: amqp://rabbitmq:5672
-            METRICS_SERVICE: mongo
-            METRICS_HOST: mongo
-            METRICS_PORT: 27017
+            UDP_LOGGER_DSN: logstash:5005
 
     mongo:
         image: mongo

@@ -21,7 +21,7 @@ final class HubSpotCreateMultipleContactsMapper extends CustomNodeAbstract
      * @return ProcessDto
      * @throws ConnectorException
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         $data = Json::decode($dto->getData());
         $body = [];

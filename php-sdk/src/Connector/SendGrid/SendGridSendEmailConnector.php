@@ -11,7 +11,6 @@ use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\PipesPhpSdk\Connector\Traits\ProcessEventNotSupportedTrait;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\SendGridApplication;
@@ -23,8 +22,6 @@ use Pipes\PhpSdk\Application\SendGridApplication;
  */
 final class SendGridSendEmailConnector extends ConnectorAbstract
 {
-
-    use ProcessEventNotSupportedTrait;
 
     /**
      * @var ApplicationInstallRepository
@@ -96,7 +93,7 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
         try {
             $response = $this->sender->send($request);
 
-            if (!$this->evaluateStatusCode($response->getStatusCode(), $dto)) {
+            if (!$this->evaluateStatusCode($response->getStatusCode(), $dto, '')) {
                 return $dto;
             }
         } catch (CurlException|PipesFrameworkException $e) {

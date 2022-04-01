@@ -21,7 +21,7 @@ final class HubSpotCreateContactMapper extends CustomNodeAbstract
      * @return ProcessDto
      * @throws ConnectorException
      */
-    public function process(ProcessDto $dto): ProcessDto
+    public function processAction(ProcessDto $dto): ProcessDto
     {
         $data = Json::decode($dto->getData());
         if (!isset($data['name'], $data['email'], $data['phone'])) {

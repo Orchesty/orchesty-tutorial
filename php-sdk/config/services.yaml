@@ -4,8 +4,9 @@ parameters:
 
     public.services: false
 
-    backend_host: '%env(BACKEND_HOST)%'
-    starting_point_host: '%env(BACKEND_HOST)%'
+    startingPointHost: '%env(STARTING_POINT_DSN)%'
+    backendHost: '%env(BACKEND_DSN)%'
+    udp_logger_url: '%env(UDP_LOGGER_DSN)%'
 
     node_services_dirs:
         - '%kernel.project_dir%/config'

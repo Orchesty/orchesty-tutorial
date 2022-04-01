@@ -6,7 +6,6 @@ use Exception;
 use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\File\File;
 use Pipes\PhpSdk\Connector\Users\GetUsersConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
@@ -29,18 +28,6 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
     public function testGetId(): void
     {
         self::assertEquals('get-users', $this->createConnector(DataProvider::createResponseDto())->getId());
-    }
-
-    /**
-     * @covers \Pipes\PhpSdk\Connector\Users\GetUsersConnector::processEvent
-     *
-     * @throws Exception
-     */
-    public function testProcessEvent(): void
-    {
-        self::expectException(ConnectorException::class);
-        self::expectExceptionCode(ConnectorException::CONNECTOR_DOES_NOT_HAVE_PROCESS_EVENT);
-        $this->createConnector(DataProvider::createResponseDto())->processEvent(DataProvider::getProcessDto());
     }
 
     /**

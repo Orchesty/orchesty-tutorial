@@ -6,9 +6,12 @@
 nodejs-sdk/coverage
 nodejs-sdk/node_modules
 
+nodejs-sdk/.pnpm-store
+
 # PHP
 php-sdk/vendor
 php-sdk/var
+
 # PIPES
 .env
 */docker-compose.mutagen.yml

@@ -18,7 +18,7 @@ final class HubSpotCreateContactMapperTest extends KernelTestCaseAbstract
 {
 
     /**
-     * @covers \Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper::process
+     * @covers \Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper::processAction
      *
      * @throws Exception
      */
@@ -40,7 +40,7 @@ final class HubSpotCreateContactMapperTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper::process
+     * @covers \Pipes\PhpSdk\Mapper\HubSpot\HubSpotCreateContactMapper::processAction
      *
      * @throws Exception
      */

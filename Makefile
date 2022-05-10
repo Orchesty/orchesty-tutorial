@@ -44,8 +44,8 @@ composer-update:
 	$(PHP_SDK) composer update
 
 # Yarn section
-yarn-install:
-	$(NODE_SDK) yarn install
+pnpm-install:
+	$(NODE_SDK) pnpm install
 
 # App section
 clear-cache:

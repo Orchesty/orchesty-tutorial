@@ -1,15 +1,15 @@
 import AConnector from 'pipes-nodejs-sdk/dist/lib/Connector/AConnector';
 import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
 
-export class CursorBatch extends AConnector {
-
+export default class CursorBatch extends AConnector {
   public getName(): string {
-    return 'split-batch';
+    return 'cursor-batch';
   }
 
-  public processAction(dto: ProcessDto): Promise<ProcessDto> | ProcessDto {
+  public processAction(_dto: ProcessDto): Promise<ProcessDto> | ProcessDto {
+    const dto = _dto;
     const key = dto.getBatchCursor('firstKey');
-    const response = this.fetchNextPage(key);
+    const response = this._fetchNextPage(key);
 
     dto.jsonData = response.data;
     if (response.nextKey !== null) {
@@ -19,13 +19,12 @@ export class CursorBatch extends AConnector {
     return dto;
   }
 
-  private fetchNextPage(key: string): IData {
+  private _fetchNextPage(key: string): IData {
     return {
       nextKey: null,
       data: [],
     };
   }
-
 }
 
 interface IData {

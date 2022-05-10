@@ -2,7 +2,6 @@ import ACommonNode from 'pipes-nodejs-sdk/dist/lib/Commons/ACommonNode';
 import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
 
 export class CustomNode extends ACommonNode {
-
   public getName(): string {
     return 'custom-node';
   }
@@ -35,7 +34,6 @@ export class CustomNode extends ACommonNode {
 
     return dto;
   }
-
 }
 
 interface IInput {

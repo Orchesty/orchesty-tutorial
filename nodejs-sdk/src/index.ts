@@ -4,8 +4,8 @@ import GetUsersConnector from './Tutorial/Connector/GetUsersConnector';
 import SendgridApplication from './Tutorial/SendgridApplication';
 import SengridSendEmailConnector from './Tutorial/Connector/SengridSendEmailConnector';
 import { CustomNode } from './Tutorial/CustomNode/CustomNode';
-import { SplitBatch } from './Tutorial/Batch/SplitBatch';
-import { CursorBatch } from './Tutorial/Batch/CursorBatch';
+import SplitBatch from './Tutorial/Batch/SplitBatch';
+import CursorBatch from './Tutorial/Batch/CursorBatch';
 
 const prepare = async (): Promise<void> => {
   // Load core services by:

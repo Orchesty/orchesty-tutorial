@@ -12,8 +12,7 @@ import {
 } from 'pipes-nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
 import { encode } from 'pipes-nodejs-sdk/dist/lib/Utils/Base64';
 import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
-import { JSON_TYPE } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
-import { CommonHeaders } from 'pipes-nodejs-sdk/lib/Utils/Headers';
+import { JSON_TYPE, CommonHeaders } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
 
 export default class SendgridApplication extends ABasicApplication {
   public getDescription = () => 'SendgridApplication';
@@ -43,7 +42,7 @@ export default class SendgridApplication extends ABasicApplication {
       [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
     };
 
-    return new RequestDto(url || '', parseHttpMethod(method), data, headers, dto);
+    return new RequestDto(url || '', parseHttpMethod(method), dto, data, headers);
   }
 
   public getSettingsForm(): Form {

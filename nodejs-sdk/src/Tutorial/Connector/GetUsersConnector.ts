@@ -5,7 +5,6 @@ import RequestDto from 'pipes-nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
 import OnRepeatException from 'pipes-nodejs-sdk/dist/lib/Exception/OnRepeatException';
 
 export default class GetUsersConnector extends AConnector {
-
   public getName(): string {
     return 'get-users';
   }
@@ -14,6 +13,7 @@ export default class GetUsersConnector extends AConnector {
     const request = new RequestDto(
       'https://jsonplaceholder.typicode.com/users',
       HttpMethods.GET,
+      dto,
     );
 
     const response = await this._sender.send(request);
@@ -25,5 +25,4 @@ export default class GetUsersConnector extends AConnector {
 
     return dto;
   }
-
 }

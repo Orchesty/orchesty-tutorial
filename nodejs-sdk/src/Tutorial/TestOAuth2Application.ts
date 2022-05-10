@@ -8,9 +8,8 @@ import Field from 'pipes-nodejs-sdk/dist/lib/Application/Model/Form/Field';
 import FieldType from 'pipes-nodejs-sdk/dist/lib/Application/Model/Form/FieldType';
 import { CLIENT_ID, CLIENT_SECRET } from 'pipes-nodejs-sdk/dist/lib/Authorization/Type/OAuth2/IOAuth2Application';
 import ScopeSeparatorEnum from 'pipes-nodejs-sdk/dist/lib/Authorization/ScopeSeparatorEnum';
-import { ACCESS_TOKEN } from 'pipes-nodejs-sdk/lib/Authorization/Provider/OAuth2/OAuth2Provider';
-import { CommonHeaders } from 'pipes-nodejs-sdk/lib/Utils/Headers';
-import { JSON_TYPE } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
+import { ACCESS_TOKEN } from 'pipes-nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
+import { CommonHeaders, JSON_TYPE } from 'pipes-nodejs-sdk/dist/lib/Utils/Headers';
 
 export default class TestOAuth2Application extends AOAuth2Application {
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
@@ -34,7 +33,7 @@ export default class TestOAuth2Application extends AOAuth2Application {
     method: HttpMethods,
     url?: string,
     data?: string,
-  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data, {
+  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, dto, data, {
     [CommonHeaders.AUTHORIZATION]: `Bearer ${this.getTokens(applicationInstall)[ACCESS_TOKEN]}`,
     [CommonHeaders.ACCEPT]: JSON_TYPE,
     [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,

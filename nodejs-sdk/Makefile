@@ -26,20 +26,20 @@ docker-down-clean: .env .lo0-down
 	docker-compose down -v
 
 start:
-	$(DCS) yarn start
+	$(DCS) pnpm run start
 
-yarn-install:
-	$(DCS) yarn install
+install:
+	$(DCS) pnpm install
 
-yarn-update:
-	$(DCS) yarn up "**"
+update:
+	$(DCS) pnpm update
 
 lint:
-	$(DCS) yarn lint
+	$(DCS) pnpm run lint
 
 unit:
-	$(DCS) yarn test
+	$(DCS) pnpm run test
 
 fasttest: lint unit
 
-test: docker-up-force yarn-install fasttest docker-down-clean
+test: docker-up-force install fasttest docker-down-clean

@@ -6,6 +6,8 @@ include ./Makefile-mutagen
 ##### ____________ #####
 
 DC=docker-compose
+DR=docker-compose exec -T rabbitmq
+DB=docker-compose exec -T backend
 PHP_SDK=docker-compose exec -T php-sdk
 NODE_SDK=docker-compose exec -T node-sdk
 
@@ -32,6 +34,11 @@ init-dev: docker-up-force composer-install clear-cache
 docker-up-force: .env .lo0-up
 	$(DC) pull --ignore-pull-failures
 	$(DC) up -d --force-recreate --remove-orphans
+	$(DC) run --rm wait-for-it rabbitmq:15672 -t 600
+	$(DR) rabbitmq-plugins enable rabbitmq_consistent_hash_exchange
+	$(DB) bin/console doctrine:mongodb:schema:update --dm default
+	$(DB) bin/console doctrine:mongodb:schema:update --dm metrics
+	$(DB) bin/console mongodb:index:update
 
 docker-down-clean: .env .lo0-down
 	$(DC) down -v

@@ -1,6 +1,9 @@
 version: '2.4'
 
 services:
+    wait-for-it:
+        image: hanabosocom/wait-for-it:master
+
     php-sdk:
         image: hanabosocom/php-dev:php-8.1-alpine
         user: ${DEV_UID}:${DEV_GID}
@@ -42,7 +45,7 @@ services:
             UDP_LOGGER_DSN: logstash:5005
             METRICS_DSN: mongodb://mongo:27017/metrics
             MONGODB_DSN: mongodb://mongo:27017/tutorial
-        command: sh -c 'yarn install && yarn start'
+        command: sh -c 'pnpm install && pnpm run start'
         mem_limit: 512MB
 
     status-service:
@@ -158,6 +161,7 @@ services:
             DOCKER_PF_BRIDGE_IMAGE: bridge:${VERSION}
             JWT_KEY: tutorial_key
             CRYPT_SECRET: ThisIsNotSoSecret
+            X_AUTH_KEY: x_auth_key
         mem_limit: 64MB
 
     logstash:

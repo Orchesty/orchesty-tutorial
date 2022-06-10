@@ -13,11 +13,11 @@
         "hanaboso/pipes-connectors": "^2.0",
         "hanaboso/pipes-php-sdk": "^2.0",
         "hanaboso/rest-bundle": "^1.1",
-        "symfony/security-bundle": "^v6.0"
+        "symfony/security-bundle": "^v6.1"
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.4",
-        "symfony/debug-bundle": "^v6.0"
+        "symfony/debug-bundle": "^v6.1"
     },
     "replace": {
         "ralouphie/getallheaders": "*",

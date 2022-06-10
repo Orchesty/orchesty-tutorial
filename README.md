@@ -18,9 +18,9 @@
 
 ## How to enable your Node.JS services
 1. Go to [UI Services](http://127.0.0.10/services)
-2. Add `node-sdk` as new Services
-    1. URL: `node-sdk:8080`
-    2. Name: `node-sdk`
+2. Add `nodejs-sdk` as new Services
+    1. URL: `nodejs-sdk:8080`
+    2. Name: `nodejs-sdk`
 
 ## MacOs developers
 

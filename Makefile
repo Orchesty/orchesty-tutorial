@@ -9,7 +9,7 @@ DC=docker-compose
 DR=docker-compose exec -T rabbitmq
 DB=docker-compose exec -T backend
 PHP_SDK=docker-compose exec -T php-sdk
-NODE_SDK=docker-compose exec -T node-sdk
+NODE_SDK=docker-compose exec -T nodejs-sdk
 
 ALIAS?=alias
 Darwin:
@@ -42,6 +42,9 @@ docker-up-force: .env .lo0-up
 
 docker-down-clean: .env .lo0-down
 	$(DC) down -v
+
+docker-stop: .env .lo0-down
+	$(DC) down
 
 # Composer section
 composer-install:

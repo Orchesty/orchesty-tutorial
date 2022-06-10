@@ -29,15 +29,15 @@ services:
             UDP_LOGGER_DSN: logstash:5005
         mem_limit: 512MB
 
-    node-sdk:
-        image: node-sdk:tag
-        build: node-sdk/docker
+    nodejs-sdk:
+        image: nodejs-sdk:tag
+        build: nodejs-sdk/docker
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
-            - ./node-sdk/:/var/www
+            - ./nodejs-sdk/:/var/www
         environment:
-            # Envs for tests are load from node-sdk/.jest/testEnvs.js
+            # Envs for tests are load from nodejs-sdk/.jest/testEnvs.js
             JEST_DOCKER: 1
             APP_ENV: debug
             CRYPT_SECRET: ThisIsNotSoSecret
@@ -126,6 +126,20 @@ services:
         environment:
             MONGO_DSN: mongodb://mongo/cron?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
             MONGO_COLLECTION: cron
+        mem_limit: 32MB
+
+    limiter:
+        image: orchesty/limiter:${VERSION}
+        environment:
+            LIMITER_ADDR: 0.0.0.0:3333
+            RABBITMQ_HOST: rabbitmq
+            RABBITMQ_USER: guest
+            RABBITMQ_PASS: guest
+            MONGO_HOST: mongodb://mongo/tutorial
+            MONGO_DB: tutorial
+            MONGO_COLLECTION: LimiterMessages
+            LOGSTASH_HOST: logstash
+            LOGSTASH_PORT: "5120"
         mem_limit: 32MB
 
     frontend:

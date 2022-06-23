@@ -1,8 +1,3 @@
-##### MUTAGEN_SYNC #####
-MTGN_CONTAINER=php-sdk_php-sdk_1
-include ./../Makefile-mutagen
-##### ____________ #####
-
 DC=docker-compose
 DA=docker-compose exec -T php-sdk
 

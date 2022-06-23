@@ -1,5 +1,5 @@
-import ACommonNode from 'pipes-nodejs-sdk/dist/lib/Commons/ACommonNode';
-import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
+import ACommonNode from '@orchesty/nodejs-sdk/dist/lib/Commons/ACommonNode';
+import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 
 export class CustomNode extends ACommonNode {
   public getName(): string {

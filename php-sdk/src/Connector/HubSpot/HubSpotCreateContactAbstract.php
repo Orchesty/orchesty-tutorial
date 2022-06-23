@@ -57,14 +57,10 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
 
     /**
      * @param LoggerInterface $logger
-     *
-     * @return self
      */
-    public function setLogger(LoggerInterface $logger): self
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-
-        return $this;
     }
 
     /**

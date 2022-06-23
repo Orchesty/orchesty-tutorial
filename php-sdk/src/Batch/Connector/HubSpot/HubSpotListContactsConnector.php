@@ -63,14 +63,10 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Lo
 
     /**
      * @param LoggerInterface $logger
-     *
-     * @return HubSpotListContactsConnector
      */
-    public function setLogger(LoggerInterface $logger): HubSpotListContactsConnector
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-
-        return $this;
     }
 
     /**

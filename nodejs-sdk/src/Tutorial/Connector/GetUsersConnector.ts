@@ -1,8 +1,8 @@
-import AConnector from 'pipes-nodejs-sdk/dist/lib/Connector/AConnector';
-import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
-import HttpMethods from 'pipes-nodejs-sdk/dist/lib/Transport/HttpMethods';
-import RequestDto from 'pipes-nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
-import OnRepeatException from 'pipes-nodejs-sdk/dist/lib/Exception/OnRepeatException';
+import AConnector from '@orchesty/nodejs-sdk/dist/lib/Connector/AConnector';
+import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
+import HttpMethods from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
+import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
+import OnRepeatException from '@orchesty/nodejs-sdk/dist/lib/Exception/OnRepeatException';
 
 export default class GetUsersConnector extends AConnector {
   public getName(): string {

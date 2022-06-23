@@ -1,5 +1,5 @@
-import { container, initiateContainer, listen } from 'pipes-nodejs-sdk';
-import CoreServices from 'pipes-nodejs-sdk/dist/lib/DIContainer/CoreServices';
+import { container, initiateContainer, listen } from '@orchesty/nodejs-sdk';
+import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
 import GetUsersConnector from './Tutorial/Connector/GetUsersConnector';
 import SendgridApplication from './Tutorial/SendgridApplication';
 import SengridSendEmailConnector from './Tutorial/Connector/SengridSendEmailConnector';

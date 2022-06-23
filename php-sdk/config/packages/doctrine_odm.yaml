@@ -35,17 +35,17 @@ doctrine_mongodb:
                 AppStoreDocument:
                     type: annotation
                     is_bundle: false
-                    dir: "%kernel.project_dir%/vendor/hanaboso/app-store/src/Document"
+                    dir: "%kernel.project_dir%/vendor/orchesty/app-store/src/Document"
                     prefix: Hanaboso\HbPFAppStore\Document
                 ApplicationDocument:
                     type: annotation
                     is_bundle: false
-                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/Application/Document'
+                    dir: '%kernel.project_dir%/vendor/orchesty/php-sdk/src/Application/Document'
                     prefix: Hanaboso\PipesPhpSdk\Application\Document
                 CommonsDocument:
                     type: annotation
                     is_bundle: false
-                    dir: '%kernel.project_dir%/vendor/hanaboso/pipes-php-sdk/src/Database/Document'
+                    dir: '%kernel.project_dir%/vendor/orchesty/php-sdk/src/Database/Document'
                     prefix: Hanaboso\PipesPhpSdk\Database\Document
             filters:
                 deleted:

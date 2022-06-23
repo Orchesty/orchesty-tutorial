@@ -1,5 +1,5 @@
 {
-    "name": "pipes/php-sdk",
+    "name": "orchesty/tutorial-php-sdk",
     "license": "Apache-2.0",
     "version": "1.0.0",
     "require": {
@@ -9,10 +9,10 @@
         "ext-mbstring": "*",
         "ext-mongodb": "*",
         "doctrine/mongodb-odm-bundle": "^4.4",
-        "hanaboso/app-store": "^2.0",
-        "hanaboso/pipes-connectors": "^2.0",
-        "hanaboso/pipes-php-sdk": "^2.0",
         "hanaboso/rest-bundle": "^1.1",
+        "orchesty/app-store": "^2.0",
+        "orchesty/php-connectors": "^2.0",
+        "orchesty/php-sdk": "^2.0",
         "symfony/security-bundle": "^v6.1"
     },
     "require-dev": {

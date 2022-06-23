@@ -19,14 +19,14 @@ services:
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             BACKEND_DSN: ${BACKEND_URL}
-            STARTING_POINT_DSN: ${DEV_IP}:82
             METRICS_SERVICE: mongo
-            METRICS_DSN: mongodb://mongo
+            METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
-            MONGODB_DSN: mongodb://mongo
+            MONGODB_DSN: ${MONGO_DSN}
             MONGODB_DB: tutorial
-            RABBITMQ_DSN: amqp://rabbitmq:5672
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
             UDP_LOGGER_DSN: logstash:5005
+            STARTING_POINT_DSN: starting-point:8080
         mem_limit: 512MB
 
     nodejs-sdk:
@@ -43,8 +43,8 @@ services:
             CRYPT_SECRET: ThisIsNotSoSecret
             BACKEND_URL: http://127.0.0.10:8080
             UDP_LOGGER_DSN: logstash:5005
-            METRICS_DSN: mongodb://mongo:27017/metrics
-            MONGODB_DSN: mongodb://mongo:27017/tutorial
+            METRICS_DSN: ${METRICS_DSN}
+            MONGODB_DSN: ${MONGO_DSN}
         command: sh -c 'pnpm install && pnpm run start'
         mem_limit: 512MB
 
@@ -52,29 +52,29 @@ services:
         image: orchesty/status-service:${VERSION}
         restart: on-failure
         environment:
-            RABBITMQ_DSN: amqp://rabbitmq:5672
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
         mem_limit: 32MB
 
     notification-sender-api:
         image: orchesty/notification-sender:${VERSION}
         environment:
-            MONGO_HOST: mongo
+            MONGO_CONNECTION: ${MONGO_DSN}
         mem_limit: 32MB
 
     notification-sender-consumer:
         image: orchesty/notification-sender:${VERSION}
         environment:
-            RABBITMQ_DSN: amqp://rabbitmq:5672
-            MONGO_HOST: mongo
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
+            MONGO_CONNECTION: ${MONGO_DSN}
         command: bin/console rabbit_mq:consumer:notification
         mem_limit: 32MB
 
     multi-counter:
         image: orchesty/counter:${VERSION}
         environment:
-            RABBITMQ_DSN: amqp://rabbitmq:5672
-            MONGODB_DSN: mongodb://mongo/tutorial
-            METRICS_DSN: mongodb://mongo/metrics
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
+            MONGODB_DSN: ${MONGO_DSN}
+            METRICS_DSN: ${METRICS_DSN}
         command: /bin/counter start
         mem_limit: 64MB
 
@@ -89,8 +89,8 @@ services:
     starting-point:
         image: orchesty/starting-point:${VERSION}
         environment:
-            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
-            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            MONGO_DSN: ${MONGO_DSN}
+            METRICS_DSN: ${METRICS_DSN}
             RABBIT_COUNTER_QUEUE_DURABLE: 'true'
             RABBIT_QUEUE_DURABLE: 'true'
             RABBIT_DELIVERY_MODE: 2
@@ -101,13 +101,12 @@ services:
     topology-api:
         image: orchesty/topology-api:${VERSION}
         environment:
-            DEPLOYMENT_PREFIX: skeleton
-            GENERATOR_NETWORK: skeleton_default
-            GENERATOR_MODE: compose
+            DEPLOYMENT_PREFIX: tutorial
+            GENERATOR_NETWORK: ${NETWORK_NAME}
+            GENERATOR_MODE: ${GENERATOR_MODE}
             GENERATOR_PATH: /srv/topology
-            MONGO_DSN: mongodb://mongo/tutorial?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
-            RABBITMQ_HOST: rabbitmq
             PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
+            MONGO_DSN: ${MONGO_DSN}
             WORKER_DEFAULT_LIMIT_CPU: 1
             WORKER_DEFAULT_LIMIT_MEMORY: 200m
         volumes:
@@ -118,13 +117,15 @@ services:
     detector:
         image: orchesty/detector:${VERSION}
         environment:
-            METRICS_DSN: mongodb://mongo/metrics?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            METRICS_DSN: ${METRICS_DSN}
+            GENERATOR_MODE: ${GENERATOR_MODE}
+            GENERATOR_NETWORK: ${NETWORK_NAME}
         mem_limit: 32MB
 
     cron-api:
         image: orchesty/cron:${VERSION}
         environment:
-            MONGO_DSN: mongodb://mongo/cron?connectTimeoutMS=2500&serverSelectionTimeoutMS=2500&socketTimeoutMS=2500&heartbeatFrequencyMS=2500
+            MONGO_DSN: ${MONGO_DSN}
             MONGO_COLLECTION: cron
         mem_limit: 32MB
 
@@ -135,8 +136,7 @@ services:
             RABBITMQ_HOST: rabbitmq
             RABBITMQ_USER: guest
             RABBITMQ_PASS: guest
-            MONGO_HOST: mongodb://mongo/tutorial
-            MONGO_DB: tutorial
+            MONGO_HOST: ${MONGO_DSN}
             MONGO_COLLECTION: LimiterMessages
             LOGSTASH_HOST: logstash
             LOGSTASH_PORT: "5120"
@@ -160,10 +160,10 @@ services:
             BACKEND_DSN: ${BACKEND_URL}/
             FRONTEND_DSN: ${FRONTEND_URL}/
             NOTIFICATION_DSN: notification-sender-api
-            RABBITMQ_DSN: amqp://rabbitmq:5672/
-            MONGODB_DSN: mongodb://mongo
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
+            MONGODB_DSN: ${MONGO_DSN}
             MONGODB_DB: tutorial
-            METRICS_DSN: mongodb://mongo
+            METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
             METRICS_SERVICE: mongo
             CRON_DSN: cron-api:8080
@@ -181,7 +181,7 @@ services:
     logstash:
         image: orchesty/logstash:${VERSION}
         environment:
-            - MONGO_DSN=mongodb://mongo:27017
+            - MONGO_DSN=${MONGO_DSN}
             - MONGO_DB=tutorial
             - MONGO_COLLECTION=Logs
             - LS_JAVA_OPTS=-Xms512m -Xmx512m
@@ -209,4 +209,4 @@ volumes:
 
 networks:
     default:
-        name: tutorial_default
+        name: ${NETWORK_NAME}

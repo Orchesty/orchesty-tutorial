@@ -1,9 +1,8 @@
-import AConnector from 'pipes-nodejs-sdk/dist/lib/Connector/AConnector';
-import ProcessDto from 'pipes-nodejs-sdk/dist/lib/Utils/ProcessDto';
-import HttpMethods from 'pipes-nodejs-sdk/dist/lib/Transport/HttpMethods';
+import AConnector from '@orchesty/nodejs-sdk/dist/lib/Connector/AConnector';
+import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
+import HttpMethods from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 
 export default class SengridSendEmailConnector extends AConnector {
-
   public getName = () => 'sendgrid-send-email';
 
   public async processAction(dto: ProcessDto): Promise<ProcessDto> {
@@ -29,7 +28,6 @@ export default class SengridSendEmailConnector extends AConnector {
 
     return dto;
   }
-
 }
 
 interface IInput {

@@ -8,7 +8,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mongodb": "*",
-        "doctrine/mongodb-odm-bundle": "^4.4",
+        "doctrine/mongodb-odm-bundle": "^4.5",
         "hanaboso/rest-bundle": "^1.1",
         "orchesty/app-store": "^2.0",
         "orchesty/php-connectors": "^2.0",

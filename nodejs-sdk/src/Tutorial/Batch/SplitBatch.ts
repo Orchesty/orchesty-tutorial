@@ -1,14 +1,14 @@
-import AConnector from '@orchesty/nodejs-sdk/dist/lib/Connector/AConnector';
-import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
+import ABatchNode from '@orchesty/nodejs-sdk/dist/lib/Batch/ABatchNode';
+import BatchProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/BatchProcessDto';
 
-export default class SplitBatch extends AConnector {
+export default class SplitBatch extends ABatchNode {
   public getName(): string {
     return 'split-batch';
   }
 
-  public processAction(_dto: ProcessDto): Promise<ProcessDto> | ProcessDto {
+  public processAction(_dto: BatchProcessDto): Promise<BatchProcessDto> | BatchProcessDto {
     const dto = _dto;
-    dto.jsonData = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    dto.setItemList([{ id: 1 }, { id: 2 }, { id: 3 }]);
 
     return dto;
   }

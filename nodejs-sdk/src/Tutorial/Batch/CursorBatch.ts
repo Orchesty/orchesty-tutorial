@@ -1,17 +1,17 @@
-import AConnector from '@orchesty/nodejs-sdk/dist/lib/Connector/AConnector';
-import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
+import ABatchNode from '@orchesty/nodejs-sdk/dist/lib/Batch/ABatchNode';
+import BatchProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/BatchProcessDto';
 
-export default class CursorBatch extends AConnector {
+export default class CursorBatch extends ABatchNode {
   public getName(): string {
     return 'cursor-batch';
   }
 
-  public processAction(_dto: ProcessDto): Promise<ProcessDto> | ProcessDto {
+  public processAction(_dto: BatchProcessDto): Promise<BatchProcessDto> | BatchProcessDto {
     const dto = _dto;
     const key = dto.getBatchCursor('firstKey');
     const response = this._fetchNextPage(key);
 
-    dto.jsonData = response.data;
+    dto.setItemList(response.data);
     if (response.nextKey !== null) {
       dto.setBatchCursor(response.nextKey);
     }

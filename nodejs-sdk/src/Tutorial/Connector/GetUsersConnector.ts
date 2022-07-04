@@ -9,7 +9,8 @@ export default class GetUsersConnector extends AConnector {
     return 'get-users';
   }
 
-  public async processAction(dto: ProcessDto): Promise<ProcessDto> {
+  public async processAction(_dto: ProcessDto): Promise<ProcessDto> {
+    const dto = _dto;
     const request = new RequestDto(
       'https://jsonplaceholder.typicode.com/users',
       HttpMethods.GET,

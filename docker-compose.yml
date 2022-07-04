@@ -50,7 +50,6 @@ services:
 
     status-service:
         image: orchesty/status-service:${VERSION}
-        restart: on-failure
         environment:
             RABBITMQ_DSN: ${RABBITMQ_DSN}
         mem_limit: 32MB
@@ -81,8 +80,13 @@ services:
     repeater:
         image: orchesty/pf-bridge:${VERSION}
         environment:
-            MONGO_HOST: mongo
+            MONGO_DSN: ${MONGO_DSN}
             REPEATER_CHECK_TIMEOUT: 5000
+            RABBITMQ_HOST: rabbitmq
+            RABBITMQ_PASS: guest
+            RABBITMQ_PORT: "5672"
+            RABBITMQ_USER: guest
+            RABBITMQ_VHOST: /
         command: ./dist/src/bin/pipes.js start repeater
         mem_limit: 64MB
 

@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests;
 
 use Exception;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\HbPFAppStore\Model\Webhook\WebhookSubscription;
@@ -39,10 +40,10 @@ final class DataProvider
         string $clientSecret = 'clientSecret',
     ): ApplicationInstall
     {
-        $settings                                                                                                          = [];
-        $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][ApplicationInterface::TOKEN][OAuth2Provider::ACCESS_TOKEN] = $accessToken;
-        $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_ID]                     = $clientId;
-        $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_SECRET]                 = $clientSecret;
+        $settings                                                                                                      = [];
+        $settings[ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::TOKEN][OAuth2Provider::ACCESS_TOKEN] = $accessToken;
+        $settings[ApplicationInterface::AUTHORIZATION_FORM][OAuth2ApplicationInterface::CLIENT_ID]                     = $clientId;
+        $settings[ApplicationInterface::AUTHORIZATION_FORM][OAuth2ApplicationInterface::CLIENT_SECRET]                 = $clientSecret;
 
         $applicationInstall = new ApplicationInstall();
 
@@ -66,9 +67,9 @@ final class DataProvider
         string $password = 'pass123',
     ): ApplicationInstall
     {
-        $settings                                                                                    = [];
-        $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][BasicApplicationInterface::USER]     = $user;
-        $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][BasicApplicationInterface::PASSWORD] = $password;
+        $settings                                                                                = [];
+        $settings[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::USER]     = $user;
+        $settings[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::PASSWORD] = $password;
 
         $applicationInstall = new ApplicationInstall();
 
@@ -90,10 +91,38 @@ final class DataProvider
         $dto = new ProcessDto();
         $dto
             ->setData($body)
+            ->setUser($user)
             ->setHeaders(
                 [
-                    PipesHeaders::createKey(PipesHeaders::USER)        => [$user],
-                    PipesHeaders::createKey(PipesHeaders::APPLICATION) => [$key],
+                    PipesHeaders::USER        => $user,
+                    PipesHeaders::APPLICATION => $key,
+                ],
+            );
+
+        return $dto;
+    }
+
+    /**
+     * @param string $key
+     * @param string $user
+     * @param string $body
+     *
+     * @return BatchProcessDto
+     */
+    public static function getBatchProcessDto(
+        string $key = '',
+        string $user = 'user',
+        string $body = '',
+    ): BatchProcessDto
+    {
+        $dto = new BatchProcessDto();
+        $dto
+            ->setBridgeData($body)
+            ->setUser($user)
+            ->setHeaders(
+                [
+                    PipesHeaders::USER        => $user,
+                    PipesHeaders::APPLICATION => $key,
                 ],
             );
 

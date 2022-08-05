@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests\Unit\Application;
 
 use Exception;
+use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth1Provider;
 use Hanaboso\Utils\String\Json;
@@ -61,6 +62,7 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     public function testGetRequestDto(): void
     {
         $dto = $this->app->getRequestDto(
+            new ProcessDto(),
             DataProvider::createApplicationInstall($this->app->getName()),
             CurlManager::METHOD_POST,
             'foo.bar',
@@ -72,14 +74,14 @@ final class SampleOAuth1ApplicationTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Application\SampleOAuth1Application::getSettingsForm
+     * @covers \Pipes\PhpSdk\Application\SampleOAuth1Application::getFormStack
      *
      * @throws Exception
      */
-    public function testGetSettingsForm(): void
+    public function testGetFormStack(): void
     {
-        $form = $this->app->getSettingsForm();
-        self::assertCount(0, $form->getFields());
+        $form = $this->app->getFormStack()->getForms();
+        self::assertEmpty($form);
     }
 
     /**

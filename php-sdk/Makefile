@@ -59,7 +59,7 @@ phpcoverage:
 	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --coverage-html var/coverage --whitelist /var/www/src --exclude-group live tests
 
 phpcoverage-ci:
-	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -e live
+	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -e live -c 90
 
 fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcoverage-ci
 

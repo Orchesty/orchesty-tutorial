@@ -30,14 +30,16 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     private SendGridApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::getId
-     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::__construct
+     * @covers \Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector::getName
      *
      * @throws Exception
      */
     public function testGetId(): void
     {
-        self::assertEquals('send-grid.send-email', $this->createConnector(DataProvider::createResponseDto())->getId());
+        self::assertEquals(
+            'send-grid.send-email',
+            $this->createConnector(DataProvider::createResponseDto())->getName(),
+        );
     }
 
     /**
@@ -149,7 +151,12 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
             $sender->method('send')->willReturn($dto);
         }
 
-        return new SendGridSendEmailConnector($this->dm, $sender);
+        $conn = new SendGridSendEmailConnector();
+        $conn
+            ->setSender($sender)
+            ->setDb($this->dm);
+
+        return $conn;
     }
 
     /**
@@ -160,7 +167,7 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     {
         $appInstall = DataProvider::getBasicAppInstall($this->app->getName());
         $appInstall
-            ->setSettings([ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']]);
+            ->setSettings([ApplicationInterface::AUTHORIZATION_FORM => [SendGridApplication::API_KEY => 'key']]);
 
         return $appInstall;
     }

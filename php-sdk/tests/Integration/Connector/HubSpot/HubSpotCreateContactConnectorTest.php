@@ -31,7 +31,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     private HubSpotApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::getId
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::getName
      * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector::__construct
      *
      * @throws Exception
@@ -40,7 +40,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'hub-spot.create-contact',
-            $this->createConnector(DataProvider::createResponseDto())->getId(),
+            $this->createConnector(DataProvider::createResponseDto())->getName(),
         );
     }
 
@@ -155,7 +155,12 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
             $sender->method('send')->willReturn($dto);
         }
 
-        return new HubSpotCreateContactConnector($this->dm, $sender);
+        $conn = new HubSpotCreateContactConnector();
+        $conn
+            ->setSender($sender)
+            ->setDb($this->dm);
+
+        return $conn;
     }
 
     /**
@@ -166,9 +171,9 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     {
         $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
-            array_merge(
+            array_merge_recursive(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+                [ApplicationAbstract::AUTHORIZATION_FORM => [HubSpotApplication::APP_ID => 'app_id'],],
             ),
         );
 

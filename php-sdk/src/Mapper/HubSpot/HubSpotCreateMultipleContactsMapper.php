@@ -4,7 +4,7 @@ namespace Pipes\PhpSdk\Mapper\HubSpot;
 
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract;
+use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\Utils\String\Json;
 
 /**
@@ -12,8 +12,16 @@ use Hanaboso\Utils\String\Json;
  *
  * @package Pipes\PhpSdk\Mapper\HubSpot
  */
-final class HubSpotCreateMultipleContactsMapper extends CustomNodeAbstract
+final class HubSpotCreateMultipleContactsMapper extends CommonNodeAbstract
 {
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'hub-spot.create-multiple-contacts-mapper';
+    }
 
     /**
      * @param ProcessDto $dto

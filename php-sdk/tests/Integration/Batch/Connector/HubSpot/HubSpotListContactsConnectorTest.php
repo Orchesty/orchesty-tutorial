@@ -3,7 +3,6 @@
 namespace Pipes\PhpSdk\Tests\Integration\Batch\Connector\HubSpot;
 
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
@@ -24,14 +23,14 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::getId
+     * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::getName
      * @covers \Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector::__construct
      *
      * @throws Exception
      */
     public function testGetId(): void
     {
-        self::assertEquals('hub-spot.list-contacts', $this->createConnector()->getId());
+        self::assertEquals('hub-spot.list-contacts', $this->createConnector()->getName());
     }
 
     /**
@@ -66,19 +65,17 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
 
         $this->assertBatch(
             $this->createConnector([$response, $response2]),
-            DataProvider::getProcessDto($app->getName()),
+            DataProvider::getBatchProcessDto($app->getName()),
             [
-                (new ProcessDto())
-                    ->setData(Json::encode($expect))
-                    ->setHeaders(
-                        [
-                            PipesHeaders::createKey(PipesHeaders::BATCH_CURSOR) => '1',
-                            PipesHeaders::createKey(PipesHeaders::RESULT_MESSAGE) =>
-                                'Message will be used as a iterator with cursor [1]. Data will be send to follower(s).',
-                            PipesHeaders::createKey(PipesHeaders::RESULT_CODE) => '1010',
-                        ],
-                    ),
-                (new ProcessDto())->setData(Json::encode($expect2)),
+                DataProvider::getBatchProcessDto('hub-spot')
+                    ->setItemList($expect)
+                    ->addHeader(PipesHeaders::BATCH_CURSOR, '1')
+                    ->addHeader(
+                        PipesHeaders::RESULT_MESSAGE,
+                        'Message will be used as a iterator with cursor [1]. Data will be send to follower(s).',
+                    )
+                    ->addHeader(PipesHeaders::RESULT_CODE,'1010'),
+                DataProvider::getBatchProcessDto('hub-spot')->setItemList($expect2),
             ],
         );
     }
@@ -99,8 +96,8 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
         $this->expectException(ConnectorException::class);
         $this->assertBatch(
             $this->createConnector([$response]),
-            DataProvider::getProcessDto($app->getName()),
-            [DataProvider::getProcessDto()],
+            DataProvider::getBatchProcessDto($app->getName()),
+            [DataProvider::getBatchProcessDto()],
         );
     }
 
@@ -123,8 +120,11 @@ final class HubSpotListContactsConnectorTest extends DatabaseTestCaseAbstract
             ->method('send')
             ->willReturnOnConsecutiveCalls(...$responses);
 
-        $c = new HubSpotListContactsConnector($this->dm, $curl);
-        $c->setApplication($app);
+        $c = new HubSpotListContactsConnector();
+        $c
+            ->setApplication($app)
+            ->setDb($this->dm)
+            ->setSender($curl);
 
         $appInstall = DataProvider::getOauth2AppInstall($app->getName());
         $this->pfd($appInstall);

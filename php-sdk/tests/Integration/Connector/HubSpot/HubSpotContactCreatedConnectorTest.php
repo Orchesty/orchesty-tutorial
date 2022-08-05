@@ -25,7 +25,7 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
     private HubSpotApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotContactCreatedConnector::getId
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotContactCreatedConnector::getName
      *
      * @throws Exception
      */
@@ -33,7 +33,7 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'hub-spot.contact-created',
-            $this->createConnector()->getId(),
+            $this->createConnector()->getName(),
         );
     }
 
@@ -89,9 +89,9 @@ final class HubSpotContactCreatedConnectorTest extends DatabaseTestCaseAbstract
     {
         $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
-            array_merge(
+            array_merge_recursive(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+                [ApplicationAbstract::AUTHORIZATION_FORM => [HubSpotApplication::APP_ID => 'app_id'],],
             ),
         );
 

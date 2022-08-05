@@ -20,14 +20,13 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\Users\GetUsersConnector::getId
-     * @covers \Pipes\PhpSdk\Connector\Users\GetUsersConnector::__construct
+     * @covers \Pipes\PhpSdk\Connector\Users\GetUsersConnector::getName
      *
      * @throws Exception
      */
     public function testGetId(): void
     {
-        self::assertEquals('get-users', $this->createConnector(DataProvider::createResponseDto())->getId());
+        self::assertEquals('get-users', $this->createConnector(DataProvider::createResponseDto())->getName());
     }
 
     /**
@@ -72,7 +71,10 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
         $sender = self::createMock(CurlManager::class);
         $sender->method('send')->willReturn($dto);
 
-        return new GetUsersConnector($sender);
+        $conn = new GetUsersConnector();
+        $conn->setSender($sender);
+
+        return $conn;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests\Unit\Application;
 
 use Exception;
+use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
@@ -65,7 +66,7 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         self::assertFalse($this->app->isAuthorized($appInstall));
 
         $appInstall->setSettings(
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
+            [ApplicationInterface::AUTHORIZATION_FORM => [SendGridApplication::API_KEY => 'key']],
         );
         self::assertTrue($this->app->isAuthorized($appInstall));
     }
@@ -81,27 +82,33 @@ final class SendGridApplicationTest extends KernelTestCaseAbstract
         $appInstall = DataProvider::createApplicationInstall(
             $this->app->getName(),
             'user',
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
+            [ApplicationInterface::AUTHORIZATION_FORM => [SendGridApplication::API_KEY => 'key']],
         );
 
-        $dto = $this->app->getRequestDto($appInstall, CurlManager::METHOD_POST, NULL, Json::encode(['foo' => 'bar']));
+        $dto = $this->app->getRequestDto(
+            new ProcessDto(),
+            $appInstall,
+            CurlManager::METHOD_POST,
+            NULL,
+            Json::encode(['foo' => 'bar']),
+        );
         self::assertEquals(CurlManager::METHOD_POST, $dto->getMethod());
         self::assertEquals(SendGridApplication::BASE_URL, $dto->getUri(TRUE));
         self::assertEquals(Json::encode(['foo' => 'bar']), $dto->getBody());
 
         $appInstall = DataProvider::createApplicationInstall($this->app->getName());
         self::expectException(ApplicationInstallException::class);
-        $this->app->getRequestDto($appInstall, CurlManager::METHOD_GET);
+        $this->app->getRequestDto(new ProcessDto(), $appInstall, CurlManager::METHOD_GET);
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Application\SendGridApplication::getSettingsForm
+     * @covers \Pipes\PhpSdk\Application\SendGridApplication::getFormStack
      *
      * @throws Exception
      */
-    public function testGetSettingsForm(): void
+    public function testGetFormStack(): void
     {
-        $form = $this->app->getSettingsForm();
+        $form = $this->app->getFormStack()->getForms()[0];
         self::assertCount(1, $form->getFields());
     }
 

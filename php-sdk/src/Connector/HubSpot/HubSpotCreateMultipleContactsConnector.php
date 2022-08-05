@@ -18,7 +18,7 @@ final class HubSpotCreateMultipleContactsConnector extends HubSpotCreateContactA
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'hub-spot.create-multiple-contacts';
     }

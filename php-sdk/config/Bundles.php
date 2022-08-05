@@ -25,7 +25,6 @@ return [
     HbPFAppStoreBundle::class        => ['all' => TRUE],
     HbPFCommonsBundle::class         => ['all' => TRUE],
     HbPFConnectorBundle::class       => ['all' => TRUE],
-    HbPFConnectorsBundle::class      => ['all' => TRUE],
     HbPFCustomNodeBundle::class      => ['all' => TRUE],
     RabbitMqBundle::class            => ['all' => TRUE],
     RestBundle::class                => ['all' => TRUE],

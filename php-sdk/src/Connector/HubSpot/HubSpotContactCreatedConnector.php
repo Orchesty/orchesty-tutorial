@@ -16,7 +16,7 @@ final class HubSpotContactCreatedConnector extends ConnectorAbstract
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'hub-spot.contact-created';
     }

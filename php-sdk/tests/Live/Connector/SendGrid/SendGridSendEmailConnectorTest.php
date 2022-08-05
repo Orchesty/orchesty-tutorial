@@ -29,12 +29,15 @@ final class SendGridSendEmailConnectorTest extends DatabaseTestCaseAbstract
     {
         $app       = self::getContainer()->get('hbpf.application.send-grid');
         $curl      = self::getContainer()->get('hbpf.transport.curl_manager');
-        $connector = new SendGridSendEmailConnector($this->dm, $curl);
-        $connector->setApplication($app);
+        $connector = new SendGridSendEmailConnector();
+        $connector
+            ->setSender($curl)
+            ->setDb($this->dm)
+            ->setApplication($app);
 
         $appInstall = DataProvider::getBasicAppInstall($app->getName());
         $appInstall->setSettings(
-            [ApplicationInterface::AUTHORIZATION_SETTINGS => [SendGridApplication::API_KEY => 'key']],
+            [ApplicationInterface::AUTHORIZATION_FORM => [SendGridApplication::API_KEY => 'key']],
         );
         $this->pfd($appInstall);
         $this->dm->clear();

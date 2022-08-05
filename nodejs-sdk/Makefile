@@ -1,4 +1,5 @@
 DCS=docker-compose exec -T sdk
+IMAGE=EDIT_ME:$(TAG)
 
 ALIAS?=alias
 Darwin:
@@ -13,6 +14,11 @@ Linux:
 	sed -e "s/{DEV_UID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -u); else echo '1001'; fi)/g" \
 		-e "s/{DEV_GID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -g); else echo '1001'; fi)/g" \
 		.env.dist > .env; \
+
+# Build
+build: .env
+	docker build -f Dockerfile -t $(IMAGE) --pull .
+	docker push $(IMAGE)
 
 docker-compose.ci.yml:
 	# Comment out any port forwarding

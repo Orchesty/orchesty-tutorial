@@ -10,9 +10,8 @@
         "ext-mongodb": "*",
         "doctrine/mongodb-odm-bundle": "^4.5",
         "hanaboso/rest-bundle": "^1.1",
-        "orchesty/app-store": "^2.0",
-        "orchesty/php-connectors": "^2.0",
-        "orchesty/php-sdk": "^2.0",
+        "orchesty/app-store": "^2.1",
+        "orchesty/php-sdk": "^2.1",
         "symfony/security-bundle": "^v6.1"
     },
     "require-dev": {

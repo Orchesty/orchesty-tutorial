@@ -16,7 +16,7 @@ if (process.env.JEST_DOCKER) {
 }
 
 // Mock Logger module
-jest.mock('pipes-nodejs-sdk/dist/lib/Logger/Logger', () => ({
+jest.mock('@orchesty/nodejs-sdk/dist/lib/Logger/Logger', () => ({
   error: () => jest.fn(),
   info: () => jest.fn(),
   debug: () => jest.fn(),

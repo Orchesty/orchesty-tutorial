@@ -4,6 +4,7 @@ namespace Pipes\PhpSdk\Tests\Unit\Application;
 
 use Exception;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
+use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
@@ -97,6 +98,7 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     public function testGetRequestDto(): void
     {
         $dto = $this->app->getRequestDto(
+            new ProcessDto(),
             $this->createApplicationInstall(),
             CurlManager::METHOD_POST,
             NULL,
@@ -108,13 +110,13 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Application\HubSpotApplication::getSettingsForm
+     * @covers \Pipes\PhpSdk\Application\HubSpotApplication::getFormStack
      *
      * @throws Exception
      */
-    public function testGetSettingsForm(): void
+    public function testGetFormStack(): void
     {
-        $form = $this->app->getSettingsForm();
+        $form = $this->app->getFormStack()->getForms()[0];
         self::assertCount(3, $form->getFields());
     }
 
@@ -217,9 +219,9 @@ final class HubSpotApplicationTest extends KernelTestCaseAbstract
     {
         $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
-            array_merge(
+            array_merge_recursive(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+                [ApplicationAbstract::AUTHORIZATION_FORM => [HubSpotApplication::APP_ID => 'app_id'],],
             ),
         );
 

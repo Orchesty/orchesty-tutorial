@@ -4,6 +4,7 @@ namespace Pipes\PhpSdk\Tests\Integration\Batch\Splitter;
 
 use Exception;
 use Hanaboso\Utils\File\File;
+use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
@@ -17,13 +18,13 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::getId
+     * @covers \Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter::getName
      *
      * @throws Exception
      */
     public function testGetId(): void
     {
-        self::assertEquals('user-batch-splitter', (new UsersBatchSplitter())->getId());
+        self::assertEquals('user-batch-splitter', (new UsersBatchSplitter())->getName());
     }
 
     /**
@@ -35,8 +36,11 @@ final class UsersBatchSplitterTest extends DatabaseTestCaseAbstract
     {
         $this->assertBatch(
             new UsersBatchSplitter(),
-            DataProvider::getProcessDto('', '', File::getContent(__DIR__ . '/data/users.json')),
-            [DataProvider::getProcessDto('', '', File::getContent(__DIR__ . '/data/users.json'))],
+            DataProvider::getBatchProcessDto('', '', File::getContent(__DIR__ . '/data/users.json')),
+            [
+                DataProvider::getBatchProcessDto('', '', File::getContent(__DIR__ . '/data/users.json'))
+                    ->setItemList(Json::decode(File::getContent(__DIR__ . '/data/users.json'))),
+            ],
         );
     }
 

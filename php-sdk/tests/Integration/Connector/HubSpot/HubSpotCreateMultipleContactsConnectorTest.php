@@ -31,7 +31,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
     private HubSpotApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::getId
+     * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::getName
      * @covers \Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector::__construct
      *
      * @throws Exception
@@ -40,7 +40,7 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
     {
         self::assertEquals(
             'hub-spot.create-multiple-contacts',
-            $this->createConnector(DataProvider::createResponseDto())->getId(),
+            $this->createConnector(DataProvider::createResponseDto())->getName(),
         );
     }
 
@@ -202,7 +202,12 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
             $sender->method('send')->willReturn($dto);
         }
 
-        return new HubSpotCreateMultipleContactsConnector($this->dm, $sender);
+        $conn = new HubSpotCreateMultipleContactsConnector();
+        $conn
+            ->setSender($sender)
+            ->setDb($this->dm);
+
+        return $conn;
     }
 
     /**
@@ -213,9 +218,9 @@ final class HubSpotCreateMultipleContactsConnectorTest extends DatabaseTestCaseA
     {
         $appInstall = DataProvider::getOauth2AppInstall($this->app->getName());
         $appInstall->setSettings(
-            array_merge(
+            array_merge_recursive(
                 $appInstall->getSettings(),
-                [ApplicationAbstract::FORM => [HubSpotApplication::APP_ID => 'app_id'],],
+                [ApplicationAbstract::AUTHORIZATION_FORM => [HubSpotApplication::APP_ID => 'app_id'],],
             ),
         );
 

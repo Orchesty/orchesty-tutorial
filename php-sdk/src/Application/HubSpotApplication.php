@@ -3,6 +3,8 @@
 namespace Pipes\PhpSdk\Application;
 
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
+use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
@@ -10,10 +12,12 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\HbPFAppStore\Model\Webhook\WebhookApplicationInterface;
 use Hanaboso\HbPFAppStore\Model\Webhook\WebhookSubscription;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
+use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
+use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Authorization\Utils\ScopeFormatter;
@@ -85,23 +89,25 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     }
 
     /**
+     * @param ProcessDtoAbstract $dto
      * @param ApplicationInstall $applicationInstall
      * @param string             $method
      * @param string|null        $url
      * @param string|null        $data
      *
      * @return RequestDto
-     * @throws CurlException
      * @throws ApplicationInstallException
+     * @throws CurlException
      */
     public function getRequestDto(
+        ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
         ?string $data = NULL,
     ): RequestDto
     {
-        $request = new RequestDto($method, $this->getUri($url ?? self::BASE_URL));
+        $request = new RequestDto($this->getUri($url ?? self::BASE_URL), $method, $dto);
         $request->setHeaders(
             [
                 'Content-Type'  => 'application/json',
@@ -118,17 +124,17 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     }
 
     /**
-     * @return Form
+     * @return FormStack
      */
-    public function getSettingsForm(): Form
+    public function getFormStack(): FormStack
     {
-        $form = new Form();
+        $form = new Form(ApplicationInterface::AUTHORIZATION_FORM, 'Authorization settings');
         $form
             ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_ID, 'Client Id', NULL, TRUE))
             ->addField(new Field(Field::PASSWORD, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', TRUE))
             ->addField(new Field(Field::TEXT, self::APP_ID, 'Application Id', NULL, TRUE));
 
-        return $form;
+        return (new FormStack())->addForm($form);
     }
 
     /**
@@ -160,7 +166,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         $hubspotUrl = sprintf(
             '%s/webhooks/v1/%s/subscriptions',
             self::BASE_URL,
-            $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID],
+            $applicationInstall->getSettings()[ApplicationAbstract::AUTHORIZATION_FORM][self::APP_ID],
         );
         $body       = Json::encode(
             [
@@ -173,7 +179,13 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             ],
         );
 
-        return $this->getRequestDto($applicationInstall, CurlManager::METHOD_POST, $hubspotUrl, $body);
+        return $this->getRequestDto(
+            new ProcessDto(),
+            $applicationInstall,
+            CurlManager::METHOD_POST,
+            $hubspotUrl,
+            $body,
+        );
     }
 
     /**
@@ -189,11 +201,11 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         $url = sprintf(
             '%s/webhooks/v1/%s/subscriptions/%s',
             self::BASE_URL,
-            $applicationInstall->getSettings()[ApplicationAbstract::FORM][self::APP_ID],
+            $applicationInstall->getSettings()[ApplicationAbstract::AUTHORIZATION_FORM][self::APP_ID],
             $id,
         );
 
-        return $this->getRequestDto($applicationInstall, CurlManager::METHOD_DELETE, $url);
+        return $this->getRequestDto(new ProcessDto(), $applicationInstall, CurlManager::METHOD_DELETE, $url);
     }
 
     /**

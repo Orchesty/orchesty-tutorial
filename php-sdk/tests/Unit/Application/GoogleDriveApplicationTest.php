@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests\Unit\Application;
 
 use Exception;
+use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
 use Hanaboso\Utils\String\Json;
@@ -81,6 +82,7 @@ final class GoogleDriveApplicationTest extends KernelTestCaseAbstract
     public function testGetRequestDto(): void
     {
         $dto = $this->app->getRequestDto(
+            new ProcessDto(),
             DataProvider::getOauth2AppInstall($this->app->getName()),
             CurlManager::METHOD_POST,
             NULL,
@@ -92,13 +94,13 @@ final class GoogleDriveApplicationTest extends KernelTestCaseAbstract
     }
 
     /**
-     * @covers \Pipes\PhpSdk\Application\GoogleDriveApplication::getSettingsForm
+     * @covers \Pipes\PhpSdk\Application\GoogleDriveApplication::getFormStack
      *
      * @throws Exception
      */
-    public function testGetSettingsForm(): void
+    public function testGetFormStack(): void
     {
-        $form = $this->app->getSettingsForm();
+        $form = $this->app->getFormStack()->getForms()[0];
         self::assertCount(2, $form->getFields());
     }
 

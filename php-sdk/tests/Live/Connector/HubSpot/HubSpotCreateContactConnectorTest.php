@@ -29,13 +29,16 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     public function testProcessAction(): void
     {
         $settings     = self::getContainer()->get('hbpf.commons.crypt.crypt_manager')->decrypt('001_aaa');
-        $token        = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][ApplicationInterface::TOKEN][OAuth2Provider::ACCESS_TOKEN];
-        $clientId     = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_ID];
-        $clientSecret = $settings[ApplicationInterface::AUTHORIZATION_SETTINGS][OAuth2ApplicationInterface::CLIENT_SECRET];
+        $token        = $settings[ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::TOKEN][OAuth2Provider::ACCESS_TOKEN];
+        $clientId     = $settings[ApplicationInterface::AUTHORIZATION_FORM][OAuth2ApplicationInterface::CLIENT_ID];
+        $clientSecret = $settings[ApplicationInterface::AUTHORIZATION_FORM][OAuth2ApplicationInterface::CLIENT_SECRET];
         $app          = self::getContainer()->get('hbpf.application.hub-spot');
         $curl         = self::getContainer()->get('hbpf.transport.curl_manager');
-        $connector    = new HubSpotCreateContactConnector($this->dm, $curl);
-        $connector->setApplication($app);
+        $connector    = new HubSpotCreateContactConnector();
+        $connector
+            ->setSender($curl)
+            ->setDb($this->dm)
+            ->setApplication($app);
 
         $appInstall = DataProvider::getOauth2AppInstall(
             $app->getName(),

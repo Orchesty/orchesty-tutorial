@@ -27,8 +27,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
     private GoogleDriveApplication $app;
 
     /**
-     * @covers \Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector::getId
-     * @covers \Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector::__construct
+     * @covers \Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector::getName
      *
      * @throws Exception
      */
@@ -36,7 +35,7 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
     {
         self::assertEquals(
             'google-drive.upload-file',
-            $this->createConnector(DataProvider::createResponseDto())->getId(),
+            $this->createConnector(DataProvider::createResponseDto())->getName(),
         );
     }
 
@@ -122,7 +121,12 @@ final class GoogleDriveUploadFileConnectorTest extends DatabaseTestCaseAbstract
             $sender->method('send')->willReturn($dto);
         }
 
-        return new GoogleDriveUploadFileConnector($this->dm, $sender);
+        $conn = new GoogleDriveUploadFileConnector();
+        $conn
+            ->setSender($sender)
+            ->setDb($this->dm);
+
+        return $conn;
     }
 
 }

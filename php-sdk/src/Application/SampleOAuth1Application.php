@@ -2,11 +2,13 @@
 
 namespace Pipes\PhpSdk\Application;
 
+use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
-use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
+use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
+use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth1\OAuth1ApplicationAbstract;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth1Provider;
 
@@ -43,25 +45,28 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
     }
 
     /**
+     * @param ProcessDtoAbstract $dto
      * @param ApplicationInstall $applicationInstall
      * @param string             $method
      * @param string|null        $url
      * @param string|null        $data
      *
      * @return RequestDto
+     * @throws ApplicationInstallException
      * @throws CurlException
      */
     public function getRequestDto(
+        ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
         string $method,
         ?string $url = NULL,
         ?string $data = NULL,
     ): RequestDto
     {
-        $token = $applicationInstall->getSettings()
-                 [ApplicationInterface::AUTHORIZATION_SETTINGS][ApplicationInterface::TOKEN][OAuth1Provider::OAUTH_TOKEN] ?? '';
+        $request = new RequestDto($this->getUri($url), $method, $dto);
+        $token   = $applicationInstall->getSettings()
+                 [ApplicationInterface::AUTHORIZATION_FORM][ApplicationInterface::TOKEN][OAuth1Provider::OAUTH_TOKEN] ?? '';
 
-        $request = new RequestDto($method, $this->getUri($url));
         $request->setHeaders(
             [
                 'Content-Type'  => 'application/json',
@@ -78,11 +83,11 @@ final class SampleOAuth1Application extends OAuth1ApplicationAbstract
     }
 
     /**
-     * @return Form
+     * @return FormStack
      */
-    public function getSettingsForm(): Form
+    public function getFormStack(): FormStack
     {
-        return new Form();
+        return new FormStack();
     }
 
     /**

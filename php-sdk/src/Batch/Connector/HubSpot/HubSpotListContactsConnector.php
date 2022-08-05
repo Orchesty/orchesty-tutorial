@@ -2,16 +2,14 @@
 
 namespace Pipes\PhpSdk\Batch\Connector\HubSpot;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Exception;
 use GuzzleHttp\Psr7\Uri;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
-use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
-use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
+use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
@@ -25,16 +23,11 @@ use Psr\Log\NullLogger;
  *
  * @package Pipes\PhpSdk\Batch\Connector\HubSpot
  */
-final class HubSpotListContactsConnector extends ConnectorAbstract implements LoggerAwareInterface
+final class HubSpotListContactsConnector extends BatchAbstract implements LoggerAwareInterface
 {
 
     public const ITEMS_PER_PAGE = 90;
     public const URL            = '%s/contacts/v1/lists/all/contacts/all';
-
-    /**
-     * @var ApplicationInstallRepository
-     */
-    private ApplicationInstallRepository $repository;
 
     /**
      * @var LoggerInterface
@@ -43,20 +36,16 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Lo
 
     /**
      * HubSpotListContactsConnector constructor.
-     *
-     * @param DocumentManager $dm
-     * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, private CurlManager $sender)
+    public function __construct()
     {
-        $this->repository = $dm->getRepository(ApplicationInstall::class);
-        $this->logger     = new NullLogger();
+        $this->logger = new NullLogger();
     }
 
     /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'hub-spot.list-contacts';
     }
@@ -70,23 +59,22 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Lo
     }
 
     /**
-     * @param ProcessDto $dto
+     * @param BatchProcessDto $dto
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws ApplicationInstallException
      * @throws ConnectorException
      * @throws Exception
      */
-    public function processAction(ProcessDto $dto): ProcessDto
+    public function processAction(BatchProcessDto $dto): BatchProcessDto
     {
-        $dto->addHeader(PipesHeaders::createKey(PipesHeaders::APPLICATION), $this->getApplicationKey() ?? '');
-        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
+        $applicationInstall = $this->getApplicationInstallFromProcess($dto);
         $requestDto         = $this->getApplication()->getRequestDto(
+            $dto,
             $applicationInstall,
             CurlManager::METHOD_GET,
             sprintf(self::URL, HubspotApplication::BASE_URL),
         );
-        $requestDto->setDebugInfo($dto);
 
         return $this->doPageLoop($requestDto, $applicationInstall, $dto);
     }
@@ -98,21 +86,25 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Lo
     /**
      * @param RequestDto         $dto
      * @param ApplicationInstall $install
-     * @param ProcessDto         $processDto
+     * @param BatchProcessDto    $processDto
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws Exception
      */
-    private function doPageLoop(RequestDto $dto, ApplicationInstall $install, ProcessDto $processDto): ProcessDto
+    private function doPageLoop(
+        RequestDto $dto,
+        ApplicationInstall $install,
+        BatchProcessDto $processDto,
+    ): BatchProcessDto
     {
         $offset = (int) $processDto->getBatchCursor('0');
         $uri    = $this->getUri($dto, $offset);
 
-        $response = $this->sender->send(RequestDto::from($dto, $uri));
+        $response = $this->getSender()->send(RequestDto::from($dto, $processDto, $uri));
 
         $body    = $response->getBody();
         $data    = empty($body) ? [] : Json::decode($body);
-        $respDto = $this->createSuccessMessage($install, $data, $processDto->getHeaders());
+        $respDto = $this->createSuccessMessage($processDto, $install, $data, $processDto->getHeaders());
 
         if ($data['has-more'] ?? FALSE) {
             $respDto->setBatchCursor((string) ++$offset);
@@ -140,17 +132,23 @@ final class HubSpotListContactsConnector extends ConnectorAbstract implements Lo
     }
 
     /**
+     * @param BatchProcessDto    $dto
      * @param ApplicationInstall $install
      * @param mixed[]            $data
      * @param mixed[]            $headers
      *
-     * @return ProcessDto
+     * @return BatchProcessDto
      * @throws Exception
      */
-    private function createSuccessMessage(ApplicationInstall $install, array $data, array $headers = []): ProcessDto
+    private function createSuccessMessage(
+        BatchProcessDto $dto,
+        ApplicationInstall $install,
+        array $data,
+        array $headers,
+    ): BatchProcessDto
     {
         if (array_key_exists('contacts', $data)) {
-            return (new ProcessDto())->setData(Json::encode($data['contacts']));
+            return $dto->setItemList($data['contacts']);
         } else {
             throw $this->batchConnectorError(
                 new ConnectorException('Bad response data from HubSpot response. Missing "contacts".'),

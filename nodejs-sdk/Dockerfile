@@ -1,12 +1,18 @@
 FROM node:slim as precache
 
-RUN apt-get update && apt-get update -y && apt-get install -y yarn
+RUN npm i -g pnpm
 
 # Install node packages
 WORKDIR /tmp/_node
 COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install --production
+COPY pnpm-lock.yaml ./
+RUN pnpm install
+
+# Install prod node packages
+WORKDIR /tmp/_node_prod
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+RUN pnpm install --production
 
 FROM node:slim as build
 
@@ -23,8 +29,6 @@ ENV NODE_ENV=prod
 
 WORKDIR /srv/app
 COPY --from=build /srv/app/dist/src /srv/app
-COPY --from=precache /tmp/_node /srv/app
+COPY --from=precache /tmp/_node_prod /srv/app
 
-RUN npm install pm2 -g
-
-CMD pm2-runtime server.js
+CMD node index.js

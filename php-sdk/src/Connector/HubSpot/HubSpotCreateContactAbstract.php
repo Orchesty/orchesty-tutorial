@@ -2,18 +2,13 @@
 
 namespace Pipes\PhpSdk\Connector\HubSpot;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
-use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
-use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
-use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
-use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Psr\Log\LoggerAwareInterface;
@@ -34,25 +29,16 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
     protected string $contactUrl;
 
     /**
-     * @var ApplicationInstallRepository
-     */
-    protected ApplicationInstallRepository $repository;
-
-    /**
      * @var LoggerInterface
      */
     protected LoggerInterface $logger;
 
     /**
      * HubSpotCreateContactAbstract constructor.
-     *
-     * @param DocumentManager $dm
-     * @param CurlManager     $sender
      */
-    public function __construct(DocumentManager $dm, protected CurlManager $sender)
+    public function __construct()
     {
-        $this->repository = $dm->getRepository(ApplicationInstall::class);
-        $this->logger     = new NullLogger();
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -73,17 +59,17 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
-        $body               = $this->getJsonContent($dto);
+        $applicationInstall = $this->getApplicationInstallFromProcess($dto);
 
         try {
-            $response = $this->sender->send(
+            $response = $this->getSender()->send(
                 $this->getApplication()->getRequestDto(
+                    $dto,
                     $applicationInstall,
                     CurlManager::METHOD_POST,
                     sprintf('%s/%s', HubspotApplication::BASE_URL, $this->contactUrl),
-                    Json::encode($body),
-                )->setDebugInfo($dto),
+                    $dto->getData(),
+                ),
             );
 
             if ($response->getStatusCode() === 202) {
@@ -113,7 +99,7 @@ abstract class HubSpotCreateContactAbstract extends ConnectorAbstract implements
             }
 
             $dto->setData($response->getBody());
-        } catch (CurlException | ConnectorException $e) {
+        } catch (CurlException $e) {
             throw new OnRepeatException($dto, $e->getMessage(), $e->getCode(), $e);
         }
 

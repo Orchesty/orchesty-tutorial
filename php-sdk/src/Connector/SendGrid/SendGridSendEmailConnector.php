@@ -2,13 +2,10 @@
 
 namespace Pipes\PhpSdk\Connector\SendGrid;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
-use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
-use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
@@ -24,25 +21,9 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
 {
 
     /**
-     * @var ApplicationInstallRepository
-     */
-    private ApplicationInstallRepository $repository;
-
-    /**
-     * SendGridSendEmailConnector constructor.
-     *
-     * @param DocumentManager $dm
-     * @param CurlManager     $sender
-     */
-    public function __construct(DocumentManager $dm, private CurlManager $sender)
-    {
-        $this->repository = $dm->getRepository(ApplicationInstall::class);
-    }
-
-    /**
      * @return string
      */
-    public function getId(): string
+    public function getName(): string
     {
         return 'send-grid.send-email';
     }
@@ -56,8 +37,8 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
      */
     public function processAction(ProcessDto $dto): ProcessDto
     {
-        $applicationInstall = $this->repository->findUserAppByHeaders($dto);
-        $data               = $this->getJsonContent($dto);
+        $applicationInstall = $this->getApplicationInstallFromProcess($dto);
+        $data               = $dto->getJsonData();
         if (!isset($data['email'], $data['name'], $data['subject'])) {
             throw new ConnectorException('Some data is missing. Keys [email, name, subject] is required.');
         }
@@ -87,11 +68,10 @@ final class SendGridSendEmailConnector extends ConnectorAbstract
 
         $url     = sprintf('%s/mail/send', SendGridApplication::BASE_URL);
         $request = $this->getApplication()
-            ->getRequestDto($applicationInstall, CurlManager::METHOD_POST, $url, Json::encode($body))
-            ->setDebugInfo($dto);
+            ->getRequestDto($dto, $applicationInstall, CurlManager::METHOD_POST, $url, Json::encode($body));
 
         try {
-            $response = $this->sender->send($request);
+            $response = $this->getSender()->send($request);
 
             if (!$this->evaluateStatusCode($response->getStatusCode(), $dto, '')) {
                 return $dto;

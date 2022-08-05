@@ -4,15 +4,14 @@ namespace Pipes\PhpSdk\Tests;
 
 use Closure;
 use Exception;
-use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
-use Hanaboso\PipesPhpSdk\Connector\ConnectorInterface;
-use Hanaboso\PipesPhpSdk\CustomNode\CustomNodeInterface;
+use Hanaboso\PipesPhpSdk\Batch\BatchInterface;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
 use phpmock\phpunit\PHPMock;
@@ -70,20 +69,22 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     }
 
     /**
-     * @param ConnectorInterface|CustomNodeInterface $batch
-     * @param ProcessDto                             $dto
-     * @param ProcessDto[]                           $asserts
+     * @param BatchInterface    $batch
+     * @param BatchProcessDto   $_dto
+     * @param BatchProcessDto[] $asserts
      *
      * @throws Exception
      */
-    protected function assertBatch(
-        ConnectorInterface|CustomNodeInterface $batch,
-        ProcessDto $dto,
-        array $asserts,
-    ): void
+    protected function assertBatch(BatchInterface $batch, BatchProcessDto $_dto, array $asserts): void
     {
         $i = 0;
         do{
+            $dto = new BatchProcessDto($_dto->getHeaders());
+            if($_dto->getData()){
+                $dto->setBridgeData($_dto->getData());
+            }
+
+            $dto->removeBatchCursor();
             $resDto = $batch->processAction($dto);
             self::assertEquals($resDto, $asserts[$i]);
             $i++;

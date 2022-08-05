@@ -12,7 +12,8 @@ parameters:
             - Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract
             - Hanaboso\PipesPhpSdk\Authorization\Base\OAuth1\OAuth1ApplicationAbstract
             - Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract
-            - Hanaboso\PipesPhpSdk\CustomNode\CustomNodeAbstract
+            - Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract
+            - Hanaboso\PipesPhpSdk\Batch\BatchAbstract
             - Hanaboso\PipesPhpSdk\Connector\ConnectorAbstract
             - Pipes\PhpSdk\Tests\KernelTestCaseAbstract
             - Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e46b51ed60919ca5f2d1747a74e999c",
+    "content-hash": "7a96595137261927f167f5d9fd1073d6",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2097,107 +2097,17 @@
             "time": "2022-08-04T09:53:51+00:00"
         },
         {
-            "name": "orchesty/app-store",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Orchesty/orchesty-php-app-store.git",
-                "reference": "4a34d062ff1d7ebf96eae704e4b5964c1d80b9c2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Orchesty/orchesty-php-app-store/zipball/4a34d062ff1d7ebf96eae704e4b5964c1d80b9c2",
-                "reference": "4a34d062ff1d7ebf96eae704e4b5964c1d80b9c2",
-                "shasum": ""
-            },
-            "require": {
-                "orchesty/php-sdk": "^2.0",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "hanaboso/php-check-utils": "^1.4",
-                "hanaboso/rest-bundle": "^1.1",
-                "symfony/debug-bundle": "^v6.0",
-                "symfony/security-bundle": "^v6.0",
-                "symfony/serializer": "^v6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Hanaboso\\HbPFAppStore\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Apps support for Orchesty",
-            "support": {
-                "source": "https://github.com/Orchesty/orchesty-php-app-store/tree/v2.1.0"
-            },
-            "time": "2022-07-15T10:53:03+00:00"
-        },
-        {
-            "name": "orchesty/php-connectors",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Orchesty/orchesty-php-connectors.git",
-                "reference": "c29f7c4bdb17c9f60587468e6605c068bd34d73b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Orchesty/orchesty-php-connectors/zipball/c29f7c4bdb17c9f60587468e6605c068bd34d73b",
-                "reference": "c29f7c4bdb17c9f60587468e6605c068bd34d73b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-intl": "*",
-                "ext-mbstring": "*",
-                "hanaboso/rabbit-mq-bundle": "^1.5",
-                "orchesty/app-store": "^2.0",
-                "orchesty/php-sdk": "^2.0",
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "aws/aws-sdk-php-symfony": "^2.2",
-                "hanaboso/php-check-utils": "^1.4",
-                "symfony/debug-bundle": "^v6.0",
-                "symfony/security-bundle": "^v6.0",
-                "symfony/serializer": "^v6.0"
-            },
-            "suggest": {
-                "aws/aws-sdk-php-symfony": "Install me, if you need to use Model\\Application\\Impl\\AmazonApps."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Hanaboso\\HbPFConnectors\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Connectors for Orchesty",
-            "support": {
-                "source": "https://github.com/Orchesty/orchesty-php-connectors/tree/v2.1.0"
-            },
-            "time": "2022-07-15T10:53:03+00:00"
-        },
-        {
             "name": "orchesty/php-sdk",
-            "version": "2.1.2",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Orchesty/orchesty-php-sdk.git",
-                "reference": "a012169cbbc56c699cb26b9e12d15b099fd9bde5"
+                "reference": "00db5ac8dac8da1284f6fd4551a8b605d2aebc7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Orchesty/orchesty-php-sdk/zipball/a012169cbbc56c699cb26b9e12d15b099fd9bde5",
-                "reference": "a012169cbbc56c699cb26b9e12d15b099fd9bde5",
+                "url": "https://api.github.com/repos/Orchesty/orchesty-php-sdk/zipball/00db5ac8dac8da1284f6fd4551a8b605d2aebc7e",
+                "reference": "00db5ac8dac8da1284f6fd4551a8b605d2aebc7e",
                 "shasum": ""
             },
             "require": {
@@ -2235,9 +2145,9 @@
             ],
             "description": "PHP sdk for Orchesty",
             "support": {
-                "source": "https://github.com/Orchesty/orchesty-php-sdk/tree/v2.1.2"
+                "source": "https://github.com/Orchesty/orchesty-php-sdk/tree/v2.2.0"
             },
-            "time": "2022-07-28T15:46:27+00:00"
+            "time": "2022-08-08T15:24:58+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -7440,16 +7350,16 @@
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "1.3.11",
+            "version": "1.3.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "3ef6399761bb33fdfa0d5546d4b6e7d8811e8850"
+                "reference": "c5ec462889f3bcee32be57ff26f775295836c173"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/3ef6399761bb33fdfa0d5546d4b6e7d8811e8850",
-                "reference": "3ef6399761bb33fdfa0d5546d4b6e7d8811e8850",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/c5ec462889f3bcee32be57ff26f775295836c173",
+                "reference": "c5ec462889f3bcee32be57ff26f775295836c173",
                 "shasum": ""
             },
             "require": {
@@ -7502,9 +7412,9 @@
             "description": "Doctrine extensions for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-doctrine/issues",
-                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.3.11"
+                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.3.12"
             },
-            "time": "2022-07-20T14:54:37+00:00"
+            "time": "2022-08-08T18:06:58+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -7608,16 +7518,16 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "1.2.8",
+            "version": "1.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "28fe677ec3ad43eb4c0946c502535365e3040ecf"
+                "reference": "f4cb3b8915d3656e780f305f01c86b70ff933272"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/28fe677ec3ad43eb4c0946c502535365e3040ecf",
-                "reference": "28fe677ec3ad43eb4c0946c502535365e3040ecf",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/f4cb3b8915d3656e780f305f01c86b70ff933272",
+                "reference": "f4cb3b8915d3656e780f305f01c86b70ff933272",
                 "shasum": ""
             },
             "require": {
@@ -7673,9 +7583,9 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.8"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.2.9"
             },
-            "time": "2022-07-20T12:02:52+00:00"
+            "time": "2022-08-05T20:13:38+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

@@ -32,11 +32,6 @@ doctrine_mongodb:
             connection: default
             database: '%env(MONGODB_DB)%'
             mappings:
-                AppStoreDocument:
-                    type: annotation
-                    is_bundle: false
-                    dir: "%kernel.project_dir%/vendor/orchesty/app-store/src/Document"
-                    prefix: Hanaboso\HbPFAppStore\Document
                 ApplicationDocument:
                     type: annotation
                     is_bundle: false

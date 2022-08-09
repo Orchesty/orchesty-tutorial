@@ -2,10 +2,6 @@ hb_pf_application:
     resource: "@HbPFApplicationBundle/Controller"
     type: annotation
 
-hb_pf_app_store:
-    resource: "@HbPFAppStoreBundle"
-    type: annotation
-
 hb_pf_connector:
     resource: "@HbPFConnectorBundle/Controller"
     type: annotation

@@ -1,53 +1,70 @@
-import AOAuth2Application from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/OAuth2/AOAuth2Application';
-import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
+import { AUTHORIZATION_FORM } from '@orchesty/nodejs-sdk/dist/lib/Application/Base/AApplication';
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
-import HttpMethods from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
-import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
-import Form from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/Form';
 import Field from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/Field';
 import FieldType from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/FieldType';
-import { CLIENT_ID, CLIENT_SECRET } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/OAuth2/IOAuth2Application';
-import ScopeSeparatorEnum from '@orchesty/nodejs-sdk/dist/lib/Authorization/ScopeSeparatorEnum';
+import Form from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/Form';
+import FormStack from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/FormStack';
 import { ACCESS_TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
+import ScopeSeparatorEnum from '@orchesty/nodejs-sdk/dist/lib/Authorization/ScopeSeparatorEnum';
+import AOAuth2Application from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/OAuth2/AOAuth2Application';
+import { CLIENT_ID, CLIENT_SECRET } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/OAuth2/IOAuth2Application';
+import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
+import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 import { CommonHeaders, JSON_TYPE } from '@orchesty/nodejs-sdk/dist/lib/Utils/Headers';
+import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 
 export default class TestOAuth2Application extends AOAuth2Application {
-  public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
 
-  public getTokenUrl = (): string => 'https://identity.idoklad.cz/server/connect/token';
+    public getAuthUrl(): string {
+        return 'https://identity.idoklad.cz/server/connect/authorize';
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getScopes = (applicationInstall: ApplicationInstall): string[] => ['idoklad_api', 'offline_access'];
+    public getTokenUrl(): string {
+        return 'https://identity.idoklad.cz/server/connect/token';
+    }
 
-  protected _getScopesSeparator = (): string => ScopeSeparatorEnum.SPACE;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getScopes(applicationInstall: ApplicationInstall): string[] {
+        return ['idoklad_api', 'offline_access'];
+    }
 
-  public getDescription = (): string => 'Test OAuth2 application';
+    public getDescription(): string {
+        return 'Test OAuth2 application';
+    }
 
-  public getName = (): string => 'oauth2application';
+    public getName(): string {
+        return 'oauth2application';
+    }
 
-  public getPublicName = (): string => 'Test OAuth2 Application';
+    public getPublicName(): string {
+        return 'Test OAuth2 Application';
+    }
 
-  public getRequestDto = (
-    dto: ProcessDto,
-    applicationInstall: ApplicationInstall,
-    method: HttpMethods,
-    url?: string,
-    data?: string,
-  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, dto, data, {
-    [CommonHeaders.AUTHORIZATION]: `Bearer ${this.getTokens(applicationInstall)[ACCESS_TOKEN]}`,
-    [CommonHeaders.ACCEPT]: JSON_TYPE,
-    [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
-  });
+    public getRequestDto(
+        dto: ProcessDto,
+        applicationInstall: ApplicationInstall,
+        method: HttpMethods,
+        url?: string,
+        data?: string,
+    ): RequestDto {
+        return new RequestDto(url ?? '', HttpMethods.GET, dto, data, {
+            [CommonHeaders.AUTHORIZATION]: `Bearer ${this.getTokens(applicationInstall)[ACCESS_TOKEN]}`,
+            [CommonHeaders.ACCEPT]: JSON_TYPE,
+            [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
+        });
+    }
 
-  public getSettingsForm = (): Form => {
-    const fieldClientId = new Field(FieldType.TEXT, CLIENT_ID, 'Client Id');
-    const fieldClientSecret = new Field(FieldType.PASSWORD, CLIENT_SECRET, 'Client secret');
+    public getFormStack(): FormStack {
+        const form = new Form(AUTHORIZATION_FORM, 'Authorization settings');
+        form
+            .addField(new Field(FieldType.TEXT, CLIENT_ID, 'Client Id'))
+            .addField(new Field(FieldType.PASSWORD, CLIENT_SECRET, 'Client secret'));
 
-    const form = new Form();
-    form
-      .addField(fieldClientId)
-      .addField(fieldClientSecret);
+        return new FormStack().addForm(form);
+    }
 
-    return form;
-  };
+    protected getScopesSeparator(): string {
+        return ScopeSeparatorEnum.SPACE;
+    }
+
 }

@@ -46,6 +46,10 @@ lint:
 unit:
 	$(DCS) pnpm run test
 
+localtest:
+	pnpm run lint
+	pnpm run test
+
 fasttest: lint unit
 
 test: docker-up-force install fasttest docker-down-clean

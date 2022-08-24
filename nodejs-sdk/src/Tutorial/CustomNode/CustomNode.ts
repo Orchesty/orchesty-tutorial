@@ -2,57 +2,54 @@ import ACommonNode from '@orchesty/nodejs-sdk/dist/lib/Commons/ACommonNode';
 import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 
 export class CustomNode extends ACommonNode {
-  public getName(): string {
-    return 'custom-node';
-  }
 
-  public processAction(_dto: ProcessDto): Promise<ProcessDto> | ProcessDto {
-    const dto = _dto;
-    // Specify what is an input
-    const data = dto.jsonData as IInput;
+    public getName(): string {
+        return 'custom-node';
+    }
 
-    // Whole data transformation
-    dto.jsonData = {
-      key: data.key,
-      personage: data.persons.reduce((acc: IPersonage, it) => {
-        // Single person transformation
-        const transformed = {
-          id: it.id,
-          fullname: `${it.name} ${it.surname}`,
-        };
+    public processAction(dto: ProcessDto<IInput>): ProcessDto<IOutput> {
+        const data = dto.getJsonData();
 
-        if (!(it.assignment in acc)) {
-          acc[it.assignment] = [transformed];
-        } else {
-          acc[it.assignment].push(transformed);
-        }
+        // Whole data transformation
+        return dto.setNewJsonData<IOutput>({
+            key: data.key,
+            personage: data.persons.reduce((acc: Record<string, IPersonage[]>, it) => {
+                // Single person transformation
+                const transformed = {
+                    id: it.id,
+                    fullname: `${it.name} ${it.surname}`,
+                };
 
-        return acc;
-      }, {}),
-      // Specifying output type to avoid unexpected keys
-    } as IOutput;
+                if (!(it.assignment in acc)) {
+                    acc[it.assignment] = [transformed];
+                } else {
+                    acc[it.assignment].push(transformed);
+                }
 
-    return dto;
-  }
+                return acc;
+            }, {}),
+        });
+    }
+
 }
 
 interface IInput {
-  key: string,
-  persons: {
-    id: number,
-    name: string,
-    surname: string,
-    assignment: string,
-  }[]
+    key: string;
+    persons: {
+        id: number;
+        name: string;
+        surname: string;
+        assignment: string;
+    }[];
 }
 
 // Exporting output type for any following node
 export interface IOutput {
-  key: string,
-  personage: IPersonage,
+    key: string;
+    personage: Record<string, IPersonage[]>;
 }
 
-export type IPersonage = Record<string, {
-  id: number,
-  fullname: string,
-}[]>
+export interface IPersonage {
+    id: number;
+    fullname: string;
+}

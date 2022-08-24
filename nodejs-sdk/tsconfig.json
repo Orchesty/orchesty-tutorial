@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "ES2022",
         "module": "commonjs",
         "moduleResolution": "node",
-        "lib": ["es6", "dom"],
         "rootDir": "./",
         "outDir": "./dist",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
         "allowJs": true,
         "noImplicitAny": true,
         "removeComments": true,
@@ -13,9 +15,10 @@
         "strict": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "skipLibCheck": true
     },
     "include": [
-        "src/**/*.ts"
+        "src"
     ]
 }

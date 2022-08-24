@@ -58,6 +58,7 @@ services:
         image: orchesty/notification-sender:${VERSION}
         environment:
             MONGO_CONNECTION: ${MONGO_DSN}
+            MONGO_DB: ${MAIN_DB}
         mem_limit: 32MB
 
     notification-sender-consumer:
@@ -65,6 +66,7 @@ services:
         environment:
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGO_CONNECTION: ${MONGO_DSN}
+            MONGO_DB: ${MAIN_DB}
         command: bin/console rabbit_mq:consumer:notification
         mem_limit: 32MB
 
@@ -105,7 +107,7 @@ services:
     topology-api:
         image: orchesty/topology-api:${VERSION}
         environment:
-            DEPLOYMENT_PREFIX: tutorial
+            DEPLOYMENT_PREFIX: ${MAIN_DB}
             GENERATOR_NETWORK: ${NETWORK_NAME}
             GENERATOR_MODE: ${GENERATOR_MODE}
             GENERATOR_PATH: /srv/topology
@@ -166,7 +168,7 @@ services:
             NOTIFICATION_DSN: notification-sender-api
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGODB_DSN: ${MONGO_DSN}
-            MONGODB_DB: tutorial
+            MONGODB_DB: ${MAIN_DB}
             METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
             METRICS_SERVICE: mongo
@@ -186,7 +188,7 @@ services:
         image: orchesty/logstash:${VERSION}
         environment:
             - MONGO_DSN=${MONGO_DSN}
-            - MONGO_DB=tutorial
+            - MONGO_DB=${MAIN_DB}
             - MONGO_COLLECTION=Logs
             - LS_JAVA_OPTS=-Xms512m -Xmx512m
         mem_limit: 768MB

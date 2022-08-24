@@ -179,7 +179,7 @@ services:
             WORKER_DEFAULT_PORT: 8008
             DOCKER_REGISTRY: orchesty
             DOCKER_PF_BRIDGE_IMAGE: bridge:${VERSION}
-            JWT_KEY: tutorial_key
+            JWT_KEY: tutorial_keytutorial_keytutorial_keytutorial_keytutorial_keytutorial_keytutorial_key
             CRYPT_SECRET: ThisIsNotSoSecret
             X_AUTH_KEY: x_auth_key
         mem_limit: 64MB

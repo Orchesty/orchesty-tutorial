@@ -7,8 +7,7 @@ export default class SplitBatch extends ABatchNode {
         return 'split-batch';
     }
 
-    public processAction(_dto: BatchProcessDto): BatchProcessDto | Promise<BatchProcessDto> {
-        const dto = _dto;
+    public processAction(dto: BatchProcessDto): BatchProcessDto {
         dto.setItemList([{ id: 1 }, { id: 2 }, { id: 3 }]);
 
         return dto;

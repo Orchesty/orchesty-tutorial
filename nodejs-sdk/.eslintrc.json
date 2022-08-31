@@ -1,17 +1,5 @@
 {
     "extends": [
         "plugin:@hanaboso/orchesty"
-    ],
-    "rules": {
-        "jest/expect-expect": [
-            "error",
-            {
-                "assertFunctionNames": [
-                    "expect",
-                    "tester.runTopology",
-                    "tester.test*"
-                ]
-            }
-        ]
-    }
+    ]
 }

@@ -7,7 +7,7 @@ import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 export default class GetUsersConnector extends AConnector {
 
     public getName(): string {
-        return 'get-users';
+        return 'jsonplaceholder-get-users';
     }
 
     public async processAction(dto: ProcessDto): Promise<ProcessDto> {

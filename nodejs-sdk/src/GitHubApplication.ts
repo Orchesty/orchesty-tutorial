@@ -6,58 +6,58 @@ import Form from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/Form';
 import FormStack from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/FormStack';
 import {
     ABasicApplication,
-    PASSWORD,
+    TOKEN,
     USER,
 } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
-import { parseHttpMethod } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
+import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 import AProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/AProcessDto';
 import { encode } from '@orchesty/nodejs-sdk/dist/lib/Utils/Base64';
 import { CommonHeaders, JSON_TYPE } from '@orchesty/nodejs-sdk/dist/lib/Utils/Headers';
 
-export default class SendgridApplication extends ABasicApplication {
+export const NAME = 'git-hub';
 
-    public getDescription(): string {
-        return 'SendgridApplication';
-    }
+export default class GitHubApplication extends ABasicApplication {
 
     public getName(): string {
-        return 'sendgrid';
+        return NAME;
     }
 
     public getPublicName(): string {
-        return 'Sendgrid';
+        return 'Git Hub';
+    }
+
+    public getDescription(): string {
+        return 'Git Hub application';
+    }
+
+    public getFormStack(): FormStack {
+        const form = new Form(AUTHORIZATION_FORM, 'Authorization settings')
+            .addField(new Field(FieldType.TEXT, USER, ' User name', undefined, false))
+            .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, false));
+
+        return new FormStack().addForm(form);
     }
 
     public getRequestDto(
         dto: AProcessDto,
         applicationInstall: ApplicationInstall,
-        method: string,
+        method: HttpMethods,
         url?: string,
-        data?: string,
+        data?: unknown,
     ): RequestDto {
-        if (!this.isAuthorized(applicationInstall)) {
-            throw new Error('Missing authorization settings');
+        const request = new RequestDto(`https://api.github.com${url}`, method, dto);
+        request.setHeaders({
+            [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
+            [CommonHeaders.ACCEPT]: JSON_TYPE,
+            [CommonHeaders.AUTHORIZATION]: encode(`${TOKEN}:${USER}`),
+        });
+
+        if (data) {
+            request.setJsonBody(data);
         }
 
-        const settings = applicationInstall.getSettings();
-        const token = encode(`${settings[AUTHORIZATION_FORM][USER]}:${settings[AUTHORIZATION_FORM][PASSWORD]}`);
-        const headers = {
-            [CommonHeaders.AUTHORIZATION]: `Basic ${token}`,
-            [CommonHeaders.ACCEPT]: JSON_TYPE,
-            [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
-        };
-
-        return new RequestDto(url ?? '', parseHttpMethod(method), dto, data, headers);
-    }
-
-    public getFormStack(): FormStack {
-        const form = new Form(AUTHORIZATION_FORM, 'Authorization settings');
-        form
-            .addField(new Field(FieldType.TEXT, USER, 'Username', undefined, true))
-            .addField(new Field(FieldType.PASSWORD, PASSWORD, 'Password', undefined, true));
-
-        return new FormStack().addForm(form);
+        return request;
     }
 
 }

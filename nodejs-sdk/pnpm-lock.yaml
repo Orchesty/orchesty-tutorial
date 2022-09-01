@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@hanaboso/eslint-plugin': ^0.0.4
-  '@orchesty/nodejs-sdk': ^3.1.0
+  '@orchesty/nodejs-sdk': ^3.1.1
   '@types/jest': ^28.1.8
   '@types/node': ^18.7.14
   '@types/node-fetch': ^2.6.2
@@ -17,7 +17,7 @@ specifiers:
   typescript: 4.7.4
 
 dependencies:
-  '@orchesty/nodejs-sdk': 3.1.0
+  '@orchesty/nodejs-sdk': 3.1.1
   node-fetch: 2.6.7
 
 devDependencies:
@@ -764,8 +764,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@orchesty/nodejs-sdk/3.1.0:
-    resolution: {integrity: sha512-MMU9eDKXf8onoUJ9OmEPSGpzrcDG89gHv8rU/y02g1AvhF0IX7dUOPFq92+7GiYQMBL0WEDTiUrkOqWQ48NjQQ==}
+  /@orchesty/nodejs-sdk/3.1.1:
+    resolution: {integrity: sha512-VujC/7E81VdH6ykwihnzegqXTNrChD8Lx1xsNkohRHeKdbEjVXULmnSSakEJCpyfOLGEfmHKxUqty51SoKhJAw==}
     dependencies:
       '@types/express': 4.17.13
       '@types/express-prometheus-middleware': 1.2.1
@@ -784,8 +784,8 @@ packages:
       luxon: 3.0.3
       metrics-sender: 0.0.10
       mime-types: 2.1.35
-      mongodb: 4.9.0
-      mongodb-typescript: 3.0.0_yncesdxeq3z7gecntdjonxvkly
+      mongodb: 4.9.1
+      mongodb-typescript: 3.0.0_klas57w6wbzhtiu62oaot5t3du
       node-cache: 5.1.2
       node-fetch: 2.6.7
       node-redis-connection-pool: 3.1.0
@@ -1463,7 +1463,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001387
-      electron-to-chromium: 1.4.237
+      electron-to-chromium: 1.4.239
       node-releases: 2.0.6
       update-browserslist-db: 1.0.5_browserslist@4.21.3
     dev: true
@@ -1852,8 +1852,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium/1.4.237:
-    resolution: {integrity: sha512-vxVyGJcsgArNOVUJcXm+7iY3PJAfmSapEszQD1HbyPLl0qoCmNQ1o/EX3RI7Et5/88In9oLxX3SGF8J3orkUgA==}
+  /electron-to-chromium/1.4.239:
+    resolution: {integrity: sha512-XbhfzxPIFzMjJm17T7yUGZEyYh5XuUjrA/FQ7JUy2bEd4qQ7MvFTaKpZ6zXZog1cfVttESo2Lx0ctnf7eQOaAQ==}
     dev: true
 
   /emittery/0.10.2:
@@ -3599,19 +3599,19 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb-typescript/3.0.0_yncesdxeq3z7gecntdjonxvkly:
+  /mongodb-typescript/3.0.0_klas57w6wbzhtiu62oaot5t3du:
     resolution: {integrity: sha512-SBhe8ttj33q1Ccn14UdtTFQVOPYvpMqLxJtB7AXCc4SRTe8AA6KWjdqDPLDJWw/B5E4LpLpqmjwoNsgoKL1PlQ==}
     peerDependencies:
       mongodb: ^4.8.0
       reflect-metadata: ^0.1.13
     dependencies:
       class-transformer: 0.5.1
-      mongodb: 4.9.0
+      mongodb: 4.9.1
       reflect-metadata: 0.1.13
     dev: false
 
-  /mongodb/4.9.0:
-    resolution: {integrity: sha512-tJJEFJz7OQTQPZeVHZJIeSOjMRqc5eSyXTt86vSQENEErpkiG7279tM/GT5AVZ7TgXNh9HQxoa2ZkbrANz5GQw==}
+  /mongodb/4.9.1:
+    resolution: {integrity: sha512-ZhgI/qBf84fD7sI4waZBoLBNJYPQN5IOC++SBCiPiyhzpNKOxN/fi0tBHvH2dEC42HXtNEbFB0zmNz4+oVtorQ==}
     engines: {node: '>=12.9.0'}
     dependencies:
       bson: 4.7.0

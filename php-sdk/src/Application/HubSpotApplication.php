@@ -2,15 +2,13 @@
 
 namespace Pipes\PhpSdk\Application;
 
-use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
+use GuzzleHttp\Psr7\Uri;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationAbstract;
-use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookApplicationInterface;
@@ -19,8 +17,7 @@ use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Form;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\FormStack;
 use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationAbstract;
-use Hanaboso\PipesPhpSdk\Authorization\Base\OAuth2\OAuth2ApplicationInterface;
-use Hanaboso\PipesPhpSdk\Authorization\Utils\ScopeFormatter;
+use Hanaboso\PipesPhpSdk\Authorization\Exception\AuthorizationException;
 use Hanaboso\Utils\String\Json;
 
 /**
@@ -31,29 +28,17 @@ use Hanaboso\Utils\String\Json;
 final class HubSpotApplication extends OAuth2ApplicationAbstract implements WebhookApplicationInterface
 {
 
-    public const    BASE_URL    = 'https://api.hubapi.com';
-    public const    HUBSPOT_URL = 'https://app.hubspot.com/oauth/authorize';
-    public const    TOKEN_URL   = 'https://api.hubapi.com/oauth/v1/token';
-    public const    APP_ID      = 'app_id';
+    public const BASE_URL = 'https://api.hubapi.com';
+    public const NAME     = 'hub-spot';
 
-    protected const SCOPE_SEPARATOR = ScopeFormatter::SPACE;
-
-    private const SCOPES = ['contacts'];
-
-    /**
-     * @return string
-     */
-    public function getApplicationType(): string
-    {
-        return ApplicationTypeEnum::WEBHOOK;
-    }
+    private const APPLICATION_ID = 'applicationId';
 
     /**
      * @return string
      */
     public function getName(): string
     {
-        return 'hub-spot';
+        return self::NAME;
     }
 
     /**
@@ -61,7 +46,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      */
     public function getPublicName(): string
     {
-        return 'HubSpot Application';
+        return 'HubSpot';
     }
 
     /**
@@ -69,23 +54,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      */
     public function getDescription(): string
     {
-        return 'HubSpot offers a full stack of software for marketing, sales, and customer service, with a completely free CRM at its core. They’re powerful alone — but even better when used together.';
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthUrl(): string
-    {
-        return self::HUBSPOT_URL;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTokenUrl(): string
-    {
-        return self::TOKEN_URL;
+        return 'HubSpot application with OAuth 2';
     }
 
     /**
@@ -96,8 +65,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      * @param string|null        $data
      *
      * @return RequestDto
-     * @throws ApplicationInstallException
+     * @throws AuthorizationException
      * @throws CurlException
+     * @throws ApplicationInstallException
      */
     public function getRequestDto(
         ProcessDtoAbstract $dto,
@@ -107,20 +77,21 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
         ?string $data = NULL,
     ): RequestDto
     {
-        $request = new RequestDto($this->getUri($url ?? self::BASE_URL), $method, $dto);
-        $request->setHeaders(
+        if (!$this->isAuthorized($applicationInstall)) {
+            throw new AuthorizationException('Unauthorized');
+        }
+
+        return new RequestDto(
+            new Uri($url ?? self::BASE_URL),
+            $method,
+            $dto,
+            $data ?? '',
             [
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
                 'Authorization' => sprintf('Bearer %s', $this->getAccessToken($applicationInstall)),
             ],
         );
-
-        if (isset($data)) {
-            $request->setBody($data);
-        }
-
-        return $request;
     }
 
     /**
@@ -128,13 +99,30 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      */
     public function getFormStack(): FormStack
     {
-        $form = new Form(ApplicationInterface::AUTHORIZATION_FORM, 'Authorization settings');
-        $form
-            ->addField(new Field(Field::TEXT, OAuth2ApplicationInterface::CLIENT_ID, 'Client Id', NULL, TRUE))
-            ->addField(new Field(Field::PASSWORD, OAuth2ApplicationInterface::CLIENT_SECRET, 'Client Secret', TRUE))
-            ->addField(new Field(Field::TEXT, self::APP_ID, 'Application Id', NULL, TRUE));
+        $stack    = new FormStack();
+        $authForm = new Form(self::AUTHORIZATION_FORM, 'Authorization settings');
+        $authForm
+            ->addField(new Field(Field::TEXT, self::CLIENT_ID, 'Client Id', NULL, TRUE))
+            ->addField(new Field(Field::PASSWORD, self::CLIENT_SECRET, 'Client Secret', NULL, TRUE))
+            ->addField(new Field(Field::TEXT, self::APPLICATION_ID, 'Application Id', NULL, TRUE));
 
-        return (new FormStack())->addForm($form);
+        return $stack;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthUrl(): string
+    {
+        return 'https://app.hubspot.com/oauth/authorize';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenUrl(): string
+    {
+        return 'https://api.hubapi.com/oauth/v1/token';
     }
 
     /**
@@ -154,8 +142,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      * @param string              $url
      *
      * @return RequestDto
-     * @throws CurlException
      * @throws ApplicationInstallException
+     * @throws AuthorizationException
+     * @throws CurlException
      */
     public function getWebhookSubscribeRequestDto(
         ApplicationInstall $applicationInstall,
@@ -164,19 +153,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     ): RequestDto
     {
         $hubspotUrl = sprintf(
-            '%s/webhooks/v1/%s/subscriptions',
+            '%s/webhooks/v1/%s',
             self::BASE_URL,
-            $applicationInstall->getSettings()[ApplicationAbstract::AUTHORIZATION_FORM][self::APP_ID],
-        );
-        $body       = Json::encode(
-            [
-                'webhookUrl'          => $url,
-                'subscriptionDetails' => [
-                    'subscriptionType' => $subscription->getParameters()['name'],
-                    'propertyName'     => 'email',
-                ],
-                'enabled'             => FALSE,
-            ],
+            $applicationInstall->getSettings()[self::AUTHORIZATION_FORM][self::APPLICATION_ID] ?? '',
         );
 
         return $this->getRequestDto(
@@ -184,7 +163,14 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             $applicationInstall,
             CurlManager::METHOD_POST,
             $hubspotUrl,
-            $body,
+            Json::encode([
+                'webhookUrl'          => $url,
+                'subscriptionDetails' => [
+                    'subscriptionType' => $subscription->getParameters()['name'],
+                    'propertyName'     => 'email',
+                ],
+                'enabled'             => FALSE,
+            ]),
         );
     }
 
@@ -193,19 +179,22 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      * @param string             $id
      *
      * @return RequestDto
-     * @throws CurlException
-     * @throws ApplicationInstallException
      */
     public function getWebhookUnsubscribeRequestDto(ApplicationInstall $applicationInstall, string $id): RequestDto
     {
         $url = sprintf(
             '%s/webhooks/v1/%s/subscriptions/%s',
             self::BASE_URL,
-            $applicationInstall->getSettings()[ApplicationAbstract::AUTHORIZATION_FORM][self::APP_ID],
+            $applicationInstall->getSettings()[self::AUTHORIZATION_FORM][self::APPLICATION_ID] ?? '',
             $id,
         );
 
-        return $this->getRequestDto(new ProcessDto(), $applicationInstall, CurlManager::METHOD_DELETE, $url);
+        return $this->getRequestDto(
+            new ProcessDto(),
+            $applicationInstall,
+            CurlManager::METHOD_DELETE,
+            $url,
+        );
     }
 
     /**
@@ -218,7 +207,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     {
         $install;
 
-        return $dto->getJsonBody()['id'] ?? '';
+        return $dto->getJsonBody()['id'];
     }
 
     /**
@@ -232,19 +221,15 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     }
 
     /**
-     * -------------------------------------------- HELPERS ------------------------------------
-     */
-
-    /**
      * @param ApplicationInstall $applicationInstall
      *
-     * @return string[]
+     * @return mixed[]|mixed[]
      */
     protected function getScopes(ApplicationInstall $applicationInstall): array
     {
         $applicationInstall;
 
-        return self::SCOPES;
+        return ['contacts'];
     }
 
 }

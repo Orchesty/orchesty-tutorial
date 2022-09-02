@@ -5,51 +5,21 @@ services:
         autoconfigure: false
         public: '%public.services%'
 
-
-    # BASIC Connectors
-    hbpf.connector.get-users:
-        class: Pipes\PhpSdk\Connector\Users\GetUsersConnector
-        arguments:
-            - '@hbpf.transport.curl_manager'
-
-    # SendGrid Connectors
-    hbpf.connector.send-grid.send-email:
-        class: Pipes\PhpSdk\Connector\SendGrid\SendGridSendEmailConnector
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.transport.curl_manager'
+    hbpf.connector.jsonplaceholder-get-users:
+        class: Pipes\PhpSdk\Connector\GetUsersConnector
         calls:
-            - ['setApplication', ['@hbpf.application.send-grid']]
+            - ['setSender', ['@hbpf.transport.curl_manager']]
 
-    # HubSpot Connectors
-    hbpf.connector.hub-spot.create-multiple-contact:
-        class: Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateMultipleContactsConnector
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.transport.curl_manager'
+    hbpf.connector.git-hub-get-repository:
+        class: Pipes\PhpSdk\Connector\GitHubRepositoryConnector
+        calls:
+            - ['setApplication', ['@hbpf.application.git-hub']]
+            - ['setSender', ['@hbpf.transport.curl_manager']]
+            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]
+
+    hbpf.connector.hub-spot-create-contact:
+        class: Pipes\PhpSdk\Connector\HubSpotCreateContactConnector
         calls:
             - ['setApplication', ['@hbpf.application.hub-spot']]
-            - ['setLogger', ['@monolog.logger.commons']]
-
-    hbpf.connector.hub-spot.create-contact:
-        class: Pipes\PhpSdk\Connector\HubSpot\HubSpotCreateContactConnector
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.transport.curl_manager'
-        calls:
-            - ['setApplication', ['@hbpf.application.hub-spot']]
-            - ['setLogger', ['@monolog.logger.commons']]
-
-    hbpf.connector.hub-spot.contact-created:
-        class: Pipes\PhpSdk\Connector\HubSpot\HubSpotContactCreatedConnector
-        calls:
-            - ['setApplication', ['@hbpf.application.hub-spot']]
-
-    # Google Connectors
-    hbpf.connector.google-drive.upload-file:
-        class: Pipes\PhpSdk\Connector\Google\GoogleDriveUploadFileConnector
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.transport.curl_manager'
-        calls:
-            - ['setApplication', ['@hbpf.application.google-drive']]
+            - ['setSender', ['@hbpf.transport.curl_manager']]
+            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]

@@ -10,12 +10,9 @@ parameters:
 
     node_services_dirs:
         - '%kernel.project_dir%/config'
-        - '%kernel.project_dir%/vendor/orchesty/hp-sdk/src/HbPFLongRunningNodeBundle/Resources'
-        - '%kernel.project_dir%/vendor/orchesty/php-connectors/src/Resources/config'
 
     applications:
         - '%kernel.project_dir%/config'
-        - '%kernel.project_dir%/vendor/orchesty/php-connectors/src/Resources/config'
 
 services:
     _defaults:

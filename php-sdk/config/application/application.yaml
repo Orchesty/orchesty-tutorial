@@ -5,15 +5,10 @@ services:
         autoconfigure: false
         public: '%public.services%'
 
-    hbpf.application.send-grid:
-        class: Pipes\PhpSdk\Application\SendGridApplication
+    hbpf.application.git-hub:
+        class: Pipes\PhpSdk\Application\GitHubApplication
 
     hbpf.application.hub-spot:
         class: Pipes\PhpSdk\Application\HubSpotApplication
-        arguments:
-            - '@hbpf.providers.oauth2_provider'
-
-    hbpf.application.google-drive:
-        class: Pipes\PhpSdk\Application\GoogleDriveApplication
         arguments:
             - '@hbpf.providers.oauth2_provider'

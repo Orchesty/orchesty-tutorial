@@ -5,14 +5,12 @@ services:
         autoconfigure: false
         public: '%public.services%'
 
-    hbpf.connector.user-batch-splitter:
-        class: Pipes\PhpSdk\Batch\Splitter\UsersBatchSplitter
-
-    hbpf.connector.hub-spot.list-contacts:
-        class: Pipes\PhpSdk\Batch\Connector\HubSpot\HubSpotListContactsConnector
-        arguments:
-            - '@doctrine_mongodb.odm.default_document_manager'
-            - '@hbpf.transport.curl_manager'
+    hbpf.batch.git-hub-repositories-batch:
+        class: Pipes\PhpSdk\Batch\GitHubGetRepositoriesBatch
         calls:
-            - ['setApplication', ['@hbpf.application.hub-spot']]
-            - ['setLogger', ['@monolog.logger.commons']]
+            - ['setApplication', ['@hbpf.application.git-hub']]
+            - ['setSender', ['@hbpf.transport.curl_manager']]
+            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]
+
+    hbpf.batch.split-batch:
+        class: Pipes\PhpSdk\Batch\SplitBatch

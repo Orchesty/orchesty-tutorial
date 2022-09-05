@@ -14,17 +14,3 @@ if (process.env.JEST_DOCKER) {
   process.env.METRICS_DSN = 'mongodb://127.0.0.42:27017/metrics'
   process.env.MONGODB_DSN = 'mongodb://127.0.0.42:27017/nodejs-sdk'
 }
-
-// Mock Logger module
-jest.mock('@orchesty/nodejs-sdk/dist/lib/Logger/Logger', () => ({
-  error: () => jest.fn(),
-  info: () => jest.fn(),
-  debug: () => jest.fn(),
-  log: () => jest.fn(),
-  ctxFromDto: () => jest.fn(),
-  ctxFromReq: () => jest.fn(),
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
-jest.setTimeout(10000);

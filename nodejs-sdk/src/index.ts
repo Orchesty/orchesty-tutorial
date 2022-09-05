@@ -1,4 +1,4 @@
-import { container, initiateContainer, listen } from '@orchesty/nodejs-sdk';
+import { container, initiateContainer } from '@orchesty/nodejs-sdk';
 import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
 import MongoDbClient from '@orchesty/nodejs-sdk/dist/lib/Storage/Mongodb/Client';
@@ -12,7 +12,7 @@ import HubSpotApplication from './HubSpotApplication';
 import HubSpotCreateContactConnector from './HubSpotCreateContactConnector';
 import SplitBatch from './SplitBatch';
 
-async function prepare(): Promise<void> {
+export default async function prepare(): Promise<void> {
     // Load core services by:
     await initiateContainer();
 
@@ -53,7 +53,3 @@ async function prepare(): Promise<void> {
     container.setBatch(new SplitBatch());
     // Tutorial services end
 }
-
-// Start App by:
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-prepare().then(listen);

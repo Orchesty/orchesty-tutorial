@@ -4,10 +4,12 @@ import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto'
 import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 
+export const NAME = 'jsonplaceholder-get-users';
+
 export default class GetUsersConnector extends AConnector {
 
     public getName(): string {
-        return 'jsonplaceholder-get-users';
+        return NAME;
     }
 
     public async processAction(dto: ProcessDto): Promise<ProcessDto> {

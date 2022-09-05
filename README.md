@@ -9,7 +9,7 @@
 - Go to [http://127.0.0.10](http://127.0.0.10)
 
 ## How to create user
-- Run `docker-compose exec backend bin/pipes user:create`
+- Run `docker-compose exec backend bin/orchesty user:create`
 
 ## How to enable your PHP services
 1. Go to [UI Services](http://127.0.0.10/services)

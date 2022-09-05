@@ -4,10 +4,12 @@ import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods
 import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
 import { BASE_URL } from './HubSpotApplication';
 
+export const NAME = 'hub-spot-create-contact';
+
 export default class HubSpotCreateContactConnector extends AConnector {
 
     public getName(): string {
-        return 'hub-spot-create-contact';
+        return NAME;
     }
 
     public async processAction(dto: ProcessDto): Promise<ProcessDto> {

@@ -1,0 +1,7 @@
+{
+  "http": "GET https://api.github.com/repos/usr/rep",
+  "code": 200,
+  "body": {
+    "repository": "data"
+  }
+}

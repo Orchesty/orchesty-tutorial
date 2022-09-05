@@ -19,6 +19,7 @@ import { BodyInit, Headers } from 'node-fetch';
 
 const APP_ID = 'app_id';
 export const BASE_URL = 'https://api.hubapi.com';
+export const NAME = 'hub-spot';
 
 export default class HubSpotApplication extends AOAuth2Application implements IWebhookApplication {
 
@@ -27,7 +28,7 @@ export default class HubSpotApplication extends AOAuth2Application implements IW
     }
 
     public getName(): string {
-        return 'hub-spot';
+        return NAME;
     }
 
     public getPublicName(): string {

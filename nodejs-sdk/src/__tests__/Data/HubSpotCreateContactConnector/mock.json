@@ -1,0 +1,7 @@
+{
+  "http": "POST https://api.hubapi.com/crm/v3/objects/contacts",
+  "code": 201,
+  "body": {
+    "contact": {}
+  }
+}

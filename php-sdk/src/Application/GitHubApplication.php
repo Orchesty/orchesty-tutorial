@@ -87,8 +87,8 @@ final class GitHubApplication extends BasicApplicationAbstract
     {
         $authForm = new Form(self::AUTHORIZATION_FORM, 'Authorization settings');
         $authForm
-            ->addField(new Field(Field::TEXT, self::USER, 'Username', NULL, FALSE))
-            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, FALSE));
+            ->addField(new Field(Field::TEXT, self::USER, 'Username', NULL, TRUE))
+            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE));
 
         $stack = new FormStack();
         $stack->addForm($authForm);

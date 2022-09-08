@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Connector;
 
 use GuzzleHttp\Psr7\Uri;
+use Hanaboso\CommonsBundle\Exception\OnRepeatException;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
@@ -32,8 +33,9 @@ final class GetUsersConnector extends ConnectorAbstract
      * @param ProcessDto $dto
      *
      * @return ProcessDto
-     * @throws CurlException
      * @throws ConnectorException
+     * @throws CurlException
+     * @throws OnRepeatException
      */
     function processAction(ProcessDto $dto): ProcessDto
     {
@@ -45,6 +47,9 @@ final class GetUsersConnector extends ConnectorAbstract
 
         $response = $this->getSender()->send($request);
         $dto->setData($response->getBody());
+        if ($response->getStatusCode() >= 300) {
+            throw new OnRepeatException($dto, $response->getBody(), $response->getStatusCode());
+        }
 
         return $dto;
     }

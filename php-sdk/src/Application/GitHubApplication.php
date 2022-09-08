@@ -80,24 +80,6 @@ final class GitHubApplication extends BasicApplicationAbstract
             ],
         );
     }
-
-    /**
-     * @param ApplicationInstall $applicationInstall
-     *
-     * @return bool
-     */
-    public function isAuthorized(ApplicationInstall $applicationInstall): bool
-    {
-        return
-            isset(
-                $applicationInstall->getSettings(
-                )[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::USER],
-            ) && isset(
-                $applicationInstall->getSettings(
-                )[ApplicationInterface::AUTHORIZATION_FORM][BasicApplicationInterface::TOKEN],
-            );
-    }
-
     /**
      * @return FormStack
      */

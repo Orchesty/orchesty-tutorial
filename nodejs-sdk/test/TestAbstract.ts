@@ -1,11 +1,11 @@
-import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
-import CurlSender from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/CurlSender';
+import { container as c } from '@orchesty/nodejs-sdk';
+import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import DIContainer from '@orchesty/nodejs-sdk/dist/lib/DIContainer/Container';
+import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
 import Metrics from '@orchesty/nodejs-sdk/dist/lib/Metrics/Metrics';
 import MongoDbClient from '@orchesty/nodejs-sdk/dist/lib/Storage/Mongodb/Client';
-import { container as c } from '@orchesty/nodejs-sdk';
+import CurlSender from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/CurlSender';
 import p from '../src';
-import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 
 /* eslint-disable import/no-mutable-exports */
 export let container: DIContainer;
@@ -24,10 +24,10 @@ export async function prepare(): Promise<void> {
 
 export async function closeConnection(): Promise<void> {
     await db.down();
-    await (container.get(CoreServices.METRICS) as Metrics).close();
+    await container.get<Metrics>(CoreServices.METRICS).close();
 }
 
-export async function dropCollection(collection: string) {
+export async function dropCollection(collection: string): Promise<void> {
     const database = await db.db();
     try {
         await database.dropCollection(collection);

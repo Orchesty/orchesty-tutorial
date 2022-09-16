@@ -11,12 +11,14 @@ export async function prepareApplications(): Promise<void> {
 
     const githubApp = new ApplicationInstall();
     githubApp
+        .setEnabled(true)
         .setName(GitHubApplicationName)
         .setUser('user');
     await repo.insert(githubApp);
 
     const hubspotApp = new ApplicationInstall();
     hubspotApp
+        .setEnabled(true)
         .setName(HubSpotApplicationName)
         .setUser('user')
         .setSettings({
@@ -25,6 +27,6 @@ export async function prepareApplications(): Promise<void> {
                     [ACCESS_TOKEN]: 'tkn',
                 },
             },
-        })
+        });
     await repo.insert(hubspotApp);
 }

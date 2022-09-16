@@ -13,13 +13,13 @@
   "author": "info@hanaboso.com",
   "license": "Apache-2.0",
   "dependencies": {
-    "@orchesty/nodejs-sdk": "^3.1.2",
+    "@orchesty/nodejs-sdk": "^3.1.6",
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {
-    "@hanaboso/eslint-plugin": "^1.0.1",
+    "@hanaboso/eslint-plugin": "^1.0.2",
     "@types/jest": "^28.1.8",
-    "@types/node": "^18.7.15",
+    "@types/node": "^18.7.16",
     "@types/node-fetch": "^2.6.2",
     "@types/supertest": "^2.0.12",
     "eslint": "8.22.0",

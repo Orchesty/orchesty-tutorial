@@ -33,8 +33,8 @@ export default class GitHubApplication extends ABasicApplication {
 
     public getFormStack(): FormStack {
         const form = new Form(AUTHORIZATION_FORM, 'Authorization settings')
-            .addField(new Field(FieldType.TEXT, USER, ' User name', undefined, false))
-            .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, false));
+            .addField(new Field(FieldType.TEXT, USER, ' User name', undefined, true))
+            .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, true));
 
         return new FormStack().addForm(form);
     }

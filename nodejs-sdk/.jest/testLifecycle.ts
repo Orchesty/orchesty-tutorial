@@ -1,4 +1,5 @@
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
+import DataStorageDocument from "@orchesty/nodejs-sdk/dist/lib/Storage/DataStore/Document/DataStorageDocument";
 import { prepareApplications } from '../test/dataProvider';
 import { dropCollection, prepare, closeConnection } from '../test/TestAbstract';
 
@@ -21,6 +22,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await dropCollection(ApplicationInstall.getCollection());
+    await dropCollection(DataStorageDocument.getCollection());
     await prepareApplications();
 })
 

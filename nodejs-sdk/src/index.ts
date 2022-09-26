@@ -1,12 +1,14 @@
 import { container, initiateContainer } from '@orchesty/nodejs-sdk';
 import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
+import DataStorageManager from '@orchesty/nodejs-sdk/dist/lib/Storage/DataStore/DataStorageManager';
 import MongoDbClient from '@orchesty/nodejs-sdk/dist/lib/Storage/Mongodb/Client';
 import CurlSender from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/CurlSender';
 import GetUsersConnector from './GetUsersConnector';
 import GitHubApplication from './GitHubApplication';
 import GitHubGetRepositoryConnector from './GitHubGetRepositoryConnector';
 import GitHubRepositoriesBatch from './GitHubRepositoriesBatch';
+import GitHubStoreRepositoriesBatch from './GitHubStoreRepositoriesBatch';
 import HelloWorld from './HelloWorld';
 import HubSpotApplication from './HubSpotApplication';
 import HubSpotCreateContactConnector from './HubSpotCreateContactConnector';
@@ -19,6 +21,9 @@ export default async function prepare(): Promise<void> {
     const curlSender = container.get<CurlSender>(CoreServices.CURL);
     const mongoDbClient = container.get<MongoDbClient>(CoreServices.MONGO);
     const oAuth2Provider = container.get<OAuth2Provider>(CoreServices.OAUTH2_PROVIDER);
+
+    const dataStorageManager = new DataStorageManager(mongoDbClient);
+    container.set(CoreServices.DATA_STORAGE_MANAGER, dataStorageManager);
 
     // Tutorial services
     const gitHubApplication = new GitHubApplication();
@@ -35,6 +40,12 @@ export default async function prepare(): Promise<void> {
         .setDb(mongoDbClient)
         .setApplication(gitHubApplication);
     container.setBatch(gitHubRepositoriesBatch);
+
+    const gitHubStoreRepositoriesBatch = new GitHubStoreRepositoriesBatch(dataStorageManager)
+        .setSender(curlSender)
+        .setDb(mongoDbClient)
+        .setApplication(gitHubApplication);
+    container.setBatch(gitHubStoreRepositoriesBatch);
 
     const hubSpotApplication = new HubSpotApplication(oAuth2Provider);
     container.setApplication(hubSpotApplication);

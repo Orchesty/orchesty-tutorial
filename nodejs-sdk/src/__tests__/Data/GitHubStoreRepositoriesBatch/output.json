@@ -3,5 +3,10 @@
         "user": "user",
         "process-id": "testProcessId"
     },
-    "data": []
+    "data": [
+        {
+            "body": "{\"processId\":\"testProcessId\"}",
+            "headers": null
+        }
+    ]
 }

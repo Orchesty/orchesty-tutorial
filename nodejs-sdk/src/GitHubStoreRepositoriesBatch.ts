@@ -43,6 +43,8 @@ export default class GitHubStoreRepositoriesBatch extends ABatchNode {
 
         if (response.length >= PAGE_ITEMS) {
             dto.setBatchCursor((Number(page) + 1).toString(), true);
+        } else {
+            dto.addItem({ processId });
         }
 
         return dto;

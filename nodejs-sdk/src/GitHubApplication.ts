@@ -7,15 +7,15 @@ import FormStack from '@orchesty/nodejs-sdk/dist/lib/Application/Model/Form/Form
 import {
     ABasicApplication,
     TOKEN,
-    USER,
 } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/RequestDto';
 import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 import AProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/AProcessDto';
-import { encode } from '@orchesty/nodejs-sdk/dist/lib/Utils/Base64';
 import { CommonHeaders, JSON_TYPE } from '@orchesty/nodejs-sdk/dist/lib/Utils/Headers';
 
 export const NAME = 'git-hub';
+export const OWNER = 'owner';
+export const REPOSITORY = 'repository';
 
 export default class GitHubApplication extends ABasicApplication {
 
@@ -33,8 +33,9 @@ export default class GitHubApplication extends ABasicApplication {
 
     public getFormStack(): FormStack {
         const form = new Form(AUTHORIZATION_FORM, 'Authorization settings')
-            .addField(new Field(FieldType.TEXT, USER, ' User name', undefined, true))
-            .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, true));
+            .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, true))
+            .addField(new Field(FieldType.TEXT, OWNER, ' Owner', undefined, true))
+            .addField(new Field(FieldType.TEXT, REPOSITORY, ' Repository', undefined, true));
 
         return new FormStack().addForm(form);
     }
@@ -47,11 +48,14 @@ export default class GitHubApplication extends ABasicApplication {
         data?: unknown,
     ): RequestDto {
         const request = new RequestDto(`https://api.github.com${url}`, method, dto);
+        if (!this.isAuthorized(applicationInstall)) {
+            throw new Error(`Application [${this.getPublicName()}] is not authorized!`);
+        }
         const form = applicationInstall.getSettings()[AUTHORIZATION_FORM] ?? {};
         request.setHeaders({
             [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
-            [CommonHeaders.ACCEPT]: JSON_TYPE,
-            [CommonHeaders.AUTHORIZATION]: encode(`${form[USER] ?? ''}:${form[TOKEN] ?? ''}`),
+            [CommonHeaders.ACCEPT]: 'application/vnd.github+json',
+            [CommonHeaders.AUTHORIZATION]: `Bearer ${form[TOKEN]}`,
         });
 
         if (data) {

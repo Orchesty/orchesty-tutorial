@@ -19,7 +19,9 @@ use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationAbstract;
 final class GitHubApplication extends BasicApplicationAbstract
 {
 
-    public const NAME = 'git-hub';
+    public const NAME       = 'git-hub';
+    public const OWNER      = 'Owner';
+    public const REPOSITORY = 'Repository';
 
     /**
      * @return string
@@ -53,13 +55,14 @@ final class GitHubApplication extends BasicApplicationAbstract
      * @param string|null        $data
      *
      * @return RequestDto
+     * @throws \Hanaboso\CommonsBundle\Transport\Curl\CurlException
      */
     public function getRequestDto(
         ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
-        string $method,
-        ?string $url = NULL,
-        ?string $data = NULL,
+        string             $method,
+        ?string            $url = NULL,
+        ?string            $data = NULL,
     ): RequestDto
     {
         $form = $applicationInstall->getSettings()[self::AUTHORIZATION_FORM] ?? [];
@@ -71,13 +74,12 @@ final class GitHubApplication extends BasicApplicationAbstract
             $data ?? '',
             [
                 'Content-Type'  => 'application/json',
-                'Accept'        => 'application/json',
-                'Authorization' => base64_encode(
-                    sprintf('%s:%s', $form[self::USER] ?? '', $form[self::TOKEN] ?? ''),
-                ),
+                'Accept'        => 'application/vnd.github+json',
+                'Authorization' => sprintf("Bearer %s", $form[self::TOKEN]),
             ],
         );
     }
+
     /**
      * @return FormStack
      */
@@ -85,8 +87,9 @@ final class GitHubApplication extends BasicApplicationAbstract
     {
         $authForm = new Form(self::AUTHORIZATION_FORM, 'Authorization settings');
         $authForm
-            ->addField(new Field(Field::TEXT, self::USER, 'Username', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE));
+            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE))
+            ->addField(new Field(Field::TEXT, self::OWNER, 'Owner', NULL, TRUE))
+            ->addField(new Field(Field::TEXT, self::REPOSITORY, 'Repository', NULL, TRUE));
 
         $stack = new FormStack();
         $stack->addForm($authForm);

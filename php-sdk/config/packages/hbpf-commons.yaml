@@ -62,15 +62,11 @@ services:
     hbpf.metrics_connector.loader:
         class: Hanaboso\CommonsBundle\Metrics\MetricsSenderLoader
         arguments:
-            - '%metrics_service%'
-            - null
             - '@hbpf.metrics.mongodb_connector'
 
     hbpf.metrics_monolith.loader:
         class: Hanaboso\CommonsBundle\Metrics\MetricsSenderLoader
         arguments:
-            - '%metrics_service%'
-            - null
             - '@hbpf.metrics.mongodb_monolith'
 
     ##########################

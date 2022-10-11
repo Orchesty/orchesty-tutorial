@@ -2,7 +2,7 @@ import { AUTHORIZATION_FORM } from '@orchesty/nodejs-sdk/dist/lib/Application/Ba
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
 import { ACCESS_TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
-import { NAME as GitHubApplicationName } from '../src/GitHubApplication';
+import { NAME as GitHubApplicationName, OWNER, REPOSITORY } from '../src/GitHubApplication';
 import { NAME as HubSpotApplicationName } from '../src/HubSpotApplication';
 import { container } from './TestAbstract';
 
@@ -13,7 +13,14 @@ export async function prepareApplications(): Promise<void> {
     githubApp
         .setEnabled(true)
         .setName(GitHubApplicationName)
-        .setUser('user');
+        .setUser('user')
+        .setSettings({
+            [AUTHORIZATION_FORM]: {
+                [TOKEN]: 'abcd',
+                [OWNER]: 'orchesty',
+                [REPOSITORY]: 'orchesty-tutorial',
+            },
+        });
     await repo.insert(githubApp);
 
     const hubspotApp = new ApplicationInstall();

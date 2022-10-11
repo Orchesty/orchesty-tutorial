@@ -20,7 +20,7 @@ final class GitHubGetRepositoriesBatch extends BatchAbstract
 
     public const NAME = 'git-hub-repositories-batch';
 
-    private const PER_PAGE = 5;
+    private const PAGE_ITEMS = 5;
 
     /**
      * @return string
@@ -49,11 +49,11 @@ final class GitHubGetRepositoriesBatch extends BatchAbstract
             $dto,
             $appInstall,
             CurlManager::METHOD_GET,
-            sprintf('/orgs/%s/repos?per_page=%s&page=%s', $org, self::PER_PAGE, $currentPage),
+            sprintf('/orgs/%s/repos?per_page=%s&page=%s', $org, self::PAGE_ITEMS, $currentPage),
         );
         $result  = $this->getSender()->send($request)->getJsonBody();
         $dto->setItemList($result);
-        if (count($result) >= self::PER_PAGE) {
+        if (count($result) >= self::PAGE_ITEMS) {
             $dto->setBatchCursor((string) ($currentPage + 1));
         }
 

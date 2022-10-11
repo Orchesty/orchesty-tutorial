@@ -1,7 +1,3 @@
-parameters:
-    env(MONGODB_NOTIFICATION_DATABASE): notification-sender
-    mongodb_notification_database: '%env(MONGODB_NOTIFICATION_DATABASE)%'
-
 doctrine_mongodb:
     default_document_manager: default
     default_connection: default

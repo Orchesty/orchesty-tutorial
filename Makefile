@@ -32,6 +32,8 @@ docker-up-force: .env .lo0-up
 	$(DB) bin/console doctrine:mongodb:schema:update --dm default
 	$(DB) bin/console doctrine:mongodb:schema:update --dm metrics
 	$(DB) bin/console mongodb:index:update
+	$(DB) bin/console service:install node-sdk node-sdk:8080
+	$(DB) bin/console topology:install -c -u --force node-sdk:8080
 
 docker-down-clean: .env .lo0-down
 	$(DC) down -v
@@ -52,6 +54,8 @@ pnpm-install:
 
 # App section
 clear-cache:
+	$(DB) bin/console doctrine:mongodb:schema:update --dm default
 	$(PHP_SDK) rm -rf var/log
 	$(PHP_SDK) php bin/console cache:clear --env=dev
 	$(PHP_SDK) php bin/console cache:warmup --env=dev
+

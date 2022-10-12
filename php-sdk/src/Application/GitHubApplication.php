@@ -27,8 +27,8 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
 {
 
     public const NAME       = 'git-hub';
-    public const OWNER      = 'Owner';
-    public const REPOSITORY = 'Repository';
+    public const OWNER      = 'owner';
+    public const REPOSITORY = 'repository';
 
     /**
      * @return string
@@ -95,8 +95,8 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
         $authForm = new Form(self::AUTHORIZATION_FORM, 'Authorization settings');
         $authForm
             ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::OWNER, 'Owner', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::REPOSITORY, 'Repository', NULL, TRUE));
+            ->addField(new Field(Field::TEXT, self::OWNER, 'Owner'))
+            ->addField(new Field(Field::TEXT, self::REPOSITORY, 'Repository'));
 
         $stack = new FormStack();
         $stack->addForm($authForm);

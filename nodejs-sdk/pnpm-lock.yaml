@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@hanaboso/eslint-plugin': ^1.0.4
-  '@orchesty/nodejs-sdk': ^3.1.23
+  '@orchesty/nodejs-sdk': ^3.1.24
   '@types/jest': ^29.1.2
   '@types/node': ^18.8.4
   '@types/node-fetch': ^2.6.2
@@ -17,7 +17,7 @@ specifiers:
   typescript: ^4.8.4
 
 dependencies:
-  '@orchesty/nodejs-sdk': 3.1.23
+  '@orchesty/nodejs-sdk': 3.1.24
   node-fetch: 2.6.7
 
 devDependencies:
@@ -642,7 +642,7 @@ packages:
     resolution: {integrity: sha512-3Ab5HgYIIAnS0HjqJHQYZS+zXc4tUmTmBH3z83ajI6afXp8X3ZtdLX+nXx+I7LNkJD7uN9LAVhgnjDgZa2z0kA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@sinclair/typebox': 0.24.44
+      '@sinclair/typebox': 0.24.46
     dev: true
 
   /@jest/source-map/29.0.0:
@@ -775,8 +775,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@orchesty/nodejs-sdk/3.1.23:
-    resolution: {integrity: sha512-owUmXIbnmBuRgVKTXmh8ZK7mHrm4lr5PsPfx361Igfst/f2tDhif7WdFk1afkIKAWt7OcTmT8h4PDMrLV6Vowg==}
+  /@orchesty/nodejs-sdk/3.1.24:
+    resolution: {integrity: sha512-LMwj8ggHJWqyFDHCrkXGPBac+GsR2aFtWFP7AzVZb/JpOKVCqZKkeNDhOVk8CaOqJZ91g1KyG1geiBLiHtQ0Ww==}
     dependencies:
       '@types/express': 4.17.14
       '@types/express-prometheus-middleware': 1.2.1
@@ -838,8 +838,8 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: false
 
-  /@sinclair/typebox/0.24.44:
-    resolution: {integrity: sha512-ka0W0KN5i6LfrSocduwliMMpqVgohtPFidKdMEOUjoOFCHcOOYkKsPRxfs5f15oPNHTm6ERAm0GV/+/LTKeiWg==}
+  /@sinclair/typebox/0.24.46:
+    resolution: {integrity: sha512-ng4ut1z2MCBhK/NwDVwIQp3pAUOCs/KNaW3cBxdFB2xTDrOuo1xuNmpr/9HHFhxqIvHrs1NTH3KJg6q+JSy1Kw==}
     dev: true
 
   /@sinonjs/commons/1.8.3:
@@ -1473,7 +1473,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001418
-      electron-to-chromium: 1.4.277
+      electron-to-chromium: 1.4.279
       node-releases: 2.0.6
       update-browserslist-db: 1.0.10_browserslist@4.21.4
     dev: true
@@ -1861,8 +1861,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium/1.4.277:
-    resolution: {integrity: sha512-Ej4VyUfGdVY5D2J5WHAVNqrEFBKgeNcX7p/bBQU4x/VKwvnyEvGd62NEkIK3lykLEe9Cg4MCcoWAa+u97o0u/A==}
+  /electron-to-chromium/1.4.279:
+    resolution: {integrity: sha512-xs7vEuSZ84+JsHSTFqqG0TE3i8EAivHomRQZhhcRvsmnjsh5C2KdhwNKf4ZRYtzq75wojpFyqb62m32Oam57wA==}
     dev: true
 
   /emittery/0.10.2:

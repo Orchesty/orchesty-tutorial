@@ -45,7 +45,7 @@ final class GitHubRepositoryConnector extends ConnectorAbstract
         $data       = $dto->getJsonData();
         $appInstall = $this->getApplicationInstallFromProcess($dto);
 
-        if (!isset($data['user']) || !isset($data['repo'])) {
+        if (!isset($data['org']) || !isset($data['repo'])) {
             return $dto->setStopProcess(ProcessDtoAbstract::STOP_AND_FAILED, 'Missing required data [user, repo]');
         }
 
@@ -53,7 +53,7 @@ final class GitHubRepositoryConnector extends ConnectorAbstract
             $dto,
             $appInstall,
             CurlManager::METHOD_GET,
-            sprintf('/repos/%s/%s', $data['user'], $data['repo']),
+            sprintf('/repos/%s/%s', $data['org'], $data['repo']),
         );
         $response = $this->getSender()->send($request);
         $dto->setData($response->getBody());

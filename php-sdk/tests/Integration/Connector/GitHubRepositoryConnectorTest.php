@@ -42,7 +42,7 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
         $node->setSender($this->mockCurl());
         $dto = new ProcessDto();
         $dto
-            ->setJsonData(['user' => 'usr', 'repo' => 'rep'])
+            ->setJsonData(['org' => 'org', 'repo' => 'rep'])
             ->addHeader('user', 'user');
 
         $dto = $node->processAction($dto);
@@ -69,7 +69,7 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
         $mock = self::createMock(CurlManagerInterface::class);
         $mock->method('send')->willReturnCallback(static function (RequestDto $req) {
             self::assertEquals(CurlManager::METHOD_GET, $req->getMethod());
-            self::assertEquals('https://api.github.com/repos/usr/rep', $req->getUri(TRUE));
+            self::assertEquals('https://api.github.com/repos/org/rep', $req->getUri(TRUE));
 
             return new ResponseDto(200, '', '{"body":"ok"}', []);
         });

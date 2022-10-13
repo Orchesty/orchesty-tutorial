@@ -3,11 +3,11 @@
   "description": "",
   "version": "1.0.0",
   "license": "Apache-2.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest --coverage --detectOpenHandles --passWithNoTests",
     "lint": "eslint src --ext .ts --fix",
-    "start": "nodemon src/index.ts",
+    "start": "nodemon src/server.ts",
     "build": "rm -rf build && tsc -p "
   },
   "keywords": [],

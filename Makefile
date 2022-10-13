@@ -33,6 +33,7 @@ docker-up-force: .env .lo0-up
 	$(DB) bin/console doctrine:mongodb:schema:update --dm metrics
 	$(DB) bin/console mongodb:index:update
 	$(DB) bin/console service:install node-sdk node-sdk:8080
+	$(DB) bin/console service:install php-sdk php-sdk:80
 	$(DB) bin/console topology:install -c -u --force node-sdk:8080
 
 docker-down-clean: .env .lo0-down

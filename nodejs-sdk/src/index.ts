@@ -12,6 +12,7 @@ import GitHubStoreRepositoriesBatch from './GitHubStoreRepositoriesBatch';
 import HelloWorld from './HelloWorld';
 import HubSpotApplication from './HubSpotApplication';
 import HubSpotCreateContactConnector from './HubSpotCreateContactConnector';
+import LoadRepositories from './LoadRepositories';
 import SplitBatch from './SplitBatch';
 
 export default async function prepare(): Promise<void> {
@@ -59,6 +60,8 @@ export default async function prepare(): Promise<void> {
     const getUsers = new GetUsersConnector()
         .setSender(curlSender);
     container.setConnector(getUsers);
+
+    container.setCustomNode(new LoadRepositories(dataStorageManager));
 
     container.setCustomNode(new HelloWorld());
     container.setBatch(new SplitBatch());

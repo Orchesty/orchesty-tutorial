@@ -6,7 +6,7 @@
     "data": [
         {
             "body": "{\"processId\":\"testProcessId\"}",
-            "headers": null
+            "headers": {}
         }
     ]
 }

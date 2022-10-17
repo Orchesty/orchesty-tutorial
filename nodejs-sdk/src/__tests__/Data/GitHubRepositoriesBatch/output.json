@@ -5,7 +5,7 @@
     "data": [
         {
             "body": "{\"repository\":\"data\"}",
-            "headers": null
+            "headers": {}
         }
     ]
 }

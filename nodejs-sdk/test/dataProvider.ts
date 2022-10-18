@@ -2,7 +2,7 @@ import CoreFormsEnum from '@orchesty/nodejs-sdk/dist/lib/Application/Base/CoreFo
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
 import { ACCESS_TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
-import { NAME as GitHubApplicationName, OWNER, REPOSITORY } from '../src/GitHubApplication';
+import { NAME as GitHubApplicationName } from '../src/GitHubApplication';
 import { NAME as HubSpotApplicationName } from '../src/HubSpotApplication';
 import { container } from './TestAbstract';
 
@@ -15,10 +15,8 @@ export async function prepareApplications(): Promise<void> {
         .setName(GitHubApplicationName)
         .setUser('user')
         .setSettings({
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [TOKEN]: 'abcd',
-                [OWNER]: 'orchesty',
-                [REPOSITORY]: 'orchesty-tutorial',
             },
         });
     await repo.insert(githubApp);

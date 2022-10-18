@@ -10,6 +10,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Application\Document\Webhook;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookSubscription;
@@ -164,29 +165,35 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             CurlManager::METHOD_POST,
             $hubspotUrl,
             Json::encode([
-                'webhookUrl'          => $url,
-                'subscriptionDetails' => [
-                    'subscriptionType' => $subscription->getParameters()['name'],
-                    'propertyName'     => 'email',
-                ],
-                'enabled'             => FALSE,
-            ]),
+                             'webhookUrl'          => $url,
+                             'subscriptionDetails' => [
+                                 'subscriptionType' => $subscription->getParameters()['name'],
+                                 'propertyName'     => 'email',
+                             ],
+                             'enabled'             => FALSE,
+                         ]),
         );
     }
 
     /**
      * @param ApplicationInstall $applicationInstall
-     * @param string             $id
+     * @param Webhook            $webhook
      *
      * @return RequestDto
+     * @throws ApplicationInstallException
+     * @throws AuthorizationException
+     * @throws CurlException
      */
-    public function getWebhookUnsubscribeRequestDto(ApplicationInstall $applicationInstall, string $id): RequestDto
+    public function getWebhookUnsubscribeRequestDto(
+        ApplicationInstall $applicationInstall,
+        Webhook $webhook,
+    ): RequestDto
     {
         $url = sprintf(
             '%s/webhooks/v1/%s/subscriptions/%s',
             self::BASE_URL,
             $applicationInstall->getSettings()[self::AUTHORIZATION_FORM][self::APPLICATION_ID] ?? '',
-            $id,
+            $webhook->getWebhookId(),
         );
 
         return $this->getRequestDto(

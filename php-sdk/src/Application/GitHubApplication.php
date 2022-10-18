@@ -10,6 +10,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Application\Document\Webhook;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookSubscription;
 use Hanaboso\PipesPhpSdk\Application\Model\Form\Field;
@@ -26,9 +27,7 @@ use Hanaboso\Utils\String\Json;
 final class GitHubApplication extends BasicApplicationAbstract implements WebhookApplicationInterface
 {
 
-    public const NAME       = 'git-hub';
-    public const OWNER      = 'owner';
-    public const REPOSITORY = 'repository';
+    public const NAME = 'git-hub';
 
     /**
      * @return string
@@ -94,9 +93,7 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
     {
         $authForm = new Form(self::AUTHORIZATION_FORM, 'Authorization settings');
         $authForm
-            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE))
-            ->addField(new Field(Field::TEXT, self::OWNER, 'Owner'))
-            ->addField(new Field(Field::TEXT, self::REPOSITORY, 'Repository'));
+            ->addField(new Field(Field::TEXT, self::TOKEN, 'Token', NULL, TRUE));
 
         $stack = new FormStack();
         $stack->addForm($authForm);
@@ -110,8 +107,8 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
     public function getWebhookSubscriptions(): array
     {
         return [
-            new WebhookSubscription('issues', '', ''),
-            new WebhookSubscription('pull-request', '', ''),
+            new WebhookSubscription('issues', '', '', ['record' => 'record', 'owner' => 'owner']),
+            new WebhookSubscription('pull-request', '', '', ['record' => 'record', 'owner' => 'owner']),
         ];
     }
 
@@ -129,14 +126,14 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
         string $url,
     ): RequestDto
     {
-        $request = new ProcessDto();
-        $form    = $applicationInstall->getSettings()[self::AUTHORIZATION_FORM] ?? [];
+        $request    = new ProcessDto();
+        $parameters = $subscription->getParameters();
 
         return $this->getRequestDto(
             $request,
             $applicationInstall,
             CurlManager::METHOD_POST,
-            sprintf('repos/%s/%s/hooks', $form[self::OWNER] ?? '', $form[self::REPOSITORY] ?? ''),
+            sprintf('repos/%s/%s/hooks', $parameters['owner'] ?? '', $parameters['repository'] ?? ''),
             Json::encode(
                 [
                     'config' => [
@@ -152,21 +149,32 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
 
     /**
      * @param ApplicationInstall $applicationInstall
-     * @param string             $id
+     * @param Webhook            $webhook
      *
      * @return RequestDto
      * @throws CurlException
      */
-    public function getWebhookUnsubscribeRequestDto(ApplicationInstall $applicationInstall, string $id): RequestDto
+    public function getWebhookUnsubscribeRequestDto(
+        ApplicationInstall $applicationInstall,
+        Webhook $webhook,
+    ): RequestDto
     {
-        $request = new ProcessDto();
-        $form    = $applicationInstall->getSettings()[self::AUTHORIZATION_FORM] ?? [];
+        $request    = new ProcessDto();
+        $parameters = array_filter(
+            $this->getWebhookSubscriptions(),
+            static fn($item) => $item->getName() === $webhook->getName()
+        )[0]->getParameters();
 
         return $this->getRequestDto(
             $request,
             $applicationInstall,
             CurlManager::METHOD_DELETE,
-            sprintf('repos/%s/%s/hooks/%s', $form[self::OWNER] ?? '', $form[self::REPOSITORY] ?? '', $id),
+            sprintf(
+                'repos/%s/%s/hooks/%s',
+                $parameters['owner'] ?? '',
+                $parameters['repository'] ?? '',
+                $webhook->getId(),
+            ),
         );
     }
 

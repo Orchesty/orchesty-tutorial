@@ -3,15 +3,15 @@
     "data": [
         {
             "body": "{\"id\":1}",
-            "headers": null
+            "headers": {}
         },
         {
             "body": "{\"id\":2}",
-            "headers": null
+            "headers": {}
         },
         {
             "body": "{\"id\":3}",
-            "headers": null
+            "headers": {}
         }
     ]
 }

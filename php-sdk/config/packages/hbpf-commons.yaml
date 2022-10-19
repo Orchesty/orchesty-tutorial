@@ -7,7 +7,6 @@ parameters:
     ##########################
     #        Metrics         #
     ##########################
-    metrics_service: '%env(string:METRICS_SERVICE)%'
     #MongoDb sender
     mongodb.monolith_table: monolith
     mongodb.connector_table: connectors

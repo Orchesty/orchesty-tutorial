@@ -18,15 +18,14 @@ services:
             PHP_WEBROOT: /var/www/public
             COMPOSER_HOME: ${HOME}/dev/.composer
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
+            CRYPT_SECRET: ${CRYPT_SECRET}
             BACKEND_DSN: ${BACKEND_URL}
-            METRICS_SERVICE: mongo
             METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
             MONGODB_DSN: ${MONGO_DSN}
-            MONGODB_DB: tutorial
-            RABBITMQ_DSN: ${RABBITMQ_DSN}
-            UDP_LOGGER_DSN: logstash:5005
-            STARTING_POINT_DSN: starting-point:8080
+            MONGODB_DB: ${MAIN_DB}
+            UDP_LOGGER_DSN: fluentd:5120
+            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         mem_limit: 512MB
 
     nodejs-sdk:
@@ -40,35 +39,14 @@ services:
             # Envs for tests are load from nodejs-sdk/.jest/testEnvs.js
             JEST_DOCKER: 1
             APP_ENV: debug
-            CRYPT_SECRET: ThisIsNotSoSecret
-            BACKEND_URL: http://127.0.0.10:8080
-            UDP_LOGGER_DSN: logstash:5005
+            CRYPT_SECRET: ${CRYPT_SECRET}
+            BACKEND_URL: ${BACKEND_URL}
+            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
+            UDP_LOGGER_DSN: fluentd:5120
             METRICS_DSN: ${METRICS_DSN}
             MONGODB_DSN: ${MONGO_DSN}
         command: sh -c 'pnpm install && pnpm run start'
         mem_limit: 512MB
-
-    status-service:
-        image: orchesty/status-service:${VERSION}
-        environment:
-            RABBITMQ_DSN: ${RABBITMQ_DSN}
-        mem_limit: 32MB
-
-    notification-sender-api:
-        image: orchesty/notification-sender:${VERSION}
-        environment:
-            MONGO_CONNECTION: ${MONGO_DSN}
-            MONGO_DB: ${MAIN_DB}
-        mem_limit: 32MB
-
-    notification-sender-consumer:
-        image: orchesty/notification-sender:${VERSION}
-        environment:
-            RABBITMQ_DSN: ${RABBITMQ_DSN}
-            MONGO_CONNECTION: ${MONGO_DSN}
-            MONGO_DB: ${MAIN_DB}
-        command: bin/console rabbit_mq:consumer:notification
-        mem_limit: 32MB
 
     multi-counter:
         image: orchesty/counter:${VERSION}
@@ -76,6 +54,7 @@ services:
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGODB_DSN: ${MONGO_DSN}
             METRICS_DSN: ${METRICS_DSN}
+            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         command: /bin/counter start
         mem_limit: 64MB
 
@@ -109,7 +88,7 @@ services:
         environment:
             DEPLOYMENT_PREFIX: ${MAIN_DB}
             GENERATOR_NETWORK: ${NETWORK_NAME}
-            GENERATOR_MODE: ${GENERATOR_MODE}
+            PLATFORM: ${GENERATOR_MODE}
             GENERATOR_PATH: /srv/topology
             PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
             MONGO_DSN: ${MONGO_DSN}
@@ -124,8 +103,8 @@ services:
         image: orchesty/detector:${VERSION}
         environment:
             METRICS_DSN: ${METRICS_DSN}
-            GENERATOR_MODE: ${GENERATOR_MODE}
-            GENERATOR_NETWORK: ${NETWORK_NAME}
+            PLATFORM: ${GENERATOR_MODE}
+            DOCKER_NETWORK: ${NETWORK_NAME}
         mem_limit: 32MB
 
     cron-api:
@@ -133,6 +112,7 @@ services:
         environment:
             MONGO_DSN: ${MONGO_DSN}
             MONGO_COLLECTION: cron
+            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         mem_limit: 32MB
 
     limiter:
@@ -141,7 +121,7 @@ services:
             LIMITER_ADDR: 0.0.0.0:3333
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGO_DSN: ${MONGO_DSN}
-            LOGSTASH_HOST: logstash
+            LOGSTASH_HOST: fluentd
             LOGSTASH_PORT: "5120"
         mem_limit: 32MB
 
@@ -162,33 +142,29 @@ services:
         environment:
             BACKEND_DSN: ${BACKEND_URL}/
             FRONTEND_DSN: ${FRONTEND_URL}/
-            NOTIFICATION_DSN: notification-sender-api
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGODB_DSN: ${MONGO_DSN}
             MONGODB_DB: ${MAIN_DB}
             METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
-            METRICS_SERVICE: mongo
             CRON_DSN: cron-api:8080
-            MONOLITH_API_DSN: php-sdk
-            STARTING_POINT_DSN: starting-point:8080
+            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
             TOPOLOGY_API_DSN: topology-api:8080
             WORKER_DEFAULT_PORT: 8008
             DOCKER_REGISTRY: orchesty
             DOCKER_PF_BRIDGE_IMAGE: bridge:${VERSION}
-            JWT_KEY: tutorial_keytutorial_keytutorial_keytutorial_keytutorial_keytutorial_keytutorial_key
-            CRYPT_SECRET: ThisIsNotSoSecret
+            JWT_KEY: ${JWT_KEY}
+            CRYPT_SECRET: ${CRYPT_SECRET}
             X_AUTH_KEY: x_auth_key
+            INSTALLER_DIRS: '["/var/www/topology"]'
         mem_limit: 64MB
 
-    logstash:
-        image: orchesty/logstash:${VERSION}
+    fluentd:
+        image: orchesty/fluentd:${VERSION}
         environment:
             - MONGO_DSN=${MONGO_DSN}
-            - MONGO_DB=${MAIN_DB}
             - MONGO_COLLECTION=Logs
-            - LS_JAVA_OPTS=-Xms512m -Xmx512m
-        mem_limit: 768MB
+        mem_limit: 128MB
 
     mongo:
         image: mongo

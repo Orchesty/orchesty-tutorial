@@ -17,13 +17,11 @@ services:
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             BACKEND_DSN: 127.0.0.10:8080
             STARTING_POINT_DSN: 127.0.0.10:8080
-            METRICS_SERVICE: mongo
             METRICS_DSN: mongodb://mongo
             METRICS_DB: metrics
             MONGODB_DSN: mongodb://mongo
             MONGODB_DB: tutorial
-            RABBITMQ_DSN: amqp://rabbitmq:5672
-            UDP_LOGGER_DSN: logstash:5005
+            UDP_LOGGER_DSN: fluentd:5120
 
     mongo:
         image: mongo

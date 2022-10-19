@@ -18,9 +18,7 @@ describe('Tests for GitHubStoreRepositoriesBatch', () => {
         const repo = await mongo.getRepository<DataStorageDocument>(DataStorageDocument);
         const data = await repo.findMany({ processId: 'testProcessId' });
         expect(data).toHaveLength(1);
-        expect(data[0].getUser()).toBe('user');
         expect(data[0].getProcessId()).toBe('testProcessId');
-        expect(data[0].getApplication()).toBe('git-hub');
         expect(data[0].getData()).toEqual({ repository: 'data' });
     });
 });

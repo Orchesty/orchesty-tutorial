@@ -14,7 +14,8 @@ services:
             APP_ENV: 'debug'
             CRYPT_SECRET: 'ThisIsNotSoSecret'
             BACKEND_URL: 'http://127.0.0.42:8080'
-            UDP_LOGGER_DSN: 'logstash:5005'
+            STARTING_POINT_DSN: 'http://127.0.0.42:8080'
+            UDP_LOGGER_DSN: 'fluentd:5005'
             METRICS_DSN: 'mongodb://mongo:27017/metrics'
             MONGODB_DSN: 'mongodb://mongo:27017/nodejs-sdk'
         command: sleep infinity
@@ -26,7 +27,7 @@ services:
         volumes:
             - mongo:/data/db
 
-    logstash:
+    fluentd:
         image: mendhak/udp-listener
         ports:
             - ${DEV_IP}:4444:5005

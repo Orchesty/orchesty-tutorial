@@ -38,6 +38,11 @@ doctrine_mongodb:
                     is_bundle: false
                     dir: '%kernel.project_dir%/vendor/orchesty/php-sdk/src/Database/Document'
                     prefix: Hanaboso\PipesPhpSdk\Database\Document
+                DataStorageDocument:
+                    type: annotation
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/vendor/orchesty/php-sdk/src/Storage/DataStorage/Document'
+                    prefix: Hanaboso\PipesPhpSdk\Storage\DataStorage\Document\DataStorageDocument
             filters:
                 deleted:
                     class: Hanaboso\CommonsBundle\Database\Filters\ODM\DeletedFilter

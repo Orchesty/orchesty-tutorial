@@ -8,9 +8,18 @@ services:
     hbpf.batch.git-hub-repositories-batch:
         class: Pipes\PhpSdk\Batch\GitHubGetRepositoriesBatch
         calls:
-            - ['setApplication', ['@hbpf.application.git-hub']]
-            - ['setSender', ['@hbpf.transport.curl_manager']]
-            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]
+            - [ 'setApplication', [ '@hbpf.application.git-hub' ] ]
+            - [ 'setSender', [ '@hbpf.transport.curl_manager' ] ]
+            - [ 'setDb', [ '@doctrine_mongodb.odm.default_document_manager' ] ]
+
+    hbpf.batch.git-hub-store-repositories-batch:
+        class: Pipes\PhpSdk\Batch\GitHubStoreRepositoriesBatch
+        arguments:
+            - '@hbpf.data_storage_manager'
+        calls:
+            - [ 'setApplication', [ '@hbpf.application.git-hub' ] ]
+            - [ 'setSender', [ '@hbpf.transport.curl_manager' ] ]
+            - [ 'setDb', [ '@doctrine_mongodb.odm.default_document_manager' ] ]
 
     hbpf.batch.split-batch:
         class: Pipes\PhpSdk\Batch\SplitBatch

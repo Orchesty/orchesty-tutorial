@@ -41,7 +41,7 @@ final class LoadRepositories extends CommonNodeAbstract
     function processAction(ProcessDto $dto): ProcessDto
     {
         $data  = $dto->getJsonData();
-        $repos = $this->dataStorageManager->load($data['collection'], NULL, NULL, NULL, NULL, TRUE);
+        $repos = $this->dataStorageManager->load(id: $data['collection'], toArray: TRUE);
 
         return $dto->setJsonData($repos ?? []);
     }

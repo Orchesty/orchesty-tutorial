@@ -13,13 +13,14 @@
   "keywords": [],
   "author": "info@hanaboso.com",
   "dependencies": {
+    "@orchesty/nodejs-connectors": "^2.1.7",
     "@orchesty/nodejs-sdk": "^3.2.4",
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@hanaboso/eslint-plugin": "^1.0.5",
     "@types/jest": "^29.2.0",
-    "@types/node": "^18.11.2",
+    "@types/node": "^18.11.3",
     "@types/node-fetch": "^2.6.2",
     "@types/supertest": "^2.0.12",
     "eslint": "^8.25.0",

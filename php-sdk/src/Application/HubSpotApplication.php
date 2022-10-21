@@ -73,9 +73,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     public function getRequestDto(
         ProcessDtoAbstract $dto,
         ApplicationInstall $applicationInstall,
-        string             $method,
-        ?string            $url = NULL,
-        ?string            $data = NULL,
+        string $method,
+        ?string $url = NULL,
+        ?string $data = NULL,
     ): RequestDto
     {
         if (!$this->isAuthorized($applicationInstall)) {
@@ -150,9 +150,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      * @throws CurlException
      */
     public function getWebhookSubscribeRequestDto(
-        ApplicationInstall  $applicationInstall,
+        ApplicationInstall $applicationInstall,
         WebhookSubscription $subscription,
-        string              $url,
+        string $url,
     ): RequestDto
     {
         $hubspotUrl = sprintf(
@@ -188,7 +188,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
      */
     public function getWebhookUnsubscribeRequestDto(
         ApplicationInstall $applicationInstall,
-        Webhook            $webhook,
+        Webhook $webhook,
     ): RequestDto
     {
         $url = sprintf(

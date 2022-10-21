@@ -1,3 +1,5 @@
+import { EventEnum } from '@orchesty/nodejs-connectors/dist/lib/Common/Events/EventEnum';
+import EventStatusFilter from '@orchesty/nodejs-connectors/dist/lib/Common/EventStatusFilter/EventStatusFilter';
 import { container, initiateContainer } from '@orchesty/nodejs-sdk';
 import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
@@ -25,6 +27,19 @@ export default async function prepare(): Promise<void> {
 
     const dataStorageManager = new DataStorageManager(mongoDbClient);
     container.set(CoreServices.DATA_STORAGE_MANAGER, dataStorageManager);
+
+    // System event services
+    const eventStatusFilterSuccess = new EventStatusFilter(EventEnum.PROCESS_SUCCESS);
+    container.setCustomNode(eventStatusFilterSuccess);
+
+    const eventStatusFilterError = new EventStatusFilter(EventEnum.PROCESS_FAILED);
+    container.setCustomNode(eventStatusFilterError);
+
+    const eventStatusFilterLimiter = new EventStatusFilter(EventEnum.LIMIT_OVERFLOW);
+    container.setCustomNode(eventStatusFilterLimiter);
+
+    const eventStatusFilterTrash = new EventStatusFilter(EventEnum.MESSAGE_IN_TRASH);
+    container.setCustomNode(eventStatusFilterTrash);
 
     // Tutorial services
     const gitHubApplication = new GitHubApplication();

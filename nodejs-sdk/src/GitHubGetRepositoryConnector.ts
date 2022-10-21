@@ -16,10 +16,10 @@ export default class GitHubGetRepositoryConnector extends AConnector {
         const data = dto.getJsonData();
         const appInstall = await this.getApplicationInstallFromProcess(dto);
 
-        if (!data.user || !data.repo) {
+        if (!data.org || !data.repo) {
             dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'Connector has no required data.');
         } else {
-            const request = await this.getApplication().getRequestDto(dto, appInstall, HttpMethods.GET, `/repos/${data.user}/${data.repo}`);
+            const request = await this.getApplication().getRequestDto(dto, appInstall, HttpMethods.GET, `/repos/${data.org}/${data.repo}`);
             const response = await this.getSender().send(request);
 
             if (response.getResponseCode() >= 300 && response.getResponseCode() < 400) {
@@ -36,6 +36,6 @@ export default class GitHubGetRepositoryConnector extends AConnector {
 }
 
 export interface IInput {
-    user: string;
+    org: string;
     repo: string;
 }

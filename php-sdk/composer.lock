@@ -2117,16 +2117,16 @@
         },
         {
             "name": "orchesty/php-sdk",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Orchesty/orchesty-php-sdk.git",
-                "reference": "10ac690bfad0212f811eb71356e6e64db9c22a98"
+                "reference": "850274e7b72a321aef48d8459bfeb611c1977bd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Orchesty/orchesty-php-sdk/zipball/10ac690bfad0212f811eb71356e6e64db9c22a98",
-                "reference": "10ac690bfad0212f811eb71356e6e64db9c22a98",
+                "url": "https://api.github.com/repos/Orchesty/orchesty-php-sdk/zipball/850274e7b72a321aef48d8459bfeb611c1977bd6",
+                "reference": "850274e7b72a321aef48d8459bfeb611c1977bd6",
                 "shasum": ""
             },
             "require": {
@@ -2161,9 +2161,9 @@
             ],
             "description": "PHP sdk for Orchesty",
             "support": {
-                "source": "https://github.com/Orchesty/orchesty-php-sdk/tree/v2.3.4"
+                "source": "https://github.com/Orchesty/orchesty-php-sdk/tree/v2.3.5"
             },
-            "time": "2022-10-20T08:26:38+00:00"
+            "time": "2022-10-20T16:05:38+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",

@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Application;
 
 use GuzzleHttp\Psr7\Uri;
+use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
@@ -28,6 +29,14 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
 {
 
     public const NAME = 'git-hub';
+
+    /**
+     * @return string
+     */
+    public function getApplicationType(): string
+    {
+        return ApplicationTypeEnum::WEBHOOK;
+    }
 
     /**
      * @return string

@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Tests\Unit\Application;
 
+use Exception;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Application\Manager\Webhook\WebhookSubscription;
@@ -24,13 +25,8 @@ final class GitHubApplicationTest extends KernelTestCaseAbstract
         $gitHubApplication = new GitHubApplication();
         self::assertEquals(
             [
-                new WebhookSubscription('issues', '', '', ['record' => 'record', 'owner' => 'owner']),
-                new WebhookSubscription(
-                    'pull-request',
-                    '',
-                    '',
-                    ['record' => 'record', 'owner' => 'owner'],
-                ),
+                new WebhookSubscription('issues', 'Webhook', '', ['record' => 'record', 'owner' => 'owner']),
+                new WebhookSubscription('pull-request', 'Webhook', '', ['record' => 'record', 'owner' => 'owner']),
             ],
             $gitHubApplication->getWebhookSubscriptions(),
         );
@@ -38,6 +34,7 @@ final class GitHubApplicationTest extends KernelTestCaseAbstract
 
     /**
      * @return void
+     * @throws Exception
      */
     public function testProcessWebhookSubscribeResponse(): void
     {
@@ -45,7 +42,7 @@ final class GitHubApplicationTest extends KernelTestCaseAbstract
         self::assertEquals(
             '1',
             $gitHubApplication->processWebhookSubscribeResponse(
-                new ResponseDto(200, '', '{"id": "1"}', []),
+                new ResponseDto(201, '', '{"id": "1"}', []),
                 new ApplicationInstall(),
             ),
         );

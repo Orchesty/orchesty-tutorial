@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Application;
 
+use Exception;
 use GuzzleHttp\Psr7\Uri;
 use Hanaboso\CommonsBundle\Enum\ApplicationTypeEnum;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
@@ -116,8 +117,8 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
     public function getWebhookSubscriptions(): array
     {
         return [
-            new WebhookSubscription('issues', '', '', ['record' => 'record', 'owner' => 'owner']),
-            new WebhookSubscription('pull-request', '', '', ['record' => 'record', 'owner' => 'owner']),
+            new WebhookSubscription('issues', 'Webhook', '', ['record' => 'record', 'owner' => 'owner']),
+            new WebhookSubscription('pull-request', 'Webhook', '', ['record' => 'record', 'owner' => 'owner']),
         ];
     }
 
@@ -142,7 +143,7 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
             $request,
             $applicationInstall,
             CurlManager::METHOD_POST,
-            sprintf('repos/%s/%s/hooks', $parameters['owner'] ?? '', $parameters['repository'] ?? ''),
+            sprintf('/repos/%s/%s/hooks', $parameters['owner'] ?? '', $parameters['record'] ?? ''),
             Json::encode(
                 [
                     'config' => [
@@ -179,9 +180,9 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
             $applicationInstall,
             CurlManager::METHOD_DELETE,
             sprintf(
-                'repos/%s/%s/hooks/%s',
+                '/repos/%s/%s/hooks/%s',
                 $parameters['owner'] ?? '',
-                $parameters['repository'] ?? '',
+                $parameters['record'] ?? '',
                 $webhook->getId(),
             ),
         );
@@ -192,10 +193,15 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
      * @param ApplicationInstall $install
      *
      * @return string
+     * @throws Exception
      */
     public function processWebhookSubscribeResponse(ResponseDto $dto, ApplicationInstall $install): string
     {
         $install;
+
+        if ($dto->getStatusCode() !== 201) {
+            throw new Exception($dto->getJsonBody()['message']);
+        }
 
         return $dto->getJsonBody()['id'] ?? '';
     }

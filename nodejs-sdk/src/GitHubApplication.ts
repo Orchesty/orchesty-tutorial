@@ -84,8 +84,8 @@ export default class GitHubApplication extends ABasicApplication implements IWeb
             request,
             applicationInstall,
             HttpMethods.POST,
-            `repos/${owner}/${record}/hooks`,
-            JSON.stringify({
+            `/repos/${owner}/${record}/hooks`,
+            {
                 config: {
                     url,
                     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -93,29 +93,33 @@ export default class GitHubApplication extends ABasicApplication implements IWeb
                 },
                 name: 'web',
                 events: [subscription.getName()],
-            }),
+            },
         );
     }
 
     public getWebhookSubscriptions(): WebhookSubscription[] {
         return [
-            new WebhookSubscription('issues', '', '', { record: 'record', owner: 'owner' }),
-            new WebhookSubscription('pull-request', '', '', { record: 'record', owner: 'owner' }),
+            new WebhookSubscription('issues', 'Webhook', '', { record: 'record', owner: 'owner' }),
+            new WebhookSubscription('pull-request', 'Webhook', '', { record: 'record', owner: 'owner' }),
         ];
     }
 
     public getWebhookUnsubscribeRequestDto(applicationInstall: ApplicationInstall, webhook: Webhook): RequestDto {
-        const webhookSubscription = this.getWebhookSubscriptions().filter(
+        const webhookSubscription = this.getWebhookSubscriptions().find(
             (item) => item.getName() === webhook.getName(),
-        )[0];
-        const { repository, owner } = webhookSubscription.getParameters();
+        );
+        if (!webhookSubscription) {
+            throw new Error(`Webhook with name [${webhook.getName()}] has not been found.`);
+        }
+
+        const { record, owner } = webhookSubscription.getParameters();
 
         const request = new ProcessDto();
         return this.getRequestDto(
             request,
             applicationInstall,
             HttpMethods.DELETE,
-            `repos/${owner}/${repository}/hooks/${webhook.getWebhookId()}`,
+            `/repos/${owner}/${record}/hooks/${webhook.getWebhookId()}`,
         );
     }
 
@@ -124,6 +128,10 @@ export default class GitHubApplication extends ABasicApplication implements IWeb
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         applicationInstall: ApplicationInstall,
     ): string {
+        if (dto.getResponseCode() !== 201) {
+            throw new Error((dto.getJsonBody() as { message: string }).message);
+        }
+
         return (dto.getJsonBody() as { id: string }).id;
     }
 

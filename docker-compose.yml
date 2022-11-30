@@ -27,6 +27,9 @@ services:
             UDP_LOGGER_DSN: fluentd:5120
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         mem_limit: 512MB
+        depends_on:
+            - fluentd
+            - mongo
 
     nodejs-sdk:
         image: nodejs-sdk:tag
@@ -47,6 +50,9 @@ services:
             MONGODB_DSN: ${MONGO_DSN}
         command: sh -c 'pnpm install && pnpm run start'
         mem_limit: 512MB
+        depends_on:
+            - fluentd
+            - mongo
 
     multi-counter:
         image: orchesty/counter:${VERSION}
@@ -57,6 +63,9 @@ services:
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         command: /bin/counter start
         mem_limit: 64MB
+        depends_on:
+            - mongo
+            - rabbitmq
 
     repeater:
         image: orchesty/pf-bridge:${VERSION}
@@ -70,6 +79,9 @@ services:
             RABBITMQ_VHOST: /
         command: ./dist/src/bin/pipes.js start repeater
         mem_limit: 64MB
+        depends_on:
+            - mongo
+            - rabbitmq
 
     starting-point:
         image: orchesty/starting-point:${VERSION}
@@ -82,6 +94,10 @@ services:
         ports:
             - ${DEV_IP}:82:8080
         mem_limit: 64MB
+        depends_on:
+            - fluentd
+            - mongo
+            - rabbitmq
 
     topology-api:
         image: orchesty/topology-api:${VERSION}
@@ -98,6 +114,8 @@ services:
             - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
             - ./topology:/srv/topology
         mem_limit: 64MB
+        depends_on:
+            - mongo
 
     detector:
         image: orchesty/detector:${VERSION}
@@ -106,6 +124,9 @@ services:
             PLATFORM: ${GENERATOR_MODE}
             DOCKER_NETWORK: ${NETWORK_NAME}
         mem_limit: 32MB
+        depends_on:
+            - mongo
+            - rabbitmq
 
     cron-api:
         image: orchesty/cron:${VERSION}
@@ -114,6 +135,8 @@ services:
             MONGO_COLLECTION: cron
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
         mem_limit: 32MB
+        depends_on:
+            - mongo
 
     limiter:
         image: orchesty/limiter:${VERSION}
@@ -124,6 +147,10 @@ services:
             LOGSTASH_HOST: fluentd
             LOGSTASH_PORT: "5120"
         mem_limit: 32MB
+        depends_on:
+            - fluentd
+            - mongo
+            - rabbitmq
 
     frontend:
         image: orchesty/frontend:${VERSION}

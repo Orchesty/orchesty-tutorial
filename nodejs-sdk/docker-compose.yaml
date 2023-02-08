@@ -15,22 +15,5 @@ services:
             CRYPT_SECRET: 'ThisIsNotSoSecret'
             BACKEND_URL: 'http://127.0.0.42:8080'
             STARTING_POINT_DSN: 'http://127.0.0.42:8080'
-            UDP_LOGGER_DSN: 'fluentd:5005'
-            METRICS_DSN: 'mongodb://mongo:27017/metrics'
-            MONGODB_DSN: 'mongodb://mongo:27017/nodejs-sdk'
+            WORKER_API_HOST: 'http://127.0.0.42:8080'
         command: sleep infinity
-
-    mongo:
-        image: mongo:latest
-        ports:
-            - ${DEV_IP}:27017:27017
-        volumes:
-            - mongo:/data/db
-
-    fluentd:
-        image: mendhak/udp-listener
-        ports:
-            - ${DEV_IP}:4444:5005
-
-volumes:
-    mongo: {}

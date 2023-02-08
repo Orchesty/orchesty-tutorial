@@ -17,7 +17,6 @@ import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods
 import AProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/AProcessDto';
 import { CommonHeaders, JSON_TYPE } from '@orchesty/nodejs-sdk/dist/lib/Utils/Headers';
 import ProcessDto from '@orchesty/nodejs-sdk/dist/lib/Utils/ProcessDto';
-import { BodyInit, Headers } from 'node-fetch';
 
 const APP_ID = 'app_id';
 export const BASE_URL = 'https://api.hubapi.com';
@@ -54,13 +53,13 @@ export default class HubSpotApplication extends AOAuth2Application implements IW
         applicationInstall: ApplicationInstall,
         method: HttpMethods,
         url?: string,
-        data?: BodyInit,
+        data?: unknown,
     ): RequestDto {
-        const headers = new Headers({
+        const headers = {
             [CommonHeaders.CONTENT_TYPE]: JSON_TYPE,
             [CommonHeaders.ACCEPT]: JSON_TYPE,
             [CommonHeaders.AUTHORIZATION]: `Bearer ${this.getAccessToken(applicationInstall)}`,
-        });
+        };
 
         return new RequestDto(url ?? BASE_URL, method, dto, data, headers);
     }

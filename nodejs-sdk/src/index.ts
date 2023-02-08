@@ -2,9 +2,9 @@ import { EventEnum } from '@orchesty/nodejs-connectors/dist/lib/Common/Events/Ev
 import EventStatusFilter from '@orchesty/nodejs-connectors/dist/lib/Common/EventStatusFilter/EventStatusFilter';
 import { container, initiateContainer } from '@orchesty/nodejs-sdk';
 import { OAuth2Provider } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provider/OAuth2/OAuth2Provider';
-import CoreServices from '@orchesty/nodejs-sdk/dist/lib/DIContainer/CoreServices';
+import DbClient from '@orchesty/nodejs-sdk/dist/lib/Storage/Database/Client';
 import DataStorageManager from '@orchesty/nodejs-sdk/dist/lib/Storage/DataStore/DataStorageManager';
-import MongoDbClient from '@orchesty/nodejs-sdk/dist/lib/Storage/Mongodb/Client';
+import FileSystemClient from '@orchesty/nodejs-sdk/dist/lib/Storage/File/FileSystem';
 import CurlSender from '@orchesty/nodejs-sdk/dist/lib/Transport/Curl/CurlSender';
 import GetUsersConnector from './GetUsersConnector';
 import GitHubApplication from './GitHubApplication';
@@ -17,16 +17,17 @@ import HubSpotCreateContactConnector from './HubSpotCreateContactConnector';
 import LoadRepositories from './LoadRepositories';
 import SplitBatch from './SplitBatch';
 
-export default async function prepare(): Promise<void> {
+export default function prepare(): void {
     // Load core services by:
-    await initiateContainer();
+    initiateContainer();
 
-    const curlSender = container.get<CurlSender>(CoreServices.CURL);
-    const mongoDbClient = container.get<MongoDbClient>(CoreServices.MONGO);
-    const oAuth2Provider = container.get<OAuth2Provider>(CoreServices.OAUTH2_PROVIDER);
+    const fileSystemClient = new FileSystemClient();
+    const curlSender = container.get(CurlSender);
+    const oAuth2Provider = container.get(OAuth2Provider);
+    const databaseClient = container.get(DbClient);
 
-    const dataStorageManager = new DataStorageManager(mongoDbClient);
-    container.set(CoreServices.DATA_STORAGE_MANAGER, dataStorageManager);
+    const dataStorageManager = new DataStorageManager(fileSystemClient);
+    container.set(dataStorageManager);
 
     // System event services
     const eventStatusFilterSuccess = new EventStatusFilter(EventEnum.PROCESS_SUCCESS);
@@ -47,19 +48,19 @@ export default async function prepare(): Promise<void> {
 
     const gitHubGetRepositoryConnector = new GitHubGetRepositoryConnector()
         .setSender(curlSender)
-        .setDb(mongoDbClient)
+        .setDb(databaseClient)
         .setApplication(gitHubApplication);
     container.setConnector(gitHubGetRepositoryConnector);
 
     const gitHubRepositoriesBatch = new GitHubRepositoriesBatch()
         .setSender(curlSender)
-        .setDb(mongoDbClient)
+        .setDb(databaseClient)
         .setApplication(gitHubApplication);
     container.setBatch(gitHubRepositoriesBatch);
 
     const gitHubStoreRepositoriesBatch = new GitHubStoreRepositoriesBatch(dataStorageManager)
         .setSender(curlSender)
-        .setDb(mongoDbClient)
+        .setDb(databaseClient)
         .setApplication(gitHubApplication);
     container.setBatch(gitHubStoreRepositoriesBatch);
 
@@ -68,7 +69,7 @@ export default async function prepare(): Promise<void> {
 
     const hubSpotCreateContactConnector = new HubSpotCreateContactConnector()
         .setSender(curlSender)
-        .setDb(mongoDbClient)
+        .setDb(databaseClient)
         .setApplication(hubSpotApplication);
     container.setConnector(hubSpotCreateContactConnector);
 

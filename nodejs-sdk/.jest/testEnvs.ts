@@ -5,12 +5,10 @@ process.env.BACKEND_URL = 'http://127.0.0.42:8080'
 
 if (process.env.JEST_DOCKER) {
   // --- DOCKER ---
-  process.env.UDP_LOGGER_DSN = 'logstash:5005'
-  process.env.METRICS_DSN = 'mongodb://mongo:27017/metrics'
-  process.env.MONGODB_DSN = 'mongodb://mongo:27017/nodejs-sdk'
+  process.env.STARTING_POINT_URL = 'http://127.0.0.42:8080'
+  process.env.WORKER_API_HOST = 'http://127.0.0.42:8080'
 } else {
   // --- LOCALHOST ---
-  process.env.UDP_LOGGER_DSN = '127.0.0.42:5005'
-  process.env.METRICS_DSN = 'mongodb://127.0.0.42:27017/metrics'
-  process.env.MONGODB_DSN = 'mongodb://127.0.0.42:27017/nodejs-sdk'
+  process.env.STARTING_POINT_URL = 'http://127.0.0.42:3000'
+  process.env.WORKER_API_HOST = 'http://127.0.0.42:8080'
 }

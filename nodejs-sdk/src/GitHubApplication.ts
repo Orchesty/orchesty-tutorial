@@ -1,5 +1,5 @@
 import ApplicationTypeEnum from '@orchesty/nodejs-sdk/dist/lib/Application/Base/ApplicationTypeEnum';
-import CoreFormsEnum from '@orchesty/nodejs-sdk/dist/lib/Application/Base/CoreFormsEnum';
+import CoreFormsEnum, { getFormName } from '@orchesty/nodejs-sdk/dist/lib/Application/Base/CoreFormsEnum';
 import { IWebhookApplication } from '@orchesty/nodejs-sdk/dist/lib/Application/Base/IWebhookApplication';
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
 import Webhook from '@orchesty/nodejs-sdk/dist/lib/Application/Database/Webhook';
@@ -37,7 +37,7 @@ export default class GitHubApplication extends ABasicApplication implements IWeb
     }
 
     public getFormStack(): FormStack {
-        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, 'Authorization settings')
+        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, getFormName(CoreFormsEnum.AUTHORIZATION_FORM))
             .addField(new Field(FieldType.TEXT, TOKEN, ' Token', undefined, true));
 
         return new FormStack().addForm(form);

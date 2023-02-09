@@ -1,5 +1,5 @@
 import ApplicationTypeEnum from '@orchesty/nodejs-sdk/dist/lib/Application/Base/ApplicationTypeEnum';
-import CoreFormsEnum from '@orchesty/nodejs-sdk/dist/lib/Application/Base/CoreFormsEnum';
+import CoreFormsEnum, { getFormName } from '@orchesty/nodejs-sdk/dist/lib/Application/Base/CoreFormsEnum';
 import { IWebhookApplication } from '@orchesty/nodejs-sdk/dist/lib/Application/Base/IWebhookApplication';
 import { ApplicationInstall } from '@orchesty/nodejs-sdk/dist/lib/Application/Database/ApplicationInstall';
 import Webhook from '@orchesty/nodejs-sdk/dist/lib/Application/Database/Webhook';
@@ -65,7 +65,7 @@ export default class HubSpotApplication extends AOAuth2Application implements IW
     }
 
     public getFormStack(): FormStack {
-        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, 'Authorization settings')
+        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, getFormName(CoreFormsEnum.AUTHORIZATION_FORM))
             .addField(new Field(FieldType.TEXT, CLIENT_ID, 'Client Id', null, true))
             .addField(new Field(FieldType.TEXT, CLIENT_SECRET, 'Client Secret', null, true))
             .addField(new Field(FieldType.TEXT, APP_ID, 'Application Id', null, true));

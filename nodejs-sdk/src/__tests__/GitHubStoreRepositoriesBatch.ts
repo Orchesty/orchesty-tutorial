@@ -7,9 +7,12 @@ import { NAME as GIT_HUB_STORE_REPOSITORIES_BATCH } from '../GitHubStoreReposito
 let tester: NodeTester;
 
 describe('Tests for GitHubStoreRepositoriesBatch', () => {
-    beforeAll(() => {
+    beforeAll(async () => {
         tester = new NodeTester(container, __filename);
         githubAppInstall();
+
+        const manager = container.get(DataStorageManager);
+        await manager.remove('testProcessId');
     });
 
     it('process - ok', async () => {

@@ -20,13 +20,11 @@ export default class GitHubGetRepositoryConnector extends AConnector {
             dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'Connector has no required data.');
         } else {
             const request = await this.getApplication().getRequestDto(dto, appInstall, HttpMethods.GET, `/repos/${data.org}/${data.repo}`);
-            const response = await this.getSender().send(request);
-
-            if (response.getResponseCode() >= 300 && response.getResponseCode() < 400) {
-                throw new OnRepeatException(30, 5, response.getBody());
-            } else if (response.getResponseCode() >= 400) {
-                dto.setStopProcess(ResultCode.STOP_AND_FAILED, `Failed with code ${response.getResponseCode()}`);
-            }
+            const response = await this.getSender().send(request, {
+                success: '<400',
+                stopAndFail: ['400-500'],
+                repeat: '>=500',
+            });
 
             dto.setData(response.getBody());
         }

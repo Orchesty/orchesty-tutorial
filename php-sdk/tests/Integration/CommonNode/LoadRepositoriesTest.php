@@ -33,12 +33,13 @@ final class LoadRepositoriesTest extends DatabaseTestCaseAbstract
     {
         /** @var DataStorageManager $dataStorageManager */
         $dataStorageManager = self::getContainer()->get('hbpf.data_storage_manager');
-        $dataStorageManager->store('2', ['d2']);
+        $dataStorageManager->store('20', ['d2']);
 
         $node = $this->getNode();
 
-        $dto = $node->processAction((new ProcessDto())->setJsonData(['collection' => '2']));
-        self::assertEquals('2', $dto->getJsonData()[0]['processId']);
+        $dto = $node->processAction((new ProcessDto())->setJsonData(['collection' => '20']));
+        self::assertEquals('d2', $dto->getJsonData()[0]['data']);
+        self::assertEquals('20', $dto->getJsonData()[0]['id']);
     }
 
     /**

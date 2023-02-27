@@ -3,16 +3,22 @@
 namespace Pipes\PhpSdk\Tests\Integration\Connector;
 
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
+use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Authorization\Provider\OAuth2Provider;
+use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\HubSpotApplication;
 use Pipes\PhpSdk\Connector\HubSpotCreateContactConnector;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
+use Pipes\PhpSdk\Tests\MockServer\Mock;
+use Pipes\PhpSdk\Tests\MockServer\MockServer;
+use Throwable;
 
 /**
  * Class HubSpotCreateContactConnectorTest
@@ -21,6 +27,11 @@ use Pipes\PhpSdk\Tests\DataProvider;
  */
 final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
 {
+
+    /**
+     * @var MockServer $mockServer
+     */
+    private MockServer $mockServer;
 
     /**
      * @return void
@@ -33,10 +44,19 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
 
     /**
      * @return void
-     * @throws Exception
+     * @throws Throwable
      */
     public function testProcess(): void
     {
+        $this->mockServer->addMock(
+            new Mock(
+                '/document/ApplicationInstall?filter={"names":["hub-spot"],"users":["user"]}',
+                NULL,
+                CurlManager::METHOD_GET,
+                new Response(200, [], Json::encode($this->createApplicationInstall()->toArray())),
+            ),
+        );
+
         $this->createApplicationInstall();
         $node = $this->getNode();
         $node->setSender($this->mockCurl());
@@ -45,6 +65,18 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
 
         $dto = $node->processAction($dto);
         self::assertEquals(['body' => 'ok'], $dto->getJsonData());
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mockServer = new MockServer();
+        self::getContainer()->set('hbpf.worker-api', $this->mockServer);
     }
 
     /**
@@ -76,9 +108,10 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @return ApplicationInstall
      * @throws Exception
      */
-    private function createApplicationInstall(): void
+    private function createApplicationInstall(): ApplicationInstall
     {
         $appInstall = DataProvider::getBasicAppInstall(HubSpotApplication::NAME);
         $appInstall
@@ -90,7 +123,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
                 ],
             ]);
 
-        $this->pfd($appInstall);
+        return $appInstall;
     }
 
 }

@@ -5,12 +5,11 @@ services:
         image: hanabosocom/wait-for-it:master
 
     php-sdk:
-        image: hanabosocom/php-dev:php-8.1-alpine
+        image: hanabosocom/php-dev:php-8.2-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
             - ./php-sdk:/var/www:cached
-            - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
             APP_DEBUG: 1
@@ -20,12 +19,9 @@ services:
             KERNEL_CLASS: Pipes\PhpSdk\Kernel
             CRYPT_SECRET: ${CRYPT_SECRET}
             BACKEND_DSN: ${BACKEND_URL}
-            METRICS_DSN: ${METRICS_DSN}
-            METRICS_DB: metrics
-            MONGODB_DSN: ${MONGO_DSN}
-            MONGODB_DB: ${MAIN_DB}
-            UDP_LOGGER_DSN: fluentd:5120
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
+            WORKER_API_HOST: ${WORKER_API_HOST}
+            ORCHESTY_API_KEY: ${ORCHESTY_API_KEY}
         mem_limit: 512MB
         depends_on:
             - fluentd
@@ -45,9 +41,8 @@ services:
             CRYPT_SECRET: ${CRYPT_SECRET}
             BACKEND_URL: ${BACKEND_URL}
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
-            UDP_LOGGER_DSN: fluentd:5120
-            METRICS_DSN: ${METRICS_DSN}
-            MONGODB_DSN: ${MONGO_DSN}
+            WORKER_API_HOST: ${WORKER_API_HOST}
+            ORCHESTY_API_KEY: ${ORCHESTY_API_KEY}
         command: sh -c 'pnpm install && pnpm run start'
         mem_limit: 512MB
         depends_on:
@@ -61,23 +56,7 @@ services:
             MONGODB_DSN: ${MONGO_DSN}
             METRICS_DSN: ${METRICS_DSN}
             STARTING_POINT_DSN: ${STARTING_POINT_DSN}
-        command: /bin/counter start
-        mem_limit: 64MB
-        depends_on:
-            - mongo
-            - rabbitmq
-
-    repeater:
-        image: orchesty/pf-bridge:${VERSION}
-        environment:
-            MONGO_DSN: ${MONGO_DSN}
-            REPEATER_CHECK_TIMEOUT: 5000
-            RABBITMQ_HOST: rabbitmq
-            RABBITMQ_PASS: guest
-            RABBITMQ_PORT: "5672"
-            RABBITMQ_USER: guest
-            RABBITMQ_VHOST: /
-        command: ./dist/src/bin/pipes.js start repeater
+            UDP_LOGGER_URL: ${UDP_LOGGER_DSN}
         mem_limit: 64MB
         depends_on:
             - mongo
@@ -88,8 +67,7 @@ services:
         environment:
             MONGO_DSN: ${MONGO_DSN}
             METRICS_DSN: ${METRICS_DSN}
-            RABBIT_COUNTER_QUEUE_DURABLE: 'true'
-            RABBIT_QUEUE_DURABLE: 'true'
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
             RABBIT_DELIVERY_MODE: 2
         ports:
             - ${DEV_IP}:82:8080
@@ -104,12 +82,10 @@ services:
         environment:
             DEPLOYMENT_PREFIX: ${MAIN_DB}
             GENERATOR_NETWORK: ${NETWORK_NAME}
-            PLATFORM: ${GENERATOR_MODE}
+            PLATFORM: ${PLATFORM}
             GENERATOR_PATH: /srv/topology
             PROJECT_SOURCE_PATH: ${PROJECT_SOURCE_PATH}/topology
             MONGO_DSN: ${MONGO_DSN}
-            WORKER_DEFAULT_LIMIT_CPU: 1
-            WORKER_DEFAULT_LIMIT_MEMORY: 200m
         volumes:
             - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
             - ./topology:/srv/topology
@@ -120,8 +96,10 @@ services:
     detector:
         image: orchesty/detector:${VERSION}
         environment:
+            MONGO_DSN: ${MONGO_DSN}
             METRICS_DSN: ${METRICS_DSN}
-            PLATFORM: ${GENERATOR_MODE}
+            RABBITMQ_DSN: ${RABBITMQ_DSN}
+            PLATFORM: ${PLATFORM}
             DOCKER_NETWORK: ${NETWORK_NAME}
         mem_limit: 32MB
         depends_on:
@@ -144,13 +122,22 @@ services:
             LIMITER_ADDR: 0.0.0.0:3333
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGO_DSN: ${MONGO_DSN}
-            LOGSTASH_HOST: fluentd
-            LOGSTASH_PORT: "5120"
+            UDP_LOGGER_DSN: ${UDP_LOGGER_DSN}
         mem_limit: 32MB
         depends_on:
             - fluentd
             - mongo
             - rabbitmq
+
+    worker-api:
+        image: orchesty/worker-api:${VERSION}
+        environment:
+            MONGODB_DSN: ${MONGO_DSN}
+            FLUENTD_DSN: ${UDP_LOGGER_DSN}
+        mem_limit: 64MB
+        depends_on:
+            - fluentd
+            - mongo
 
     frontend:
         image: orchesty/frontend:${VERSION}
@@ -167,24 +154,24 @@ services:
         ports:
             - ${DEV_IP}:8080:80
         environment:
-            BACKEND_DSN: ${BACKEND_URL}/
-            FRONTEND_DSN: ${FRONTEND_URL}/
+            BACKEND_URL: ${BACKEND_URL}/
+            FRONTEND_URL: ${FRONTEND_URL}/
             RABBITMQ_DSN: ${RABBITMQ_DSN}
             MONGODB_DSN: ${MONGO_DSN}
             MONGODB_DB: ${MAIN_DB}
             METRICS_DSN: ${METRICS_DSN}
             METRICS_DB: metrics
             CRON_DSN: cron-api:8080
-            STARTING_POINT_DSN: ${STARTING_POINT_DSN}
+            STARTING_POINT_URL: ${STARTING_POINT_DSN}
             TOPOLOGY_API_DSN: topology-api:8080
-            WORKER_DEFAULT_PORT: 8008
-            DOCKER_REGISTRY: orchesty
-            DOCKER_PF_BRIDGE_IMAGE: bridge:${VERSION}
+            DOCKER_PF_BRIDGE_IMAGE: orchesty/bridge:${VERSION}
             JWT_KEY: ${JWT_KEY}
-            CRYPT_SECRET: ${CRYPT_SECRET}
-            X_AUTH_KEY: x_auth_key
             INSTALLER_DIRS: '["/var/www/topology"]'
         mem_limit: 64MB
+        depends_on:
+            - fluentd
+            - mongo
+            - rabbitmq
 
     fluentd:
         image: orchesty/fluentd:${VERSION}

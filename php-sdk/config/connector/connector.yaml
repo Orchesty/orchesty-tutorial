@@ -7,19 +7,23 @@ services:
 
     hbpf.connector.jsonplaceholder-get-users:
         class: Pipes\PhpSdk\Connector\GetUsersConnector
+        arguments:
+            - '@hbpf.application_install.repository'
         calls:
             - ['setSender', ['@hbpf.transport.curl_manager']]
 
     hbpf.connector.git-hub-get-repository:
         class: Pipes\PhpSdk\Connector\GitHubRepositoryConnector
+        arguments:
+            - '@hbpf.application_install.repository'
         calls:
             - ['setApplication', ['@hbpf.application.git-hub']]
             - ['setSender', ['@hbpf.transport.curl_manager']]
-            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]
 
     hbpf.connector.hub-spot-create-contact:
         class: Pipes\PhpSdk\Connector\HubSpotCreateContactConnector
+        arguments:
+            - '@hbpf.application_install.repository'
         calls:
             - ['setApplication', ['@hbpf.application.hub-spot']]
             - ['setSender', ['@hbpf.transport.curl_manager']]
-            - ['setDb', ['@doctrine_mongodb.odm.default_document_manager']]

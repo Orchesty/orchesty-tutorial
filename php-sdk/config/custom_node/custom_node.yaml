@@ -7,8 +7,11 @@ services:
 
     hbpf.custom_node.hello-world:
         class: Pipes\PhpSdk\Mapper\HelloWorld
+        arguments:
+            - '@hbpf.application_install.repository'
 
     hbpf.common_node.load-repositories:
         class: Pipes\PhpSdk\CommonNode\LoadRepositories
         arguments:
+            - '@hbpf.application_install.repository'
             - '@hbpf.data_storage_manager'

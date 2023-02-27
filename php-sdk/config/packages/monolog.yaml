@@ -7,39 +7,8 @@ monolog:
     handlers:
         main:
             type: service
-            id: udp_handler
+            id: http_handler
             level: warning
-        authorization:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [authorization]
-        commons:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [commons]
-        connector:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [connector]
-        ftp:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [ftp]
-        parser_table:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [parser_table]
-        rabbit_mq:
-            type: service
-            id: udp_handler
-            level: info
-            channels: [rabbit_mq]
-
         # Handler for docker container
         stdout:
             type:  stream
@@ -56,10 +25,9 @@ services:
     logstash_formatter:
         class: Hanaboso\CommonsBundle\Monolog\LogstashFormatter
 
-    udp_handler:
-        class: Hanaboso\CommonsBundle\Monolog\UdpHandler
-        arguments:
-            - '@hbpf.transport.udp_sender'
-            - '%udp_logger_url%'
+    http_handler:
+        class: Hanaboso\CommonsBundle\Monolog\HttpHandler
         calls:
             - ['setFormatter', ['@logstash_formatter']]
+        arguments:
+            - '@hbpf.worker-api'

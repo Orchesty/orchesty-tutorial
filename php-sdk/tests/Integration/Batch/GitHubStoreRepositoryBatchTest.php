@@ -3,12 +3,14 @@
 namespace Pipes\PhpSdk\Tests\Integration\Batch;
 
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\PipesPhpSdk\Storage\DataStorage\DataStorageManager;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
@@ -16,6 +18,8 @@ use Pipes\PhpSdk\Application\GitHubApplication;
 use Pipes\PhpSdk\Batch\GitHubStoreRepositoriesBatch;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
+use Pipes\PhpSdk\Tests\MockServer\Mock;
+use Pipes\PhpSdk\Tests\MockServer\MockServer;
 
 /**
  * Class GitHubStoreRepositoryBatchTest
@@ -24,6 +28,11 @@ use Pipes\PhpSdk\Tests\DataProvider;
  */
 final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
 {
+
+    /**
+     * @var MockServer $mockServer
+     */
+    private MockServer $mockServer;
 
     /**
      * @return void
@@ -40,7 +49,17 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
      */
     public function testProcess(): void
     {
-        $this->createApplicationInstall();
+        /** @var DataStorageManager $dataStorageManager */
+        $dataStorageManager = self::getContainer()->get('hbpf.data_storage_manager');
+        $dataStorageManager->remove('2');
+        $this->mockServer->addMock(
+            new Mock(
+                '/document/ApplicationInstall?filter={"names":["git-hub"],"users":["user"]}',
+                NULL,
+                CurlManager::METHOD_GET,
+                new Response(200, [], Json::encode($this->createApplicationInstall()->toArray())),
+            ),
+        );
         $node = $this->getNode();
         $node->setSender($this->mockCurl());
 
@@ -55,13 +74,20 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
 
         self::assertCount(1, $data);
 
-        /** @var DataStorageManager $dataStorageManager */
-        $dataStorageManager = self::getContainer()->get('hbpf.data_storage_manager');
-        $data               = $dataStorageManager->load('2');
-        self::assertEquals(1, sizeof($data ?? []));
-        if ($data) {
-            self::assertEquals('2', $data[0]->getProcessId());
-        }
+        $data = $dataStorageManager->load('2');
+        self::assertEquals(1, sizeof($data));
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mockServer = new MockServer();
+        self::getContainer()->set('hbpf.worker-api', $this->mockServer);
     }
 
     /**
@@ -94,9 +120,10 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @return ApplicationInstall
      * @throws Exception
      */
-    private function createApplicationInstall(): void
+    private function createApplicationInstall(): ApplicationInstall
     {
         $appInstall = DataProvider::getBasicAppInstall(GitHubApplication::NAME);
         $appInstall
@@ -107,7 +134,7 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
                               ],
                           ]);
 
-        $this->pfd($appInstall);
+        return $appInstall;
     }
 
 }

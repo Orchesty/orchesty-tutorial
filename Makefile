@@ -16,9 +16,9 @@ Linux:
 .env:
 	sed -e "s/{DEV_UID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -u); else echo '1001'; fi)/g" \
 		-e "s/{DEV_GID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -g); else echo '1001'; fi)/g" \
-		-e "s/{SSH_AUTH}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo '${SSH_AUTH_SOCK}' | sed 's/\//\\\//g'; else echo '\/run\/host-services\/ssh-auth.sock'; fi)/g" \
 		-e "s|{DOCKER_SOCKET_PATH}|$(shell test -S /var/run/docker-$${USER}.sock && echo /var/run/docker-$${USER}.sock || echo /var/run/docker.sock)|g" \
 		-e "s|{PROJECT_SOURCE_PATH}|$(shell pwd)|g" \
+		-e 's/{ORCHESTY_API_KEY}/$(shell export LC_CTYPE=C && tr -dc A-Za-z0-9 </dev/urandom | head -c 65)/g' \
 		.env.dist > .env; \
 
 init-dev: docker-up-force composer-install clear-cache
@@ -35,6 +35,7 @@ docker-up-force: .env .lo0-up
 	$(DB) bin/console service:install nodejs-sdk nodejs-sdk:8080
 	$(DB) bin/console service:install php-sdk php-sdk:80
 	$(DB) bin/console topology:install -c -u --force nodejs-sdk:8080
+	$(DB) bin/console api-token:create --key "$(shell grep 'ORCHESTY_API_KEY' .env | cut -d "=" -f2)"
 
 docker-down-clean: .env .lo0-down
 	$(DC) down -v
@@ -55,8 +56,6 @@ pnpm-install:
 
 # App section
 clear-cache:
-	$(DB) bin/console doctrine:mongodb:schema:update --dm default
 	$(PHP_SDK) rm -rf var/log
 	$(PHP_SDK) php bin/console cache:clear --env=dev
 	$(PHP_SDK) php bin/console cache:warmup --env=dev
-

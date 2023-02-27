@@ -2,7 +2,9 @@
 
 namespace Pipes\PhpSdk\CommonNode;
 
+use Exception;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
+use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 use Hanaboso\PipesPhpSdk\Storage\DataStorage\DataStorageManager;
 
@@ -19,10 +21,15 @@ final class LoadRepositories extends CommonNodeAbstract
     /**
      * LoadRepositories constructor.
      *
-     * @param DataStorageManager $dataStorageManager
+     * @param ApplicationInstallRepository $repository
+     * @param DataStorageManager           $dataStorageManager
      */
-    public function __construct(private readonly DataStorageManager $dataStorageManager)
+    public function __construct(
+        ApplicationInstallRepository $repository,
+        private readonly DataStorageManager $dataStorageManager,
+    )
     {
+        parent::__construct($repository);
     }
 
     /**
@@ -37,13 +44,19 @@ final class LoadRepositories extends CommonNodeAbstract
      * @param ProcessDto $dto
      *
      * @return ProcessDto
+     * @throws Exception
      */
     function processAction(ProcessDto $dto): ProcessDto
     {
         $data  = $dto->getJsonData();
-        $repos = $this->dataStorageManager->load(id: $data['collection'], toArray: TRUE);
+        $repos = $this->dataStorageManager->load(id: $data['collection']);
 
-        return $dto->setJsonData($repos ?? []);
+        $res = [];
+        foreach ($repos as $repo){
+            $res[] = $repo->toArray();
+        }
+
+        return $dto->setJsonData($res);
     }
 
 }

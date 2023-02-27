@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Batch;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
@@ -38,6 +39,7 @@ final class GitHubGetRepositoriesBatch extends BatchAbstract
      * @throws ApplicationInstallException
      * @throws ConnectorException
      * @throws CustomNodeException
+     * @throws GuzzleException
      */
     function processAction(BatchProcessDto $dto): BatchProcessDto
     {

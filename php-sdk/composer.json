@@ -3,19 +3,18 @@
     "license": "Apache-2.0",
     "version": "1.0.0",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-dom": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mongodb": "*",
-        "doctrine/mongodb-odm-bundle": "^4.5",
         "hanaboso/rest-bundle": "^1.1",
-        "orchesty/php-sdk": "^2.3",
-        "symfony/security-bundle": "^v6.1"
+        "orchesty/php-sdk": "^3.0.0",
+        "symfony/security-bundle": "^v6.2"
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.4",
-        "symfony/debug-bundle": "^v6.1"
+        "symfony/debug-bundle": "^v6.2"
     },
     "replace": {
         "ralouphie/getallheaders": "*",
@@ -30,7 +29,8 @@
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php74": "*",
         "symfony/polyfill-php80": "*",
-        "symfony/polyfill-php81": "*"
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +40,12 @@
     "autoload-dev": {
         "psr-4": {
             "Pipes\\PhpSdk\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true
         }
     }
 }

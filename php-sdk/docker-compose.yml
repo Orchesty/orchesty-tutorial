@@ -1,32 +1,20 @@
-version: '3.3'
+version: '3.5'
 
 services:
     php-sdk:
-        image: hanabosocom/php-dev:php-8.1-alpine
+        image: hanabosocom/php-dev:php-8.2-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
             - ./:/var/www:cached
-            - ${SSH_AUTH}:/tmp/.ssh-auth-sock
             - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
         environment:
             APP_DEBUG: 1
-            APP_ENV: dev
-            PHP_WEBROOT: /var/www/public
+            APP_ENV: 'dev'
+            PHP_WEBROOT: '/var/www/public'
             COMPOSER_HOME: ${HOME}/dev/.composer
-            KERNEL_CLASS: Pipes\PhpSdk\Kernel
-            BACKEND_DSN: 127.0.0.10:8080
-            STARTING_POINT_DSN: 127.0.0.10:8080
-            METRICS_DSN: mongodb://mongo
-            METRICS_DB: metrics
-            MONGODB_DSN: mongodb://mongo
-            MONGODB_DB: tutorial
-            UDP_LOGGER_DSN: fluentd:5120
-
-    mongo:
-        image: mongo
-        volumes:
-            - mongodb:/data/db
-
-volumes:
-    mongodb:
+            KERNEL_CLASS: 'Pipes\PhpSdk\Kernel'
+            BACKEND_DSN: '127.0.0.10:8080'
+            STARTING_POINT_DSN: '127.0.0.10:8080'
+            WORKER_API_HOST: '127.0.0.10:8080'
+            ORCHESTY_API_KEY: 'ThisIsNotSoSecretApiKey'

@@ -5,7 +5,6 @@
 # Node.js
 nodejs-sdk/coverage
 nodejs-sdk/node_modules
-
 nodejs-sdk/.pnpm-store
 
 # PHP

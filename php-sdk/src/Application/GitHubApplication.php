@@ -36,7 +36,7 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
      */
     public function getApplicationType(): string
     {
-        return ApplicationTypeEnum::WEBHOOK;
+        return ApplicationTypeEnum::WEBHOOK->value;
     }
 
     /**

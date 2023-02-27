@@ -1,4 +1,4 @@
-import { createLoggerMockedServer, createMetricsMockedServer } from "@orchesty/nodejs-sdk/dist/test/MockServer";
+import { createLoggerMockedServer, createMetricsMockedServer } from '@orchesty/nodejs-sdk/dist/test/MockServer';
 import { prepare } from '../test/TestAbstract';
 
 jest.setTimeout(10000);

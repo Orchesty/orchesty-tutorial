@@ -4,9 +4,7 @@ parameters:
 
     public.services: false
 
-    startingPointHost: '%env(STARTING_POINT_DSN)%'
     backendHost: '%env(BACKEND_DSN)%'
-    udp_logger_url: '%env(UDP_LOGGER_DSN)%'
 
     node_services_dirs:
         - '%kernel.project_dir%/config'
@@ -20,7 +18,11 @@ services:
         autoconfigure: false
         public: '%public.services%'
 
+
+    hbpf.data_store.file_system:
+        class: Hanaboso\PipesPhpSdk\Storage\File\FileSystem
+
     hbpf.data_storage_manager:
         class: Hanaboso\PipesPhpSdk\Storage\DataStorage\DataStorageManager
         arguments:
-            - '@hbpf.database_manager_locator'
+            - '@hbpf.data_store.file_system'

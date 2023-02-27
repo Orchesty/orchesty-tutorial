@@ -3,17 +3,22 @@
 namespace Pipes\PhpSdk\Tests\Integration\Batch;
 
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
+use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\GitHubApplication;
 use Pipes\PhpSdk\Batch\GitHubGetRepositoriesBatch;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 use Pipes\PhpSdk\Tests\DataProvider;
+use Pipes\PhpSdk\Tests\MockServer\Mock;
+use Pipes\PhpSdk\Tests\MockServer\MockServer;
+use Throwable;
 
 /**
  * Class GitHubGetRepositoryBatchTest
@@ -22,6 +27,11 @@ use Pipes\PhpSdk\Tests\DataProvider;
  */
 final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
 {
+
+    /**
+     * @var MockServer $mockServer
+     */
+    private MockServer $mockServer;
 
     /**
      * @return void
@@ -34,11 +44,18 @@ final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
 
     /**
      * @return void
-     * @throws Exception
+     * @throws Throwable
      */
     public function testProcess(): void
     {
-        $this->createApplicationInstall();
+        $this->mockServer->addMock(
+            new Mock(
+                '/document/ApplicationInstall?filter={"names":["git-hub"],"users":["user"]}',
+                NULL,
+                CurlManager::METHOD_GET,
+                new Response(200, [], Json::encode($this->createApplicationInstall()->toArray())),
+            ),
+        );
         $node = $this->getNode();
         $node->setSender($this->mockCurl());
 
@@ -51,6 +68,18 @@ final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
         $data = Json::decode($dto->getBridgeData());
 
         self::assertCount(2, $data);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mockServer = new MockServer();
+        self::getContainer()->set('hbpf.worker-api', $this->mockServer);
     }
 
     /**
@@ -83,9 +112,10 @@ final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @return ApplicationInstall
      * @throws Exception
      */
-    private function createApplicationInstall(): void
+    private function createApplicationInstall(): ApplicationInstall
     {
         $appInstall = DataProvider::getBasicAppInstall(GitHubApplication::NAME);
         $appInstall
@@ -96,7 +126,7 @@ final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
                 ],
             ]);
 
-        $this->pfd($appInstall);
+        return $appInstall;
     }
 
 }

@@ -5,7 +5,6 @@ namespace Pipes\PhpSdk\Tests;
 use Exception;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\ControllerTestTrait;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
-use Hanaboso\PhpCheckUtils\PhpUnit\Traits\DatabaseTestTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -18,7 +17,6 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
 
     use ControllerTestTrait;
     use CustomAssertTrait;
-    use DatabaseTestTrait;
 
     /**
      * @throws Exception
@@ -28,7 +26,6 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
         parent::setUp();
 
         $this->recreateClient();
-        $this->clearMongo();
     }
 
     /**
@@ -37,7 +34,6 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     protected function recreateClient(): void
     {
         $this->startClient();
-        $this->dm = self::getContainer()->get('doctrine_mongodb.odm.default_document_manager');
     }
 
 }

@@ -16,4 +16,5 @@ services:
             BACKEND_URL: 'http://127.0.0.42:8080'
             STARTING_POINT_DSN: 'http://127.0.0.42:8080'
             WORKER_API_HOST: 'http://127.0.0.42:8080'
+            ORCHESTY_API_KEY: 'ThisIsNotSoSecretApiKey'
         command: sleep infinity

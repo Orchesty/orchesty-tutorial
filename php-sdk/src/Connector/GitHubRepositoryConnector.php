@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Connector;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Process\ProcessDtoAbstract;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
@@ -39,6 +40,7 @@ final class GitHubRepositoryConnector extends ConnectorAbstract
      * @throws PipesFrameworkException
      * @throws CurlException
      * @throws ConnectorException
+     * @throws GuzzleException
      */
     function processAction(ProcessDto $dto): ProcessDto
     {

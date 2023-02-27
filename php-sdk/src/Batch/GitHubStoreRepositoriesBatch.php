@@ -2,11 +2,12 @@
 
 namespace Pipes\PhpSdk\Batch;
 
-use Doctrine\ODM\MongoDB\MongoDBException;
+use GuzzleHttp\Exception\GuzzleException;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
 use Hanaboso\PipesPhpSdk\Application\Exception\ApplicationInstallException;
+use Hanaboso\PipesPhpSdk\Application\Repository\ApplicationInstallRepository;
 use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
@@ -29,10 +30,15 @@ final class GitHubStoreRepositoriesBatch extends BatchAbstract
     /**
      * GitHubStoreRepositoriesBatch constructor.
      *
-     * @param DataStorageManager $dataStorageManager
+     * @param ApplicationInstallRepository $repository
+     * @param DataStorageManager           $dataStorageManager
      */
-    public function __construct(private readonly DataStorageManager $dataStorageManager)
+    public function __construct(
+        ApplicationInstallRepository $repository,
+        private readonly DataStorageManager $dataStorageManager,
+    )
     {
+        parent::__construct($repository);
     }
 
     /**
@@ -51,7 +57,7 @@ final class GitHubStoreRepositoriesBatch extends BatchAbstract
      * @throws ConnectorException
      * @throws CurlException
      * @throws CustomNodeException
-     * @throws MongoDBException
+     * @throws GuzzleException
      */
     function processAction(BatchProcessDto $dto): BatchProcessDto
     {

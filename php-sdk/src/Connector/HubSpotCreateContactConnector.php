@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Connector;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlException;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
@@ -37,6 +38,7 @@ final class HubSpotCreateContactConnector extends ConnectorAbstract
      * @throws ApplicationInstallException
      * @throws ConnectorException
      * @throws CustomNodeException
+     * @throws GuzzleException
      */
     function processAction(ProcessDto $dto): ProcessDto
     {

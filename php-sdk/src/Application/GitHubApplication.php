@@ -89,9 +89,9 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
             $dto,
             $data ?? '',
             [
-                'Content-Type'  => 'application/json',
                 'Accept'        => 'application/vnd.github+json',
                 'Authorization' => sprintf('Bearer %s', $form[self::TOKEN]),
+                'Content-Type'  => 'application/json',
             ],
         );
     }
@@ -147,11 +147,11 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
             Json::encode(
                 [
                     'config' => [
-                        'url'          => $url,
                         'content_type' => 'json',
+                        'url'          => $url,
                     ],
-                    'name'   => 'web',
                     'events' => [$subscription->getName()],
+                    'name'   => 'web',
                 ],
             ),
         );

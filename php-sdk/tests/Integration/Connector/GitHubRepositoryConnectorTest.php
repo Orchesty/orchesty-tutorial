@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests\Integration\Connector;
 
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Process\ProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
@@ -11,6 +12,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\GitHubApplication;
 use Pipes\PhpSdk\Connector\GitHubRepositoryConnector;
@@ -43,6 +45,7 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
 
     /**
      * @return void
+     * @throws GuzzleException
      * @throws Exception
      */
     public function testProcess(): void
@@ -115,11 +118,11 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
         $appInstall = DataProvider::getBasicAppInstall(GitHubApplication::NAME);
         $appInstall
             ->setSettings([
-                ApplicationInterface::AUTHORIZATION_FORM => [
-                    GitHubApplication::USER  => 'usr',
-                    GitHubApplication::TOKEN => 'tkn',
-                ],
-            ]);
+                              ApplicationInterface::AUTHORIZATION_FORM => [
+                                  ApplicationInterface::TOKEN     => 'tkn',
+                                  BasicApplicationInterface::USER => 'usr',
+                              ],
+                          ]);
 
         return $appInstall;
     }

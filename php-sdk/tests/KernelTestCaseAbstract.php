@@ -62,9 +62,9 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
         }
 
         if ($exceptionMessage) {
-            $isExact ?
-                self::expectExceptionMessageMatches(sprintf('/^%s$/', preg_quote($exceptionMessage))) :
-                self::expectExceptionMessageMatches($exceptionMessage);
+            $isExact
+                ? self::expectExceptionMessageMatches(sprintf('/^%s$/', preg_quote($exceptionMessage)))
+                : self::expectExceptionMessageMatches($exceptionMessage);
         }
     }
 

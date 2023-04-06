@@ -81,7 +81,7 @@ final class MockServer implements ClientInterface
      *
      * @return bool
      */
-    private function compareMock(string $uri, array|LogRecord|null $data, string $method, Mock $mock,): bool
+    private function compareMock(string $uri, array|LogRecord|null $data, string $method, Mock $mock): bool
     {
         if (!empty($mock->replaceFields) && is_array($data)) {
             foreach ($mock->replaceFields as $key => $value) {

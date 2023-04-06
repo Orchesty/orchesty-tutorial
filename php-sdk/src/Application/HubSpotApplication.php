@@ -88,9 +88,9 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             $dto,
             $data ?? '',
             [
-                'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
                 'Authorization' => sprintf('Bearer %s', $this->getAccessToken($applicationInstall)),
+                'Content-Type'  => 'application/json',
             ],
         );
     }
@@ -167,12 +167,12 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
             CurlManager::METHOD_POST,
             $hubspotUrl,
             Json::encode([
-                             'webhookUrl'          => $url,
-                             'subscriptionDetails' => [
-                                 'subscriptionType' => $subscription->getParameters()['name'],
-                                 'propertyName'     => 'email',
-                             ],
                              'enabled'             => FALSE,
+                             'subscriptionDetails' => [
+                                 'propertyName'     => 'email',
+                                 'subscriptionType' => $subscription->getParameters()['name'],
+                             ],
+                             'webhookUrl'          => $url,
                          ]),
         );
     }
@@ -232,7 +232,7 @@ final class HubSpotApplication extends OAuth2ApplicationAbstract implements Webh
     /**
      * @param ApplicationInstall $applicationInstall
      *
-     * @return mixed[]|mixed[]
+     * @return mixed[]
      */
     protected function getScopes(ApplicationInstall $applicationInstall): array
     {

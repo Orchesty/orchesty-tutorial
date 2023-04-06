@@ -54,8 +54,7 @@ final class GitHubApplicationTest extends KernelTestCaseAbstract
     public function testProcessWebhookUnsubscribeResponse(): void
     {
         $gitHubApplication = new GitHubApplication();
-        self::assertEquals(
-            TRUE,
+        self::assertTrue(
             $gitHubApplication->processWebhookUnsubscribeResponse(
                 new ResponseDto(204, '', '', []),
             ),

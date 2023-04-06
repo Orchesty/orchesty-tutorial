@@ -8,13 +8,6 @@ process.env.WORKER_API_HOST = 'http://127.0.0.42:8080'
 
 if (process.env.JEST_DOCKER) {
   // --- DOCKER ---
-
-} else {
-  // --- LOCALHOST ---
-}
-
-if (process.env.JEST_DOCKER) {
-  // --- DOCKER ---
 } else {
   // --- LOCALHOST ---
 }

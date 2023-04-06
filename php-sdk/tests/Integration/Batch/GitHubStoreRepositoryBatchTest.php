@@ -3,6 +3,7 @@
 namespace Pipes\PhpSdk\Tests\Integration\Batch;
 
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Hanaboso\CommonsBundle\Process\BatchProcessDto;
 use Hanaboso\CommonsBundle\Transport\Curl\CurlManager;
@@ -11,6 +12,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Hanaboso\PipesPhpSdk\Storage\DataStorage\DataStorageManager;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
@@ -45,6 +47,7 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
 
     /**
      * @return void
+     * @throws GuzzleException
      * @throws Exception
      */
     public function testProcess(): void
@@ -129,8 +132,8 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
         $appInstall
             ->setSettings([
                               ApplicationInterface::AUTHORIZATION_FORM => [
-                                  GitHubApplication::USER  => 'usr',
-                                  GitHubApplication::TOKEN => 'tkn',
+                                  ApplicationInterface::TOKEN     => 'tkn',
+                                  BasicApplicationInterface::USER => 'usr',
                               ],
                           ]);
 

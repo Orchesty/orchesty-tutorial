@@ -11,6 +11,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\CommonsBundle\Transport\CurlManagerInterface;
 use Hanaboso\PipesPhpSdk\Application\Base\ApplicationInterface;
 use Hanaboso\PipesPhpSdk\Application\Document\ApplicationInstall;
+use Hanaboso\PipesPhpSdk\Authorization\Base\Basic\BasicApplicationInterface;
 use Hanaboso\Utils\String\Json;
 use Pipes\PhpSdk\Application\GitHubApplication;
 use Pipes\PhpSdk\Batch\GitHubGetRepositoriesBatch;
@@ -120,11 +121,11 @@ final class GitHubGetRepositoryBatchTest extends DatabaseTestCaseAbstract
         $appInstall = DataProvider::getBasicAppInstall(GitHubApplication::NAME);
         $appInstall
             ->setSettings([
-                ApplicationInterface::AUTHORIZATION_FORM => [
-                    GitHubApplication::USER  => 'usr',
-                    GitHubApplication::TOKEN => 'tkn',
-                ],
-            ]);
+                              ApplicationInterface::AUTHORIZATION_FORM => [
+                                  ApplicationInterface::TOKEN     => 'tkn',
+                                  BasicApplicationInterface::USER => 'usr',
+                              ],
+                          ]);
 
         return $appInstall;
     }

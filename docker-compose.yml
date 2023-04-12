@@ -133,7 +133,7 @@ services:
         image: orchesty/worker-api:${VERSION}
         environment:
             MONGODB_DSN: ${MONGO_DSN}
-            FLUENTD_DSN: ${UDP_LOGGER_DSN}
+            FLUENTD_DSN: ${TCP_LOGGER_DSN}
         mem_limit: 64MB
         depends_on:
             - fluentd

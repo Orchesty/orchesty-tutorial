@@ -8,12 +8,12 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mongodb": "*",
-        "hanaboso/rest-bundle": "^1.1",
+        "hanaboso/rest-bundle": "^1.2",
         "orchesty/php-sdk": "^3.0.0",
         "symfony/security-bundle": "^v6.2"
     },
     "require-dev": {
-        "hanaboso/php-check-utils": "^1.4",
+        "hanaboso/php-check-utils": "^1.5",
         "symfony/debug-bundle": "^v6.2"
     },
     "replace": {

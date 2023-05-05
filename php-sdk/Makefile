@@ -30,9 +30,7 @@ composer-outdated:
 
 # App section
 clear-cache:
-	$(DA) rm -rf var/log
-	$(DA) rm -rf var/coverage
-	$(DA) php bin/console cache:clear --env=test
+	$(DA) rm -rf var
 	$(DA) php bin/console cache:warmup --env=test
 
 # Tests section

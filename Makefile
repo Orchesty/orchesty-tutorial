@@ -50,12 +50,11 @@ composer-install:
 composer-update:
 	$(PHP_SDK) composer update
 
-# Yarn section
+# Pnpm section
 pnpm-install:
 	$(NODE_SDK) pnpm install
 
 # App section
 clear-cache:
-	$(PHP_SDK) rm -rf var/log
-	$(PHP_SDK) php bin/console cache:clear --env=dev
+	$(PHP_SDK) rm -rf var
 	$(PHP_SDK) php bin/console cache:warmup --env=dev

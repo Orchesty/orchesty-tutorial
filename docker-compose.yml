@@ -33,7 +33,7 @@ services:
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
-            - ./nodejs-sdk/:/var/www
+            - ./nodejs-sdk/:/var/www:cached
         environment:
             # Envs for tests are load from nodejs-sdk/.jest/testEnvs.js
             JEST_DOCKER: 1

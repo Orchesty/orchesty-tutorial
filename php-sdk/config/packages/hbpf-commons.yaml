@@ -1,15 +1,5 @@
 parameters:
     ##########################
-    #        Metrics         #
-    ##########################
-    #MongoDb sender
-    mongodb.monolith_table: monolith
-    mongodb.connector_table: connectors
-    mongodb.node_table: pipes_node
-    mongodb.rabbit_table: rabbitmq
-    mongodb.counter_table: pipes_counter
-
-    ##########################
     #        Worker Api      #
     ##########################
     worker-api: '%env(string:WORKER_API_HOST)%'
@@ -25,7 +15,7 @@ services:
     hbpf.commons.crypt.crypt_manager:
         class: Hanaboso\CommonsBundle\Crypt\CryptManager
         arguments:
-            - ['@hbpf.commons.crypt.windwalker']
+            - [ '@hbpf.commons.crypt.windwalker' ]
 
     hbpf.commons.crypt.windwalker:
         class: Hanaboso\CommonsBundle\Crypt\Impl\WindwalkerCrypt
@@ -59,11 +49,13 @@ services:
         class: Hanaboso\CommonsBundle\Metrics\Impl\CurlSender
         arguments:
             - '@hbpf.worker-api'
+            - '%worker-api%'
 
     hbpf.metrics.curl_monolith:
         class: Hanaboso\CommonsBundle\Metrics\Impl\CurlSender
         arguments:
             - '@hbpf.worker-api'
+            - '%worker-api%'
 
     hbpf.metrics_connector.loader:
         class: Hanaboso\CommonsBundle\Metrics\MetricsSenderLoader
@@ -87,5 +79,5 @@ services:
         arguments:
             - '@hbpf.transport.curl_client_factory'
         calls:
-            - ['setLogger', ['@monolog.logger.commons']]
-            - ['setMetricsSender', ['@hbpf.metrics_connector.loader']] ## Optional metrics sender
+            - [ 'setLogger', [ '@monolog.logger.commons' ] ]
+            - [ 'setMetricsSender', [ '@hbpf.metrics_connector.loader' ] ] ## Optional metrics sender

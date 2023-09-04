@@ -1,10 +1,7 @@
 parameters:
     locale: en
     secret: ThisTokenIsNotSoSecretChangeIt
-
     public.services: false
-
-    backendHost: '%env(BACKEND_DSN)%'
 
     node_services_dirs:
         - '%kernel.project_dir%/config'

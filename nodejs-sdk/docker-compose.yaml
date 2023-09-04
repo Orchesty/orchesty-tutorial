@@ -7,7 +7,7 @@ services:
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:
-            - ./:/var/www
+            - ./:/var/www:cached
         environment:
             # Envs for tests are load from .jest/testEnvs.js
             JEST_DOCKER: 1

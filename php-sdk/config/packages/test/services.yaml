@@ -1,2 +1,2 @@
 parameters:
-    public.services: false
+    public.services: true

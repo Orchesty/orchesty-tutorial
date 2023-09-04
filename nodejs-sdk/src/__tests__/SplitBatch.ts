@@ -6,7 +6,7 @@ let tester: NodeTester;
 
 describe('Tests for SplitBatch', () => {
     beforeAll(() => {
-        tester = new NodeTester(container, __filename);
+        tester = new NodeTester(container, __filename, false, ['']);
     });
 
     it('process - ok', async () => {

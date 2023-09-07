@@ -144,7 +144,7 @@ services:
         environment:
             BACKEND_URL: ${BACKEND_URL}
             FRONTEND_URL: '/'
-            STARTINGPOINT_URL: http://${DEV_IP}:82
+            STARTINGPOINT_URL: ${STARTING_POINT_URL}
         ports:
             - ${DEV_IP}:80:80
         mem_limit: 32MB

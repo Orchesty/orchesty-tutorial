@@ -7,15 +7,13 @@
 ## How to run
 - Run `make init-dev`
 - Go to [http://127.0.0.10](http://127.0.0.10)
-
-## How to create user
-- Run `docker-compose exec backend bin/orchesty user:create`
+- Login with credentials stored in .env (default: test@orchesty.io | password)
 
 ## How to enable your PHP services
 1. Go to [UI Workers](http://127.0.0.10/workers)
 2. Add `php-sdk` as new Worker:
    1. URL: `php-sdk:80`
-   1. Name: `php-sdk`
+   2. Name: `php-sdk`
 
 ## How to enable your Node.JS services
 1. Go to [UI Workers](http://127.0.0.10/workers)

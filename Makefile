@@ -36,6 +36,7 @@ docker-up-force: .env .lo0-up
 	$(DB) bin/console service:install php-sdk php-sdk:80
 	$(DB) bin/console topology:install -c -u --force nodejs-sdk:8080
 	$(DB) bin/console api-token:create --key "$(shell grep 'ORCHESTY_API_KEY' .env | cut -d "=" -f2)"
+	$(DB) bin/console user:create "$(shell grep 'ORCHESTY_USER' .env | cut -d "=" -f2)" "$(shell grep 'ORCHESTY_PASSWORD' .env | cut -d "=" -f2)"
 
 docker-down-clean: .env .lo0-down
 	$(DC) down -v

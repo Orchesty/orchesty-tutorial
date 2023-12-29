@@ -1,4 +1,4 @@
-FROM hanabosocom/php-base:php-8.2-alpine
+FROM hanabosocom/php-base:php-8.3-alpine
 
 ENV APP_ENV=prod
 ENV APP_DEBUG=0

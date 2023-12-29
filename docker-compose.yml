@@ -5,7 +5,7 @@ services:
         image: hanabosocom/wait-for-it:master
 
     php-sdk:
-        image: hanabosocom/php-dev:php-8.2-alpine
+        image: hanabosocom/php-dev:php-8.3-alpine
         user: ${DEV_UID}:${DEV_GID}
         working_dir: /var/www
         volumes:

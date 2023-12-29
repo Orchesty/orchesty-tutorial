@@ -3,7 +3,7 @@ IMAGE=EDIT_ME:$(TAG)
 
 ALIAS?=alias
 Darwin:
-	sudo ifconfig lo0 $(ALIAS) $(shell awk '$$1 ~ /^DEV_IP/' .env.dist | sed -e "s/^DEV_IP=//")
+	sudo ifconfig lo0 $(ALIAS) $(shell awk '$$1 ~ /^DEV_IP/' .env | sed -e "s/^DEV_IP=//")
 Linux:
 	@echo 'skipping ...'
 .lo0-up:

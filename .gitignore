@@ -14,7 +14,5 @@ php-sdk/var
 
 # PIPES
 .env
-*/docker-compose.mutagen.yml
-docker-compose.mutagen.yml
 topology/*
 !topology/.gitkeep

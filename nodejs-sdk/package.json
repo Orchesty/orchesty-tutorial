@@ -13,23 +13,23 @@
   "keywords": [],
   "author": "info@hanaboso.com",
   "dependencies": {
-    "@orchesty/nodejs-connectors": "^3.0.82",
-    "@orchesty/nodejs-sdk": "^4.2.35",
+    "@orchesty/nodejs-connectors": "^3.0.101",
+    "@orchesty/nodejs-sdk": "^4.2.39",
     "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
     "@hanaboso/eslint-plugin": "^1.1.1",
-    "@types/jest": "^29.5.11",
-    "@types/node": "^20.10.5",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
     "@types/supertest": "^6.0.2",
-    "axios": "^1.6.3",
+    "axios": "^1.6.7",
     "axios-mock-adapter": "^1.22.0",
     "copyfiles": "^2.4.1",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
-    "nodemon": "^3.0.2",
-    "supertest": "^6.3.3",
-    "ts-jest": "^29.1.1",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

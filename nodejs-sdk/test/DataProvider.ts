@@ -7,6 +7,7 @@ import { ACCESS_TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Provid
 import { TOKEN } from '@orchesty/nodejs-sdk/dist/lib/Authorization/Type/Basic/ABasicApplication';
 import { HttpMethods } from '@orchesty/nodejs-sdk/dist/lib/Transport/HttpMethods';
 import { mockOnce } from '@orchesty/nodejs-sdk/dist/test/MockServer';
+import { devIp } from '../.jest/testEnvs';
 import { NAME as GitHubApplicationName } from '../src/GitHubApplication';
 import { NAME as HubSpotApplicationName } from '../src/HubSpotApplication';
 
@@ -26,7 +27,7 @@ export function appInstall(
     mockOnce([
         {
             request: {
-                method: HttpMethods.GET, url: /http:\/\/127.0.0.42:8080\/document\/ApplicationInstall.*/,
+                method: HttpMethods.GET, url: new RegExp(`http:\\/\\/${devIp}:8080\\/document\\/ApplicationInstall.*`),
             },
             response: {
                 code: 200,

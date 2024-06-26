@@ -11,6 +11,7 @@ use Hanaboso\CommonsBundle\Transport\Curl\Dto\RequestDto;
 use Hanaboso\CommonsBundle\Transport\Curl\Dto\ResponseDto;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\PrivateTrait;
+use Hanaboso\PhpCheckUtils\PhpUnit\Traits\RestoreErrorHandlersTrait;
 use Hanaboso\PipesPhpSdk\Batch\BatchInterface;
 use Hanaboso\Utils\String\Json;
 use Hanaboso\Utils\System\PipesHeaders;
@@ -29,6 +30,7 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     use PrivateTrait;
     use CustomAssertTrait;
     use PHPMock;
+    use RestoreErrorHandlersTrait;
 
     /**
      *
@@ -139,6 +141,16 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
         return static function () use ($message): void {
             throw new CurlException($message, CurlException::REQUEST_FAILED);
         };
+    }
+
+    /**
+     * @return void
+     */
+    protected function tearDown(): void {
+        parent::tearDown();
+
+        $this->restoreErrorHandler();
+        $this->restoreExceptionHandler();
     }
 
 }

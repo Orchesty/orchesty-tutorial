@@ -56,7 +56,7 @@ phplive:
 	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) tests/Live
 
 phpcoverage:
-	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --coverage-html var/coverage --whitelist /var/www/src --exclude-group live tests
+	$(DA) vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --coverage-html var/coverage --cache-directory var/cache/coverage --coverage-filter src tests --exclude-group live
 
 phpcoverage-ci:
 	$(DA) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -e live -c 50

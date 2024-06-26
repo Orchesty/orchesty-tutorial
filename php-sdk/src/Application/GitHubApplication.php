@@ -172,7 +172,7 @@ final class GitHubApplication extends BasicApplicationAbstract implements Webhoo
         $request    = new ProcessDto();
         $parameters = array_filter(
             $this->getWebhookSubscriptions(),
-            static fn($item) => $item->getName() === $webhook->getName()
+            static fn($item) => $item->getName() === $webhook->getName(),
         )[0]->getParameters();
 
         return $this->getRequestDto(

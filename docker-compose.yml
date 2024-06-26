@@ -1,5 +1,3 @@
-version: '2.4'
-
 services:
     wait-for-it:
         image: hanabosocom/wait-for-it:master

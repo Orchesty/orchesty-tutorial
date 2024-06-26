@@ -2,6 +2,7 @@
 
 namespace Pipes\PhpSdk\Tests\Live;
 
+use PHPUnit\Framework\Attributes\Group;
 use Pipes\PhpSdk\Tests\DatabaseTestCaseAbstract;
 
 /**
@@ -13,8 +14,9 @@ final class SampleLiveTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @group live
+     * @return void
      */
+    #[Group('live')]
     public function testSample(): void
     {
         self::assertFake();

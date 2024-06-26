@@ -5,6 +5,7 @@ namespace Pipes\PhpSdk\Tests;
 use Exception;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\ControllerTestTrait;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
+use Hanaboso\PhpCheckUtils\PhpUnit\Traits\RestoreErrorHandlersTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -17,6 +18,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
 
     use ControllerTestTrait;
     use CustomAssertTrait;
+    use RestoreErrorHandlersTrait;
 
     /**
      * @throws Exception
@@ -34,6 +36,16 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     protected function recreateClient(): void
     {
         $this->startClient();
+    }
+
+    /**
+     * @return void
+     */
+    protected function tearDown(): void {
+        parent::tearDown();
+
+        $this->restoreErrorHandler();
+        $this->restoreExceptionHandler();
     }
 
 }

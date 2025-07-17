@@ -22,7 +22,7 @@ final class Kernel extends BaseKernel
 
     use MicroKernelTrait;
 
-    public const CONFIG_EXT = '.{yaml}';
+    public const string CONFIG_EXT = '.{yaml}';
 
     /**
      * @return BundleInterface[]

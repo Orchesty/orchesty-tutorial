@@ -22,7 +22,7 @@ final class SplitBatchTest extends KernelTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(SplitBatch::NAME, $this->getNode()->getName());
+        self::assertSame(SplitBatch::NAME, $this->getNode()->getName());
     }
 
     /**

@@ -22,7 +22,7 @@ final class LoadRepositoriesTest extends DatabaseTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(LoadRepositories::NAME, $this->getNode()->getName());
+        self::assertSame(LoadRepositories::NAME, $this->getNode()->getName());
     }
 
     /**

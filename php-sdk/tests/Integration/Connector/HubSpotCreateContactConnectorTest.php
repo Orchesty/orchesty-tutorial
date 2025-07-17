@@ -40,7 +40,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(HubSpotCreateContactConnector::NAME, $this->getNode()->getName());
+        self::assertSame(HubSpotCreateContactConnector::NAME, $this->getNode()->getName());
     }
 
     /**
@@ -99,7 +99,7 @@ final class HubSpotCreateContactConnectorTest extends DatabaseTestCaseAbstract
     {
         $mock = self::createMock(CurlManagerInterface::class);
         $mock->method('send')->willReturnCallback(static function (RequestDto $req) {
-            self::assertEquals(CurlManager::METHOD_POST, $req->getMethod());
+            self::assertSame(CurlManager::METHOD_POST, $req->getMethod());
             self::assertEquals(sprintf('%s/crm/v3/objects/contacts', HubSpotApplication::BASE_URL), $req->getUri(TRUE));
 
             return new ResponseDto(200, '', '{"body":"ok"}', []);

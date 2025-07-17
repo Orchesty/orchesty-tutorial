@@ -16,7 +16,7 @@ use Hanaboso\PipesPhpSdk\Storage\DataStorage\DataStorageManager;
 final class LoadRepositories extends CommonNodeAbstract
 {
 
-    public const NAME = 'load-repositories';
+    public const string NAME = 'load-repositories';
 
     /**
      * LoadRepositories constructor.

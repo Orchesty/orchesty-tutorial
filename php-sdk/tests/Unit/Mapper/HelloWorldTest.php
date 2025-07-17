@@ -23,7 +23,7 @@ final class HelloWorldTest extends KernelTestCaseAbstract
     {
         /** @var HelloWorld $node */
         $node = self::getContainer()->get(sprintf('hbpf.custom_node.%s', HelloWorld::NAME));
-        self::assertEquals(HelloWorld::NAME, $node->getName());
+        self::assertSame(HelloWorld::NAME, $node->getName());
     }
 
     /**

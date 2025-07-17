@@ -40,7 +40,7 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(GitHubRepositoryConnector::NAME, $this->getNode()->getName());
+        self::assertSame(GitHubRepositoryConnector::NAME, $this->getNode()->getName());
     }
 
     /**
@@ -100,7 +100,7 @@ final class GitHubRepositoryConnectorTest extends DatabaseTestCaseAbstract
     {
         $mock = self::createMock(CurlManagerInterface::class);
         $mock->method('send')->willReturnCallback(static function (RequestDto $req) {
-            self::assertEquals(CurlManager::METHOD_GET, $req->getMethod());
+            self::assertSame(CurlManager::METHOD_GET, $req->getMethod());
             self::assertEquals('https://api.github.com/repos/org/rep', $req->getUri(TRUE));
 
             return new ResponseDto(200, '', '{"body":"ok"}', []);

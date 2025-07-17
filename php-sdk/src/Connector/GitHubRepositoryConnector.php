@@ -21,7 +21,7 @@ use Hanaboso\Utils\Exception\PipesFrameworkException;
 final class GitHubRepositoryConnector extends ConnectorAbstract
 {
 
-    public const NAME = 'git-hub-get-repository';
+    public const string NAME = 'git-hub-get-repository';
 
     /**
      * @return string

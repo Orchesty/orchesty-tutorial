@@ -29,10 +29,10 @@ use Hanaboso\Utils\String\Json;
 final class HubSpotApplication extends OAuth2ApplicationAbstract implements WebhookApplicationInterface
 {
 
-    public const BASE_URL = 'https://api.hubapi.com';
-    public const NAME     = 'hub-spot';
+    public const string BASE_URL = 'https://api.hubapi.com';
+    public const string NAME     = 'hub-spot';
 
-    private const APPLICATION_ID = 'applicationId';
+    private const string APPLICATION_ID = 'applicationId';
 
     /**
      * @return string

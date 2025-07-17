@@ -13,7 +13,7 @@ use Hanaboso\PipesPhpSdk\Batch\BatchAbstract;
 final class SplitBatch extends BatchAbstract
 {
 
-    public const NAME = 'split-batch';
+    public const string NAME = 'split-batch';
 
     /**
      * @return string

@@ -19,9 +19,9 @@ use Hanaboso\PipesPhpSdk\CustomNode\Exception\CustomNodeException;
 final class GitHubGetRepositoriesBatch extends BatchAbstract
 {
 
-    public const NAME = 'git-hub-repositories-batch';
+    public const string NAME = 'git-hub-repositories-batch';
 
-    private const PAGE_ITEMS = 5;
+    private const int PAGE_ITEMS = 5;
 
     /**
      * @return string

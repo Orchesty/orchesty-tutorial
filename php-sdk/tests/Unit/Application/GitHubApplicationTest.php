@@ -39,7 +39,7 @@ final class GitHubApplicationTest extends KernelTestCaseAbstract
     public function testProcessWebhookSubscribeResponse(): void
     {
         $gitHubApplication = new GitHubApplication();
-        self::assertEquals(
+        self::assertSame(
             '1',
             $gitHubApplication->processWebhookSubscribeResponse(
                 new ResponseDto(201, '', '{"id": "1"}', []),

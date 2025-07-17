@@ -24,9 +24,9 @@ use Hanaboso\Utils\System\PipesHeaders;
 final class GitHubStoreRepositoriesBatch extends BatchAbstract
 {
 
-    public const NAME = 'git-hub-store-repositories-batch';
+    public const string NAME = 'git-hub-store-repositories-batch';
 
-    private const PAGE_ITEMS = 5;
+    private const int PAGE_ITEMS = 5;
 
     /**
      * GitHubStoreRepositoriesBatch constructor.

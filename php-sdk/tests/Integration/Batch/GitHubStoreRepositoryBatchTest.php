@@ -42,7 +42,7 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(GitHubStoreRepositoriesBatch::NAME, $this->getNode()->getName());
+        self::assertSame(GitHubStoreRepositoriesBatch::NAME, $this->getNode()->getName());
     }
 
     /**
@@ -113,7 +113,7 @@ final class GitHubStoreRepositoryBatchTest extends DatabaseTestCaseAbstract
     {
         $mock = self::createMock(CurlManagerInterface::class);
         $mock->method('send')->willReturnCallback(static function (RequestDto $req) {
-            self::assertEquals(CurlManager::METHOD_GET, $req->getMethod());
+            self::assertSame(CurlManager::METHOD_GET, $req->getMethod());
             self::assertEquals('https://api.github.com/orgs/org/repos?per_page=5&page=1', $req->getUri(TRUE));
 
             return new ResponseDto(200, '', '[{"body":"ok"},{"body":"ok"}]', []);

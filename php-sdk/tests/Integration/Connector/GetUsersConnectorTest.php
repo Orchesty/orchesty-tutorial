@@ -25,7 +25,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
      */
     public function testName(): void
     {
-        self::assertEquals(GetUsersConnector::NAME, $this->getNode()->getName());
+        self::assertSame(GetUsersConnector::NAME, $this->getNode()->getName());
     }
 
     /**
@@ -60,7 +60,7 @@ final class GetUsersConnectorTest extends DatabaseTestCaseAbstract
     {
         $mock = self::createMock(CurlManagerInterface::class);
         $mock->method('send')->willReturnCallback(static function (RequestDto $req) {
-            self::assertEquals(CurlManager::METHOD_GET, $req->getMethod());
+            self::assertSame(CurlManager::METHOD_GET, $req->getMethod());
             self::assertEquals('https://jsonplaceholder.typicode.com/users', $req->getUri(TRUE));
 
             return new ResponseDto(200, '', '{"body":"ok"}', []);

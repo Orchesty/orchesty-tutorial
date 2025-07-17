@@ -1,8 +1,8 @@
-DC=docker-compose
-DR=docker-compose exec -T rabbitmq
-DB=docker-compose exec -T backend
-PHP_SDK=docker-compose exec -T php-sdk
-NODE_SDK=docker-compose exec -T nodejs-sdk
+DC=docker compose
+DR=$(DC) exec -T rabbitmq
+DB=$(DC) exec -T backend
+PHP_SDK=$(DC) exec -T php-sdk
+NODE_SDK=$(DC) exec -T nodejs-sdk
 
 ALIAS?=alias
 Darwin:

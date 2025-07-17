@@ -36,7 +36,7 @@ final class MockServer implements ClientInterface
     ): ResponseInterface
     {
         $mock = $this->popMock();
-        if (empty($mock)) {
+        if ($mock === NULL) {
             throw new MockServerException('No requests are mocked!');
         }
         if (!$this->compareMock($uri, $data, $method, $mock)) {
@@ -83,7 +83,7 @@ final class MockServer implements ClientInterface
      */
     private function compareMock(string $uri, array|LogRecord|null $data, string $method, Mock $mock): bool
     {
-        if (!empty($mock->replaceFields) && is_array($data)) {
+        if ($mock->replaceFields !== [] && is_array($data)) {
             foreach ($mock->replaceFields as $key => $value) {
                 if ($data) {
                     foreach (array_keys($data) as $index) {

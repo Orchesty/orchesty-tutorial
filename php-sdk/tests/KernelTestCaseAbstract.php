@@ -124,7 +124,7 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     {
         return static function (RequestDto $dto) use ($data, $url, $statusCode): ResponseDto {
             if ($url) {
-                self::assertEquals($url, sprintf('%s %s', $dto->getMethod(), $dto->getUri(TRUE)));
+                self::assertSame($url, sprintf('%s %s', $dto->getMethod(), $dto->getUri(TRUE)));
             }
 
             return new ResponseDto($statusCode, 'OK', is_array($data) ? Json::encode($data) : $data, []);

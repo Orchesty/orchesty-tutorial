@@ -19,7 +19,7 @@ use Hanaboso\PipesPhpSdk\Connector\Exception\ConnectorException;
 final class GetUsersConnector extends ConnectorAbstract
 {
 
-    public const NAME = 'jsonplaceholder-get-users';
+    public const string NAME = 'jsonplaceholder-get-users';
 
     /**
      * @return string

@@ -29,7 +29,7 @@ use Hanaboso\Utils\String\Json;
 final class GitHubApplication extends BasicApplicationAbstract implements WebhookApplicationInterface
 {
 
-    public const NAME = 'git-hub';
+    public const string NAME = 'git-hub';
 
     /**
      * @return string

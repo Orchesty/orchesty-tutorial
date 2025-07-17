@@ -13,7 +13,7 @@ use Hanaboso\PipesPhpSdk\CustomNode\CommonNodeAbstract;
 final class HelloWorld extends CommonNodeAbstract
 {
 
-    public const NAME = 'hello-world';
+    public const string NAME = 'hello-world';
 
     /**
      * @return string

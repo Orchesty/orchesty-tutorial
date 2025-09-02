@@ -179,7 +179,7 @@ services:
         mem_limit: 128MB
 
     mongo:
-        image: mongo
+        image: mongo:7
         ports:
             - ${DEV_IP}:27017:27017
         volumes:

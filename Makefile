@@ -4,15 +4,6 @@ DB=$(DC) exec -T backend
 PHP_SDK=$(DC) exec -T php-sdk
 NODE_SDK=$(DC) exec -T nodejs-sdk
 
-ALIAS?=alias
-Darwin:
-	sudo ifconfig lo0 $(ALIAS) $(shell awk '$$1 ~ /^DEV_IP/' .env | sed -e "s/^DEV_IP=//")
-Linux:
-	@echo 'skipping ...'
-.lo0-up:
-	-@make `uname`
-.lo0-down:
-	-@make `uname` ALIAS='-alias'
 .env:
 	sed -e "s/{DEV_UID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -u); else echo '1001'; fi)/g" \
 		-e "s/{DEV_GID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -g); else echo '1001'; fi)/g" \
@@ -24,7 +15,7 @@ Linux:
 init-dev: docker-up-force composer-install clear-cache
 
 # Docker section
-docker-up-force: .env .lo0-up
+docker-up-force: .env
 	$(DC) pull --ignore-pull-failures
 	$(DC) up -d --force-recreate --remove-orphans
 	$(DC) run --rm wait-for-it rabbitmq:15672 -t 600
@@ -38,10 +29,10 @@ docker-up-force: .env .lo0-up
 	$(DB) bin/console api-token:create --key "$(shell grep 'ORCHESTY_API_KEY' .env | cut -d "=" -f2)"
 	$(DB) bin/console user:create "$(shell grep 'ORCHESTY_USER' .env | cut -d "=" -f2)" "$(shell grep 'ORCHESTY_PASSWORD' .env | cut -d "=" -f2)"
 
-docker-down-clean: .env .lo0-down
+docker-down-clean: .env
 	$(DC) down -v
 
-docker-stop: .env .lo0-down
+docker-stop: .env
 	$(DC) down
 
 # Composer section
